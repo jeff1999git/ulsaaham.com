@@ -1,0 +1,35 @@
+$ astro build
+[2m12:53:54[22m [34m[content][39m Syncing content
+[2m12:53:54[22m [34m[content][39m Synced content
+[2m12:53:54[22m [34m[types][39m Generated [2m81ms[22m
+[2m12:53:54[22m [34m[build][39m output: [34m"static"[39m
+[2m12:53:54[22m [34m[build][39m mode: [34m"static"[39m
+[2m12:53:54[22m [34m[build][39m directory: [34mF:\Ulsaaham\webapp\web-app\apps\site\far-fusion\dist\[39m
+[2m12:53:54[22m [34m[build][39m Collecting build info...
+[2m12:53:54[22m [34m[build][39m [32m✓ Completed in 347ms.[39m
+[2m12:53:54[22m [34m[build][39m Building static entrypoints...
+[2m12:53:59[22m [34m[vite][39m [32m✓ built in 4.34s[39m
+[2m12:53:59[22m [34m[build][39m [32m✓ Completed in 4.41s.[39m
+
+[42m[30m building client (vite) [39m[49m
+[2m12:53:59[22m [34m[vite][39m transforming...
+[2m12:54:00[22m [34m[vite][39m [32m✓[39m 29 modules transformed.
+[2m12:54:01[22m [34m[vite][39m rendering chunks...
+[2m12:54:01[22m [34m[vite][39m computing gzip size...
+[2m12:54:01[22m [34m[vite][39m [2mdist/[22m[36m_astro/index.Cd_vQiNd.js      [39m[1m[2m  7.85 kB[22m[1m[22m[2m │ gzip:   3.05 kB[22m
+[2m12:54:01[22m [34m[vite][39m [2mdist/[22m[36m_astro/client.BLUn-lwI.js     [39m[1m[2m186.62 kB[22m[1m[22m[2m │ gzip:  58.54 kB[22m
+[2m12:54:01[22m [34m[vite][39m [2mdist/[22m[36m_astro/HeroScene.CAomFhnz.js  [39m[1m[2m467.70 kB[22m[1m[22m[2m │ gzip: 118.68 kB[22m
+[2m12:54:01[22m [34m[vite][39m [32m✓ built in 1.96s[39m
+
+[42m[30m generating static routes [39m[49m
+[2m12:54:01[22m [32m▶[39m src/pages/index.astro
+[2m12:54:01[22m   [34m└─[39m [2m/index.html[22m [2m(+74ms)[22m 
+[2m12:54:01[22m [32m✓ Completed in 214ms.
+[39m
+ optimizing 7 images in batches of 8 
+12:54:02 PM [@astrojs/image] "https://images.unsplash.com/photo-1529158062015-cad636e69505?auto=format&fit=crop&w=600&q=60" image could not be fetched
+12:54:02 PM [@astrojs/image] "https://images.unsplash.com/photo-1529634898388-84d3e7f6c58b?auto=format&fit=crop&w=600&q=60" image could not be fetched
+Completed in 0.84s.
+
+[2m12:54:02[22m [34m[build][39m 1 page(s) built in [1m7.83s[22m
+[2m12:54:02[22m [34m[build][39m [1mComplete![22m

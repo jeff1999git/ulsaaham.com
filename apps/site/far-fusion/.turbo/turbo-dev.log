@@ -1,0 +1,529 @@
+$ astro dev
+[33m[1m12:42:03[22m [WARN][39m The injected route "/_image" by @astrojs/image specifies the entry point with the "entryPoint" property. This property is deprecated, please use "entrypoint" instead.
+[2m12:42:03[22m [34m[types][39m Generated [2m1ms[22m
+[2m12:42:03[22m [34m[content][39m Syncing content
+[2m12:42:03[22m [34m[content][39m Synced content
+[2m12:42:03[22m [34m[vite][39m Re-optimizing dependencies because vite config has changed
+
+[42m[1m astro [22m[49m [32mv5.15.4[39m [2mready in[22m 1221 [2mms[22m
+
+[2m┃[22m Local    [36mhttp://localhost:4321/[39m
+[2m┃[22m Network  [2muse --host to expose[22m
+
+[2m12:42:03[22m [32mwatching for file changes...[39m
+[2m12:42:18[22m [34m[200][39m / [2m359ms[22m
+[33m[1m12:42:20[22m [WARN] [router][39m No API Route handler exists for the method "GET" for the route "/_image".
+Found handlers: "get"
+
+[2m12:42:20[22m [33m[404][39m /_image [2m2ms[22m
+[33m[1m12:42:20[22m [WARN] [router][39m No API Route handler exists for the method "GET" for the route "/_image".
+Found handlers: "get"
+
+[2m12:42:20[22m [33m[404][39m /_image [2m0ms[22m
+[33m[1m12:42:20[22m [WARN] [router][39m No API Route handler exists for the method "GET" for the route "/_image".
+Found handlers: "get"
+
+[2m12:42:20[22m [33m[404][39m /_image [2m0ms[22m
+[33m[1m12:42:20[22m [WARN] [router][39m No API Route handler exists for the method "GET" for the route "/_image".
+Found handlers: "get"
+
+[2m12:42:20[22m [33m[404][39m /_image [2m1ms[22m
+[33m[1m12:42:20[22m [WARN] [router][39m No API Route handler exists for the method "GET" for the route "/_image".
+Found handlers: "get"
+
+[2m12:42:20[22m [33m[404][39m /_image [2m1ms[22m
+[33m[1m12:42:20[22m [WARN] [router][39m No API Route handler exists for the method "GET" for the route "/_image".
+Found handlers: "get"
+
+[2m12:42:20[22m [33m[404][39m /_image [2m1ms[22m
+[33m[1m12:42:20[22m [WARN] [router][39m No API Route handler exists for the method "GET" for the route "/_image".
+Found handlers: "get"
+
+[2m12:42:20[22m [33m[404][39m /_image [2m1ms[22m
+[33m[1m12:42:20[22m [WARN] [router][39m No API Route handler exists for the method "GET" for the route "/_image".
+Found handlers: "get"
+
+[2m12:42:20[22m [33m[404][39m /_image [2m1ms[22m
+[33m[1m12:42:20[22m [WARN] [router][39m No API Route handler exists for the method "GET" for the route "/_image".
+Found handlers: "get"
+
+[2m12:42:20[22m [33m[404][39m /_image [2m2ms[22m
+[33m[1m12:42:20[22m [WARN] [router][39m No API Route handler exists for the method "GET" for the route "/_image".
+Found handlers: "get"
+
+[2m12:42:20[22m [33m[404][39m /_image [2m1ms[22m
+[33m[1m12:42:20[22m [WARN] [router][39m No API Route handler exists for the method "GET" for the route "/_image".
+Found handlers: "get"
+
+[2m12:42:20[22m [33m[404][39m /_image [2m1ms[22m
+[33m[1m12:42:21[22m [WARN] [router][39m No API Route handler exists for the method "GET" for the route "/_image".
+Found handlers: "get"
+
+[2m12:42:21[22m [33m[404][39m /_image [2m1ms[22m
+[33m[1m12:42:21[22m [WARN] [router][39m No API Route handler exists for the method "GET" for the route "/_image".
+Found handlers: "get"
+
+[2m12:42:21[22m [33m[404][39m /_image [2m1ms[22m
+[33m[1m12:42:21[22m [WARN] [router][39m No API Route handler exists for the method "GET" for the route "/_image".
+Found handlers: "get"
+
+[2m12:42:21[22m [33m[404][39m /_image [2m2ms[22m
+[2m12:47:15[22m [34m[watch][39m src/pages/index.astro
+[2m12:47:15[22m [34m[watch][39m src/pages/index.astro
+[2m12:47:17[22m [34m[200][39m / [2m178ms[22m
+[33m[1m12:47:17[22m [WARN] [router][39m No API Route handler exists for the method "GET" for the route "/_image".
+Found handlers: "get"
+
+[2m12:47:17[22m [33m[404][39m /_image [2m1ms[22m
+[33m[1m12:47:17[22m [WARN] [router][39m No API Route handler exists for the method "GET" for the route "/_image".
+Found handlers: "get"
+
+[2m12:47:17[22m [33m[404][39m /_image [2m0ms[22m
+[33m[1m12:47:17[22m [WARN] [router][39m No API Route handler exists for the method "GET" for the route "/_image".
+Found handlers: "get"
+
+[2m12:47:17[22m [33m[404][39m /_image [2m1ms[22m
+[33m[1m12:47:17[22m [WARN] [router][39m No API Route handler exists for the method "GET" for the route "/_image".
+Found handlers: "get"
+
+[2m12:47:17[22m [33m[404][39m /_image [2m1ms[22m
+[33m[1m12:47:17[22m [WARN] [router][39m No API Route handler exists for the method "GET" for the route "/_image".
+Found handlers: "get"
+
+[2m12:47:17[22m [33m[404][39m /_image [2m0ms[22m
+[33m[1m12:47:17[22m [WARN] [router][39m No API Route handler exists for the method "GET" for the route "/_image".
+Found handlers: "get"
+
+[2m12:47:17[22m [33m[404][39m /_image [2m1ms[22m
+[33m[1m12:47:17[22m [WARN] [router][39m No API Route handler exists for the method "GET" for the route "/_image".
+Found handlers: "get"
+
+[2m12:47:17[22m [33m[404][39m /_image [2m0ms[22m
+[33m[1m12:47:23[22m [WARN] [router][39m No API Route handler exists for the method "GET" for the route "/_image".
+Found handlers: "get"
+
+[2m12:47:23[22m [33m[404][39m /_image [2m0ms[22m
+[33m[1m12:47:23[22m [WARN] [router][39m No API Route handler exists for the method "GET" for the route "/_image".
+Found handlers: "get"
+
+[2m12:47:23[22m [33m[404][39m /_image [2m0ms[22m
+[33m[1m12:47:23[22m [WARN] [router][39m No API Route handler exists for the method "GET" for the route "/_image".
+Found handlers: "get"
+
+[2m12:47:23[22m [33m[404][39m /_image [2m0ms[22m
+[33m[1m12:47:23[22m [WARN] [router][39m No API Route handler exists for the method "GET" for the route "/_image".
+Found handlers: "get"
+
+[2m12:47:23[22m [33m[404][39m /_image [2m0ms[22m
+[33m[1m12:47:24[22m [WARN] [router][39m No API Route handler exists for the method "GET" for the route "/_image".
+Found handlers: "get"
+
+[2m12:47:24[22m [33m[404][39m /_image [2m0ms[22m
+[33m[1m12:47:24[22m [WARN] [router][39m No API Route handler exists for the method "GET" for the route "/_image".
+Found handlers: "get"
+
+[2m12:47:24[22m [33m[404][39m /_image [2m0ms[22m
+[33m[1m12:47:24[22m [WARN] [router][39m No API Route handler exists for the method "GET" for the route "/_image".
+Found handlers: "get"
+
+[2m12:47:24[22m [33m[404][39m /_image [2m0ms[22m
+[2m12:47:26[22m [34m[watch][39m src/pages/index.astro
+[2m12:47:26[22m [34m[watch][39m src/pages/index.astro
+[2m12:47:27[22m [34m[200][39m / [2m88ms[22m
+[33m[1m12:47:27[22m [WARN] [router][39m No API Route handler exists for the method "GET" for the route "/_image".
+Found handlers: "get"
+
+[2m12:47:27[22m [33m[404][39m /_image [2m0ms[22m
+[33m[1m12:47:27[22m [WARN] [router][39m No API Route handler exists for the method "GET" for the route "/_image".
+Found handlers: "get"
+
+[2m12:47:27[22m [33m[404][39m /_image [2m0ms[22m
+[33m[1m12:47:27[22m [WARN] [router][39m No API Route handler exists for the method "GET" for the route "/_image".
+Found handlers: "get"
+
+[2m12:47:27[22m [33m[404][39m /_image [2m1ms[22m
+[33m[1m12:47:27[22m [WARN] [router][39m No API Route handler exists for the method "GET" for the route "/_image".
+Found handlers: "get"
+
+[2m12:47:27[22m [33m[404][39m /_image [2m1ms[22m
+[33m[1m12:47:27[22m [WARN] [router][39m No API Route handler exists for the method "GET" for the route "/_image".
+Found handlers: "get"
+
+[2m12:47:27[22m [33m[404][39m /_image [2m0ms[22m
+[33m[1m12:47:27[22m [WARN] [router][39m No API Route handler exists for the method "GET" for the route "/_image".
+Found handlers: "get"
+
+[2m12:47:27[22m [33m[404][39m /_image [2m1ms[22m
+[33m[1m12:47:27[22m [WARN] [router][39m No API Route handler exists for the method "GET" for the route "/_image".
+Found handlers: "get"
+
+[2m12:47:27[22m [33m[404][39m /_image [2m1ms[22m
+[33m[1m12:47:27[22m [WARN] [router][39m No API Route handler exists for the method "GET" for the route "/_image".
+Found handlers: "get"
+
+[2m12:47:27[22m [33m[404][39m /_image [2m1ms[22m
+[33m[1m12:47:27[22m [WARN] [router][39m No API Route handler exists for the method "GET" for the route "/_image".
+Found handlers: "get"
+
+[2m12:47:27[22m [33m[404][39m /_image [2m0ms[22m
+[33m[1m12:47:27[22m [WARN] [router][39m No API Route handler exists for the method "GET" for the route "/_image".
+Found handlers: "get"
+
+[2m12:47:27[22m [33m[404][39m /_image [2m1ms[22m
+[33m[1m12:47:27[22m [WARN] [router][39m No API Route handler exists for the method "GET" for the route "/_image".
+Found handlers: "get"
+
+[2m12:47:27[22m [33m[404][39m /_image [2m1ms[22m
+[33m[1m12:47:27[22m [WARN] [router][39m No API Route handler exists for the method "GET" for the route "/_image".
+Found handlers: "get"
+
+[2m12:47:27[22m [33m[404][39m /_image [2m0ms[22m
+[33m[1m12:47:27[22m [WARN] [router][39m No API Route handler exists for the method "GET" for the route "/_image".
+Found handlers: "get"
+
+[2m12:47:27[22m [33m[404][39m /_image [2m0ms[22m
+[33m[1m12:47:27[22m [WARN] [router][39m No API Route handler exists for the method "GET" for the route "/_image".
+Found handlers: "get"
+
+[2m12:47:27[22m [33m[404][39m /_image [2m0ms[22m
+[2m12:48:17[22m [34m[watch][39m /src/components/HeroScene.jsx, /src/styles/global.css
+[2m12:48:17[22m [34m[watch][39m src/components/HeroScene.jsx
+[33m[1m12:48:28[22m [WARN] [router][39m No API Route handler exists for the method "GET" for the route "/_image".
+Found handlers: "get"
+
+[2m12:48:28[22m [33m[404][39m /_image [2m1ms[22m
+[33m[1m12:48:28[22m [WARN] [router][39m No API Route handler exists for the method "GET" for the route "/_image".
+Found handlers: "get"
+
+[2m12:48:28[22m [33m[404][39m /_image [2m1ms[22m
+[33m[1m12:48:28[22m [WARN] [router][39m No API Route handler exists for the method "GET" for the route "/_image".
+Found handlers: "get"
+
+[2m12:48:28[22m [33m[404][39m /_image [2m1ms[22m
+[33m[1m12:48:28[22m [WARN] [router][39m No API Route handler exists for the method "GET" for the route "/_image".
+Found handlers: "get"
+
+[2m12:48:28[22m [33m[404][39m /_image [2m1ms[22m
+[33m[1m12:48:28[22m [WARN] [router][39m No API Route handler exists for the method "GET" for the route "/_image".
+Found handlers: "get"
+
+[2m12:48:28[22m [33m[404][39m /_image [2m0ms[22m
+[33m[1m12:48:28[22m [WARN] [router][39m No API Route handler exists for the method "GET" for the route "/_image".
+Found handlers: "get"
+
+[2m12:48:28[22m [33m[404][39m /_image [2m0ms[22m
+[33m[1m12:48:28[22m [WARN] [router][39m No API Route handler exists for the method "GET" for the route "/_image".
+Found handlers: "get"
+
+[2m12:48:28[22m [33m[404][39m /_image [2m1ms[22m
+[2m12:48:51[22m [34m[watch][39m /src/components/HeroScene.jsx, /src/styles/global.css
+[2m12:48:51[22m [34m[watch][39m src/components/HeroScene.jsx
+[2m12:48:51[22m [34m[watch][39m src/pages/index.astro
+[2m12:48:51[22m [34m[watch][39m src/pages/index.astro
+[33m[1m12:48:52[22m [WARN] [router][39m No API Route handler exists for the method "GET" for the route "/_image".
+Found handlers: "get"
+
+[2m12:48:52[22m [33m[404][39m /_image [2m0ms[22m
+[2m12:48:52[22m [34m[200][39m / [2m95ms[22m
+[33m[1m12:48:52[22m [WARN] [router][39m No API Route handler exists for the method "GET" for the route "/_image".
+Found handlers: "get"
+
+[2m12:48:52[22m [33m[404][39m /_image [2m1ms[22m
+[33m[1m12:48:52[22m [WARN] [router][39m No API Route handler exists for the method "GET" for the route "/_image".
+Found handlers: "get"
+
+[2m12:48:52[22m [33m[404][39m /_image [2m0ms[22m
+[33m[1m12:48:52[22m [WARN] [router][39m No API Route handler exists for the method "GET" for the route "/_image".
+Found handlers: "get"
+
+[2m12:48:52[22m [33m[404][39m /_image [2m1ms[22m
+[33m[1m12:48:52[22m [WARN] [router][39m No API Route handler exists for the method "GET" for the route "/_image".
+Found handlers: "get"
+
+[2m12:48:52[22m [33m[404][39m /_image [2m0ms[22m
+[33m[1m12:48:52[22m [WARN] [router][39m No API Route handler exists for the method "GET" for the route "/_image".
+Found handlers: "get"
+
+[2m12:48:52[22m [33m[404][39m /_image [2m1ms[22m
+[33m[1m12:48:52[22m [WARN] [router][39m No API Route handler exists for the method "GET" for the route "/_image".
+Found handlers: "get"
+
+[2m12:48:52[22m [33m[404][39m /_image [2m1ms[22m
+[33m[1m12:48:52[22m [WARN] [router][39m No API Route handler exists for the method "GET" for the route "/_image".
+Found handlers: "get"
+
+[2m12:48:52[22m [33m[404][39m /_image [2m1ms[22m
+[33m[1m12:48:52[22m [WARN] [router][39m No API Route handler exists for the method "GET" for the route "/_image".
+Found handlers: "get"
+
+[2m12:48:52[22m [33m[404][39m /_image [2m0ms[22m
+[33m[1m12:48:52[22m [WARN] [router][39m No API Route handler exists for the method "GET" for the route "/_image".
+Found handlers: "get"
+
+[2m12:48:52[22m [33m[404][39m /_image [2m0ms[22m
+[33m[1m12:48:52[22m [WARN] [router][39m No API Route handler exists for the method "GET" for the route "/_image".
+Found handlers: "get"
+
+[2m12:48:52[22m [33m[404][39m /_image [2m0ms[22m
+[33m[1m12:48:52[22m [WARN] [router][39m No API Route handler exists for the method "GET" for the route "/_image".
+Found handlers: "get"
+
+[2m12:48:52[22m [33m[404][39m /_image [2m1ms[22m
+[33m[1m12:48:52[22m [WARN] [router][39m No API Route handler exists for the method "GET" for the route "/_image".
+Found handlers: "get"
+
+[2m12:48:52[22m [33m[404][39m /_image [2m1ms[22m
+[33m[1m12:48:52[22m [WARN] [router][39m No API Route handler exists for the method "GET" for the route "/_image".
+Found handlers: "get"
+
+[2m12:48:52[22m [33m[404][39m /_image [2m0ms[22m
+[33m[1m12:48:52[22m [WARN] [router][39m No API Route handler exists for the method "GET" for the route "/_image".
+Found handlers: "get"
+
+[2m12:48:52[22m [33m[404][39m /_image [2m2ms[22m
+[33m[1m12:48:57[22m [WARN] [router][39m No API Route handler exists for the method "GET" for the route "/_image".
+Found handlers: "get"
+
+[2m12:48:57[22m [33m[404][39m /_image [2m1ms[22m
+[2m12:52:17[22m [34m[watch][39m tailwind.config.mjs
+[2m12:52:17[22m [34m[watch][39m tailwind.config.mjs
+[31m[1m12:52:18[22m [ERROR][39m [postcss] F:/Ulsaaham/webapp/web-app/apps/site/far-fusion/src/styles/global.css:19:3: The `text-brand-500` class does not exist. If `text-brand-500` is a custom class, make sure it is defined within a `@layer` directive.
+  [1mStack trace:[22m
+[2m    at F:/Ulsaaham/webapp/web-app/apps/site/far-fusion/src/styles/global.css:19:2
+    [...] See full stack trace in the browser, or rerun with --verbose.[22m
+[2m12:52:31[22m [34m[watch][39m /src/styles/global.css
+[2m12:52:32[22m [34m[200][39m / [2m356ms[22m
+[2m12:52:32[22m [34m[200][39m / [2m251ms[22m
+[33m[1m12:52:32[22m [WARN] [router][39m No API Route handler exists for the method "GET" for the route "/_image".
+Found handlers: "get"
+
+[2m12:52:32[22m [33m[404][39m /_image [2m0ms[22m
+[33m[1m12:52:32[22m [WARN] [router][39m No API Route handler exists for the method "GET" for the route "/_image".
+Found handlers: "get"
+
+[2m12:52:32[22m [33m[404][39m /_image [2m0ms[22m
+[33m[1m12:52:32[22m [WARN] [router][39m No API Route handler exists for the method "GET" for the route "/_image".
+Found handlers: "get"
+
+[2m12:52:32[22m [33m[404][39m /_image [2m0ms[22m
+[33m[1m12:52:32[22m [WARN] [router][39m No API Route handler exists for the method "GET" for the route "/_image".
+Found handlers: "get"
+
+[2m12:52:32[22m [33m[404][39m /_image [2m0ms[22m
+[33m[1m12:52:32[22m [WARN] [router][39m No API Route handler exists for the method "GET" for the route "/_image".
+Found handlers: "get"
+
+[2m12:52:32[22m [33m[404][39m /_image [2m0ms[22m
+[33m[1m12:52:32[22m [WARN] [router][39m No API Route handler exists for the method "GET" for the route "/_image".
+Found handlers: "get"
+
+[2m12:52:32[22m [33m[404][39m /_image [2m0ms[22m
+[33m[1m12:52:32[22m [WARN] [router][39m No API Route handler exists for the method "GET" for the route "/_image".
+Found handlers: "get"
+
+[2m12:52:32[22m [33m[404][39m /_image [2m0ms[22m
+[33m[1m12:52:32[22m [WARN] [router][39m No API Route handler exists for the method "GET" for the route "/_image".
+Found handlers: "get"
+
+[2m12:52:32[22m [33m[404][39m /_image [2m0ms[22m
+[33m[1m12:52:32[22m [WARN] [router][39m No API Route handler exists for the method "GET" for the route "/_image".
+Found handlers: "get"
+
+[2m12:52:32[22m [33m[404][39m /_image [2m0ms[22m
+[33m[1m12:52:32[22m [WARN] [router][39m No API Route handler exists for the method "GET" for the route "/_image".
+Found handlers: "get"
+
+[2m12:52:32[22m [33m[404][39m /_image [2m0ms[22m
+[33m[1m12:52:32[22m [WARN] [router][39m No API Route handler exists for the method "GET" for the route "/_image".
+Found handlers: "get"
+
+[2m12:52:32[22m [33m[404][39m /_image [2m0ms[22m
+[33m[1m12:52:32[22m [WARN] [router][39m No API Route handler exists for the method "GET" for the route "/_image".
+Found handlers: "get"
+
+[2m12:52:32[22m [33m[404][39m /_image [2m0ms[22m
+[33m[1m12:52:32[22m [WARN] [router][39m No API Route handler exists for the method "GET" for the route "/_image".
+Found handlers: "get"
+
+[2m12:52:32[22m [33m[404][39m /_image [2m0ms[22m
+[33m[1m12:52:32[22m [WARN] [router][39m No API Route handler exists for the method "GET" for the route "/_image".
+Found handlers: "get"
+
+[2m12:52:32[22m [33m[404][39m /_image [2m0ms[22m
+[2m12:53:18[22m [34m[watch][39m src/pages/index.astro
+[2m12:53:18[22m [34m[watch][39m src/pages/index.astro
+[2m12:53:19[22m [34m[200][39m / [2m103ms[22m
+[33m[1m12:53:19[22m [WARN] [router][39m No API Route handler exists for the method "GET" for the route "/_image".
+Found handlers: "get"
+
+[2m12:53:19[22m [33m[404][39m /_image [2m0ms[22m
+[33m[1m12:53:19[22m [WARN] [router][39m No API Route handler exists for the method "GET" for the route "/_image".
+Found handlers: "get"
+
+[2m12:53:19[22m [33m[404][39m /_image [2m0ms[22m
+[33m[1m12:53:19[22m [WARN] [router][39m No API Route handler exists for the method "GET" for the route "/_image".
+Found handlers: "get"
+
+[2m12:53:19[22m [33m[404][39m /_image [2m0ms[22m
+[33m[1m12:53:19[22m [WARN] [router][39m No API Route handler exists for the method "GET" for the route "/_image".
+Found handlers: "get"
+
+[2m12:53:19[22m [33m[404][39m /_image [2m0ms[22m
+[33m[1m12:53:19[22m [WARN] [router][39m No API Route handler exists for the method "GET" for the route "/_image".
+Found handlers: "get"
+
+[2m12:53:19[22m [33m[404][39m /_image [2m0ms[22m
+[33m[1m12:53:19[22m [WARN] [router][39m No API Route handler exists for the method "GET" for the route "/_image".
+Found handlers: "get"
+
+[2m12:53:19[22m [33m[404][39m /_image [2m0ms[22m
+[33m[1m12:53:19[22m [WARN] [router][39m No API Route handler exists for the method "GET" for the route "/_image".
+Found handlers: "get"
+
+[2m12:53:19[22m [33m[404][39m /_image [2m0ms[22m
+[33m[1m12:53:19[22m [WARN] [router][39m No API Route handler exists for the method "GET" for the route "/_image".
+Found handlers: "get"
+
+[2m12:53:19[22m [33m[404][39m /_image [2m0ms[22m
+[33m[1m12:53:19[22m [WARN] [router][39m No API Route handler exists for the method "GET" for the route "/_image".
+Found handlers: "get"
+
+[2m12:53:19[22m [33m[404][39m /_image [2m0ms[22m
+[33m[1m12:53:19[22m [WARN] [router][39m No API Route handler exists for the method "GET" for the route "/_image".
+Found handlers: "get"
+
+[2m12:53:19[22m [33m[404][39m /_image [2m0ms[22m
+[33m[1m12:53:19[22m [WARN] [router][39m No API Route handler exists for the method "GET" for the route "/_image".
+Found handlers: "get"
+
+[2m12:53:19[22m [33m[404][39m /_image [2m0ms[22m
+[33m[1m12:53:19[22m [WARN] [router][39m No API Route handler exists for the method "GET" for the route "/_image".
+Found handlers: "get"
+
+[2m12:53:19[22m [33m[404][39m /_image [2m0ms[22m
+[33m[1m12:53:19[22m [WARN] [router][39m No API Route handler exists for the method "GET" for the route "/_image".
+Found handlers: "get"
+
+[2m12:53:19[22m [33m[404][39m /_image [2m0ms[22m
+[33m[1m12:53:19[22m [WARN] [router][39m No API Route handler exists for the method "GET" for the route "/_image".
+Found handlers: "get"
+
+[2m12:53:19[22m [33m[404][39m /_image [2m0ms[22m
+[2m12:53:33[22m [34m[watch][39m src/pages/index.astro
+[2m12:53:33[22m [34m[watch][39m src/pages/index.astro
+[2m12:53:34[22m [34m[200][39m / [2m83ms[22m
+[33m[1m12:53:34[22m [WARN] [router][39m No API Route handler exists for the method "GET" for the route "/_image".
+Found handlers: "get"
+
+[2m12:53:34[22m [33m[404][39m /_image [2m0ms[22m
+[33m[1m12:53:34[22m [WARN] [router][39m No API Route handler exists for the method "GET" for the route "/_image".
+Found handlers: "get"
+
+[2m12:53:34[22m [33m[404][39m /_image [2m0ms[22m
+[33m[1m12:53:34[22m [WARN] [router][39m No API Route handler exists for the method "GET" for the route "/_image".
+Found handlers: "get"
+
+[2m12:53:34[22m [33m[404][39m /_image [2m0ms[22m
+[33m[1m12:53:34[22m [WARN] [router][39m No API Route handler exists for the method "GET" for the route "/_image".
+Found handlers: "get"
+
+[2m12:53:34[22m [33m[404][39m /_image [2m1ms[22m
+[33m[1m12:53:34[22m [WARN] [router][39m No API Route handler exists for the method "GET" for the route "/_image".
+Found handlers: "get"
+
+[2m12:53:34[22m [33m[404][39m /_image [2m0ms[22m
+[33m[1m12:53:34[22m [WARN] [router][39m No API Route handler exists for the method "GET" for the route "/_image".
+Found handlers: "get"
+
+[2m12:53:34[22m [33m[404][39m /_image [2m1ms[22m
+[33m[1m12:53:34[22m [WARN] [router][39m No API Route handler exists for the method "GET" for the route "/_image".
+Found handlers: "get"
+
+[2m12:53:34[22m [33m[404][39m /_image [2m0ms[22m
+[33m[1m12:53:34[22m [WARN] [router][39m No API Route handler exists for the method "GET" for the route "/_image".
+Found handlers: "get"
+
+[2m12:53:34[22m [33m[404][39m /_image [2m2ms[22m
+[33m[1m12:53:34[22m [WARN] [router][39m No API Route handler exists for the method "GET" for the route "/_image".
+Found handlers: "get"
+
+[2m12:53:34[22m [33m[404][39m /_image [2m0ms[22m
+[33m[1m12:53:34[22m [WARN] [router][39m No API Route handler exists for the method "GET" for the route "/_image".
+Found handlers: "get"
+
+[2m12:53:34[22m [33m[404][39m /_image [2m0ms[22m
+[33m[1m12:53:34[22m [WARN] [router][39m No API Route handler exists for the method "GET" for the route "/_image".
+Found handlers: "get"
+
+[2m12:53:34[22m [33m[404][39m /_image [2m0ms[22m
+[33m[1m12:53:34[22m [WARN] [router][39m No API Route handler exists for the method "GET" for the route "/_image".
+Found handlers: "get"
+
+[2m12:53:34[22m [33m[404][39m /_image [2m0ms[22m
+[33m[1m12:53:34[22m [WARN] [router][39m No API Route handler exists for the method "GET" for the route "/_image".
+Found handlers: "get"
+
+[2m12:53:34[22m [33m[404][39m /_image [2m0ms[22m
+[33m[1m12:53:34[22m [WARN] [router][39m No API Route handler exists for the method "GET" for the route "/_image".
+Found handlers: "get"
+
+[2m12:53:34[22m [33m[404][39m /_image [2m0ms[22m
+[2m12:54:14[22m [34m[watch][39m tailwind.config.mjs
+[2m12:54:14[22m [34m[watch][39m tailwind.config.mjs
+[2m12:54:14[22m [34m[watch][39m /src/styles/global.css
+[2m12:54:15[22m [34m[watch][39m src/pages/index.astro
+[2m12:54:15[22m [34m[watch][39m src/pages/index.astro
+[2m12:54:16[22m [34m[200][39m / [2m437ms[22m
+[33m[1m12:54:16[22m [WARN] [router][39m No API Route handler exists for the method "GET" for the route "/_image".
+Found handlers: "get"
+
+[2m12:54:16[22m [33m[404][39m /_image [2m1ms[22m
+[33m[1m12:54:16[22m [WARN] [router][39m No API Route handler exists for the method "GET" for the route "/_image".
+Found handlers: "get"
+
+[2m12:54:16[22m [33m[404][39m /_image [2m0ms[22m
+[33m[1m12:54:16[22m [WARN] [router][39m No API Route handler exists for the method "GET" for the route "/_image".
+Found handlers: "get"
+
+[2m12:54:16[22m [33m[404][39m /_image [2m0ms[22m
+[33m[1m12:54:16[22m [WARN] [router][39m No API Route handler exists for the method "GET" for the route "/_image".
+Found handlers: "get"
+
+[2m12:54:16[22m [33m[404][39m /_image [2m0ms[22m
+[33m[1m12:54:16[22m [WARN] [router][39m No API Route handler exists for the method "GET" for the route "/_image".
+Found handlers: "get"
+
+[2m12:54:16[22m [33m[404][39m /_image [2m0ms[22m
+[33m[1m12:54:16[22m [WARN] [router][39m No API Route handler exists for the method "GET" for the route "/_image".
+Found handlers: "get"
+
+[2m12:54:16[22m [33m[404][39m /_image [2m0ms[22m
+[33m[1m12:54:16[22m [WARN] [router][39m No API Route handler exists for the method "GET" for the route "/_image".
+Found handlers: "get"
+
+[2m12:54:16[22m [33m[404][39m /_image [2m1ms[22m
+[33m[1m12:54:17[22m [WARN] [router][39m No API Route handler exists for the method "GET" for the route "/_image".
+Found handlers: "get"
+
+[2m12:54:17[22m [33m[404][39m /_image [2m0ms[22m
+[33m[1m12:54:17[22m [WARN] [router][39m No API Route handler exists for the method "GET" for the route "/_image".
+Found handlers: "get"
+
+[2m12:54:17[22m [33m[404][39m /_image [2m0ms[22m
+[33m[1m12:54:17[22m [WARN] [router][39m No API Route handler exists for the method "GET" for the route "/_image".
+Found handlers: "get"
+
+[2m12:54:17[22m [33m[404][39m /_image [2m0ms[22m
+[33m[1m12:54:17[22m [WARN] [router][39m No API Route handler exists for the method "GET" for the route "/_image".
+Found handlers: "get"
+
+[2m12:54:17[22m [33m[404][39m /_image [2m0ms[22m
+[33m[1m12:54:17[22m [WARN] [router][39m No API Route handler exists for the method "GET" for the route "/_image".
+Found handlers: "get"
+
+[2m12:54:17[22m [33m[404][39m /_image [2m1ms[22m
+[33m[1m12:54:17[22m [WARN] [router][39m No API Route handler exists for the method "GET" for the route "/_image".
+Found handlers: "get"
+
+[2m12:54:17[22m [33m[404][39m /_image [2m0ms[22m
+[33m[1m12:54:17[22m [WARN] [router][39m No API Route handler exists for the method "GET" for the route "/_image".
