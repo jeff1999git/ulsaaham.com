@@ -10,33 +10,12 @@ export default {
         serif: ["'Playfair Display'", ...defaultTheme.fontFamily.serif]
       },
       colors: {
-        forest: {
-          50: "#e6f2e6",
-          100: "#c4e0c4",
-          200: "#8fc48f",
-          300: "#5aa75a",
-          400: "#328432",
-          500: "#186318",
-          600: "#0f4f0f",
-          700: "#0a3c0a",
-          800: "#063006",
-          900: "#041f04"
-        },
-        gold: {
-          50: "#fff8d9",
-          100: "#fff0b0",
-          200: "#ffe170",
-          300: "#ffd33b",
-          400: "#fecb01",
-          500: "#e6b700",
-          600: "#b89100",
-          700: "#8c6c00",
-          800: "#604a00",
-          900: "#3f2f00"
-        }
+        primary: "#023301",
+        accent: "#fecc01",
+        light: "#ffffff"
       },
       boxShadow: {
-        glow: "0 0 60px rgba(254, 203, 1, 0.28)"
+        glow: "0 0 60px rgba(254, 204, 1, 0.28)"
       },
       keyframes: {
         float: {
