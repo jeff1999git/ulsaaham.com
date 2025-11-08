@@ -1,0 +1,354 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import { Image } from "@astrojs/image/components";
+import "photoswipe/style.css";
+import HeroScene from "../components/HeroScene.jsx";
+
+const experiences = [
+  {
+    title: "Weddings & Engagements",
+    description:
+      "Curated ceremonies, immersive receptions, and unforgettable after-parties tailored to your story.",
+    icon: "💍"
+  },
+  {
+    title: "Luxury Social Affairs",
+    description:
+      "Milestone birthdays, anniversaries, and private celebrations elevated with sensory details and signature flair.",
+    icon: "🎉"
+  },
+  {
+    title: "Corporate & Brand Events",
+    description:
+      "Product launches, galas, and retreats designed to spark connection and deliver measurable impact.",
+    icon: "🏢"
+  }
+];
+
+const gallery = [
+  {
+    src: "https://images.unsplash.com/photo-1529634898388-84d3e7f6c58b?auto=format&fit=crop&w=1600&q=80",
+    thumb: "https://images.unsplash.com/photo-1529634898388-84d3e7f6c58b?auto=format&fit=crop&w=600&q=60",
+    width: 1600,
+    height: 1067,
+    alt: "Candlelit outdoor dinner table setting."
+  },
+  {
+    src: "https://images.unsplash.com/photo-1519741497674-611481863552?auto=format&fit=crop&w=1600&q=80",
+    thumb: "https://images.unsplash.com/photo-1519741497674-611481863552?auto=format&fit=crop&w=600&q=60",
+    width: 1600,
+    height: 1067,
+    alt: "Elegant wedding reception with floral centerpieces."
+  },
+  {
+    src: "https://images.unsplash.com/photo-1489515217757-5fd1be406fef?auto=format&fit=crop&w=1600&q=80",
+    thumb: "https://images.unsplash.com/photo-1489515217757-5fd1be406fef?auto=format&fit=crop&w=600&q=60",
+    width: 1600,
+    height: 1067,
+    alt: "Corporate celebration with dramatic lighting."
+  },
+  {
+    src: "https://images.unsplash.com/photo-1527529482837-4698179dc6ce?auto=format&fit=crop&w=1600&q=80",
+    thumb: "https://images.unsplash.com/photo-1527529482837-4698179dc6ce?auto=format&fit=crop&w=600&q=60",
+    width: 1600,
+    height: 1067,
+    alt: "Dessert table with bespoke cake and pastries."
+  },
+  {
+    src: "https://images.unsplash.com/photo-1445452916036-9022dfd33aa8?auto=format&fit=crop&w=1600&q=80",
+    thumb: "https://images.unsplash.com/photo-1445452916036-9022dfd33aa8?auto=format&fit=crop&w=600&q=60",
+    width: 1600,
+    height: 1067,
+    alt: "Live band performing on stage for guests."
+  },
+  {
+    src: "https://images.unsplash.com/photo-1529158062015-cad636e69505?auto=format&fit=crop&w=1600&q=80",
+    thumb: "https://images.unsplash.com/photo-1529158062015-cad636e69505?auto=format&fit=crop&w=600&q=60",
+    width: 1600,
+    height: 1067,
+    alt: "Luxury rooftop cocktail hour at sunset."
+  }
+];
+
+const testimonials = [
+  {
+    quote:
+      "Far Fusion transformed our rooftop into a dreamscape. Every moment carried intention, from the fragrance in the air to the way guests were guided through the evening.",
+    name: "Anisha & Dev",
+    role: "Destination Wedding, Goa 2025"
+  },
+  {
+    quote:
+      "Our brand launch needed to be bold, fresh, and memorable—Far Fusion delivered a multi-sensory experience that had partners talking for weeks.",
+    name: "Rohit Sharma",
+    role: "VP Marketing, Luma Drinks"
+  }
+];
+---
+
+<BaseLayout title="Far Fusion Events | Immersive Celebrations Crafted to Perfection">
+  <section class="hero-scene-wrapper bg-forest-900 text-white">
+    <HeroScene client:load />
+    <div class="pointer-events-none absolute inset-0 overflow-hidden">
+      <div class="absolute inset-0 bg-[radial-gradient(circle_at_top,_rgba(8,64,8,0.45),_rgba(2,51,1,0.82))] bg-[length:200%_200%] animate-gradient-x"></div>
+      <div class="absolute inset-x-0 top-0 h-72 bg-gradient-to-b from-forest-600/70 via-forest-600/40 to-transparent blur-3xl animate-pulse-soft"></div>
+      <div class="absolute inset-x-0 bottom-0 h-72 bg-gradient-to-t from-forest-900 via-forest-900/80 to-transparent"></div>
+      <div class="absolute left-1/2 top-1/2 h-96 w-96 -translate-x-1/2 -translate-y-1/2 rounded-full bg-gold-400/30 blur-[140px] animate-float"></div>
+    </div>
+    <div class="relative z-10 mx-auto flex max-w-6xl flex-col gap-12 px-6 py-28 lg:flex-row lg:items-center lg:py-32">
+      <div class="flex-1 space-y-6 animate-fade-up animation-delay-100">
+        <p class="inline-flex items-center rounded-full border border-white/20 bg-white/5 px-4 py-1 text-sm font-semibold uppercase tracking-[0.3em] text-white/80 transition hover:border-white/40 hover:bg-white/10">
+          Celebrations & Experiences
+        </p>
+        <h1 class="font-serif text-4xl leading-tight text-white shadow-lg drop-shadow lg:text-6xl">
+          Crafting immersive celebrations<br />that live beyond the night.
+        </h1>
+        <p class="max-w-xl font-medium text-white/80 lg:text-lg">
+          Far Fusion curates boundary-pushing events for couples, brands, and tastemakers across India. We choreograph every sensory detail so your guests feel transported, engaged, and celebrated.
+        </p>
+        <div class="flex flex-wrap gap-4">
+          <a
+            href="#consult"
+            class="inline-flex items-center justify-center rounded-full bg-gold-400 px-7 py-3 font-semibold text-forest-900 shadow-glow transition-transform duration-300 hover:-translate-y-1 hover:scale-105 hover:bg-gold-300"
+          >
+            Plan My Celebration
+          </a>
+          <a
+            href="#gallery"
+            class="inline-flex items-center justify-center rounded-full border border-white/30 px-7 py-3 font-semibold text-white/80 transition duration-300 hover:-translate-y-1 hover:border-white hover:text-white"
+          >
+            View Signature Moments
+          </a>
+        </div>
+        <dl class="grid max-w-lg grid-cols-2 gap-6 text-white/70 animate-fade-up animation-delay-300">
+          <div>
+            <dt class="text-sm uppercase tracking-wide text-white/60">Events produced</dt>
+            <dd class="text-3xl font-semibold text-white">120+</dd>
+          </div>
+          <div>
+            <dt class="text-sm uppercase tracking-wide text-white/60">Cities served</dt>
+            <dd class="text-3xl font-semibold text-white">14</dd>
+          </div>
+        </dl>
+      </div>
+      <div class="flex-1 animate-fade-up animation-delay-200">
+        <div class="group relative h-full rounded-3xl border border-white/10 bg-white/5 p-4 backdrop-blur transition duration-500 hover:border-white/30 hover:bg-white/10">
+          <div class="relative overflow-hidden rounded-2xl">
+            <Image
+              src="https://images.unsplash.com/photo-1489515217757-5fd1be406fef?auto=format&fit=crop&w=1400&q=80"
+              alt="Immersive light-filled event dance floor."
+              width={980}
+              height={640}
+              class="h-full w-full object-cover scale-105 transition duration-[2500ms] group-hover:scale-110"
+              format="webp"
+            />
+            <div class="absolute inset-0 bg-gradient-to-tr from-forest-900/60 via-transparent to-gold-400/20"></div>
+            <div class="absolute bottom-6 left-6 right-6 rounded-2xl bg-white/15 p-6 backdrop-blur">
+              <p class="text-sm font-semibold uppercase tracking-[0.3em] text-white/70">Signature Scene</p>
+              <p class="mt-3 text-lg font-medium text-white">
+                "We wanted a space that unfolded like a dream. Far Fusion orchestrated a rave-meets-royalty experience that our guests are still talking about."
+              </p>
+              <p class="mt-4 text-sm font-semibold text-white">Nirali + Vikram</p>
+              <p class="text-xs text-white/70">Sufi Disco Reception, Jaipur</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="bg-white py-24" id="experiences">
+    <div class="mx-auto max-w-6xl px-6">
+      <div class="mx-auto max-w-3xl text-center">
+        <h2 class="font-serif text-3xl text-slate-900 sm:text-4xl">Crafted for your most meaningful moments</h2>
+        <p class="mt-4 text-lg text-slate-600">
+          Every celebration is built around your story, your guests, and the emotions you want them to carry home.
+        </p>
+      </div>
+      <div class="mt-14 grid gap-8 md:grid-cols-3">
+        {experiences.map((experience, index) => (
+          <article
+            style={`animation-delay: ${(index * 0.15 + 0.1).toFixed(2)}s`}
+            class="group flex h-full animate-fade-up flex-col rounded-3xl border border-slate-200 bg-white/90 p-8 shadow-sm transition-all duration-500 hover:-translate-y-3 hover:border-gold-200 hover:bg-white hover:shadow-2xl"
+          >
+            <span class="flex h-12 w-12 items-center justify-center rounded-full bg-gold-50 text-2xl transition group-hover:scale-110 group-hover:bg-gold-100">
+              {experience.icon}
+            </span>
+            <h3 class="mt-6 font-serif text-2xl text-slate-900">{experience.title}</h3>
+            <p class="mt-3 text-base text-slate-600">{experience.description}</p>
+            <span class="mt-auto pt-6 text-sm font-semibold uppercase tracking-[0.2em] text-forest-500 transition group-hover:text-forest-400">
+              Discover More
+            </span>
+          </article>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <section class="relative bg-forest-900 py-24 text-white">
+    <div class="absolute inset-0 bg-[radial-gradient(circle_at_top,_rgba(2,51,1,0.35),_transparent)]"></div>
+    <div class="relative mx-auto max-w-6xl px-6 text-center">
+      <p class="animate-fade-up text-sm uppercase tracking-[0.4em] text-gold-200">Our Philosophy</p>
+      <h2 class="animate-fade-up animation-delay-200 mt-4 font-serif text-3xl sm:text-4xl">Immersion, emotion, intention.</h2>
+      <p class="animate-fade-up animation-delay-300 mt-4 text-lg text-white/70">
+        We pair imaginative design with flawless production to craft journeys that feel effortless. Moodboards become moments, budgets remain protected, and our team holds the reins from concept to encore.
+      </p>
+      <dl class="mt-12 grid gap-8 sm:grid-cols-3">
+        <div
+          style="animation-delay: 0.15s"
+          class="animate-fade-up rounded-3xl border border-white/10 bg-white/5 p-6 backdrop-blur transition hover:-translate-y-2 hover:border-white/30 hover:bg-white/10"
+        >
+          <dt class="text-sm uppercase tracking-wide text-gold-100">01 / Discovery</dt>
+          <dd class="mt-3 text-base text-white/80">Immersive consultation, mood exploration, and experience mapping.</dd>
+        </div>
+        <div
+          style="animation-delay: 0.3s"
+          class="animate-fade-up rounded-3xl border border-white/10 bg-white/5 p-6 backdrop-blur transition hover:-translate-y-2 hover:border-white/30 hover:bg-white/10"
+        >
+          <dt class="text-sm uppercase tracking-wide text-gold-100">02 / Design</dt>
+          <dd class="mt-3 text-base text-white/80">Narrative-led design concepts, spatial planning, talent sourcing, and tech choreography.</dd>
+        </div>
+        <div
+          style="animation-delay: 0.45s"
+          class="animate-fade-up rounded-3xl border border-white/10 bg-white/5 p-6 backdrop-blur transition hover:-translate-y-2 hover:border-white/30 hover:bg-white/10"
+        >
+          <dt class="text-sm uppercase tracking-wide text-gold-100">03 / Production</dt>
+          <dd class="mt-3 text-base text-white/80">On-site direction, guest pathing, run-of-show, and post-event storytelling assets.</dd>
+        </div>
+      </dl>
+    </div>
+  </section>
+
+  <section class="bg-white py-24" id="gallery">
+    <div class="mx-auto max-w-6xl px-6">
+      <div class="flex flex-col gap-8 md:flex-row md:items-end md:justify-between">
+        <div>
+          <h2 class="font-serif text-3xl text-slate-900 sm:text-4xl">Signature moments</h2>
+          <p class="mt-4 max-w-xl text-lg text-slate-600">
+            A peek into the kaleidoscope of celebrations curated with our clients. Tap to step inside each story.
+          </p>
+        </div>
+        <a
+          href="#consult"
+          class="inline-flex items-center rounded-full border border-slate-300 px-6 py-3 text-sm font-semibold uppercase tracking-[0.3em] text-slate-700 transition hover:border-forest-400 hover:text-forest-400"
+        >
+          Build My Vision
+        </a>
+      </div>
+      <div id="event-gallery" class="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+        {gallery.map((image, index) => (
+          <a
+            href={image.src}
+            data-pswp-width={image.width}
+            data-pswp-height={image.height}
+            target="_blank"
+            rel="noreferrer"
+            style={`animation-delay: ${(index * 0.1 + 0.2).toFixed(2)}s`}
+            class="group relative block overflow-hidden rounded-3xl ring-1 ring-transparent transition-all duration-500 hover:-translate-y-2 hover:ring-gold-200 animate-fade-up"
+          >
+            <div class="relative aspect-[4/3] overflow-hidden">
+              <Image
+                src={image.thumb}
+                alt={image.alt}
+                width={600}
+                height={450}
+                class="h-full w-full object-cover transition duration-700 group-hover:scale-110"
+                format="webp"
+              />
+              <div class="pointer-events-none absolute inset-0 bg-gradient-to-tr from-slate-900/20 via-transparent to-gold-400/25 opacity-0 transition-opacity duration-500 group-hover:opacity-100"></div>
+              <div class="pointer-events-none absolute inset-0 -translate-x-full bg-gradient-to-r from-transparent via-white/30 to-transparent opacity-0 transition duration-700 group-hover:translate-x-full group-hover:opacity-100"></div>
+            </div>
+            <p class="absolute bottom-4 left-4 rounded-full bg-white/90 px-4 py-2 text-xs font-semibold uppercase tracking-[0.3em] text-slate-700 shadow">
+              View Story
+            </p>
+          </a>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <section class="bg-slate-50 py-24" id="testimonials">
+    <div class="mx-auto max-w-6xl px-6">
+      <div class="mx-auto max-w-2xl text-center">
+        <h2 class="font-serif text-3xl text-slate-900 sm:text-4xl">Stories we still replay</h2>
+        <p class="mt-4 text-lg text-slate-600">Intimate notes from the people who trusted us with unforgettable nights.</p>
+      </div>
+      <div class="mt-12 grid gap-8 md:grid-cols-2">
+        {testimonials.map((testimonial, index) => (
+          <blockquote
+            style={`animation-delay: ${(index * 0.15 + 0.2).toFixed(2)}s`}
+            class="h-full animate-fade-up rounded-3xl border border-white bg-white p-8 shadow-lg shadow-gold-400/10 transition-all duration-500 hover:-translate-y-2 hover:border-gold-100 hover:shadow-2xl"
+          >
+            <p class="text-lg text-slate-700">“{testimonial.quote}”</p>
+            <footer class="mt-6 text-slate-500">
+              <p class="text-base font-semibold text-slate-900">{testimonial.name}</p>
+              <p class="text-sm uppercase tracking-[0.25em]">{testimonial.role}</p>
+            </footer>
+          </blockquote>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <section class="relative isolate overflow-hidden bg-forest-700 py-24 text-white" id="consult">
+    <div class="absolute inset-0">
+      <div class="absolute inset-0 bg-[conic-gradient(from_45deg,_rgba(255,255,255,0.12),_rgba(2,51,1,0.32),_rgba(254,203,1,0.22))] bg-[length:200%_200%] opacity-70 animate-gradient-x"></div>
+      <div class="absolute inset-x-0 bottom-0 h-72 bg-gradient-to-t from-forest-900/80 via-forest-700/60 to-transparent"></div>
+      <div class="absolute right-10 top-10 h-48 w-48 rounded-full bg-gold-300/40 blur-3xl"></div>
+    </div>
+    <div class="relative mx-auto max-w-5xl px-6 text-center">
+      <p class="animate-fade-up text-sm uppercase tracking-[0.4em] text-white/70">Your Celebration, Elevated</p>
+      <h2 class="animate-fade-up animation-delay-200 mt-4 font-serif text-3xl sm:text-4xl">
+        Ready to choreograph a celebration<br />that feels like a cinematic experience?
+      </h2>
+      <p class="animate-fade-up animation-delay-300 mt-4 text-lg text-white/80">
+        We guide you from inspiration to applause. Share your vision, and our creative producers will craft a bespoke blueprint within 72 hours.
+      </p>
+      <div class="mt-10 flex flex-col items-center justify-center gap-4 sm:flex-row sm:gap-6">
+        <a
+          href="mailto:hello@farfusion.events"
+          class="inline-flex items-center justify-center rounded-full bg-gold-400 px-8 py-3 text-base font-semibold text-forest-900 shadow-lg transition-transform duration-300 hover:-translate-y-1 hover:scale-[1.04] hover:bg-gold-300"
+        >
+          hello@farfusion.events
+        </a>
+        <a
+          href="https://wa.me/919999999999"
+          class="inline-flex items-center justify-center rounded-full border border-white/50 px-8 py-3 text-base font-semibold text-white/90 transition-transform duration-300 hover:-translate-y-1 hover:border-white hover:text-white"
+        >
+          Schedule a WhatsApp consult →
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <footer class="bg-slate-950 py-12 text-white">
+    <div class="mx-auto flex max-w-6xl flex-col gap-8 px-6 sm:flex-row sm:items-center sm:justify-between">
+      <div>
+        <p class="text-sm uppercase tracking-[0.4em] text-white/50">Far Fusion Events</p>
+        <p class="mt-2 text-sm text-white/70">Immersive celebrations & experiential storytelling across India and beyond.</p>
+      </div>
+      <div class="flex gap-6 text-sm text-white/70">
+        <a href="https://instagram.com" target="_blank" rel="noreferrer" class="transition hover:text-white">Instagram</a>
+        <a href="https://www.youtube.com" target="_blank" rel="noreferrer" class="transition hover:text-white">YouTube</a>
+        <a href="mailto:hello@farfusion.events" class="transition hover:text-white">Email</a>
+      </div>
+    </div>
+    <div class="mt-10 border-t border-white/10 pt-6 text-center text-xs text-white/40">
+      © {new Date().getFullYear()} Far Fusion Collective. Crafted with intention.
+    </div>
+  </footer>
+
+  <script type="module">
+    import PhotoSwipeLightbox from "photoswipe/lightbox";
+    import "photoswipe/style.css";
+
+    const lightbox = new PhotoSwipeLightbox({
+      gallery: "#event-gallery",
+      children: "a",
+      pswpModule: () => import("photoswipe")
+    });
+
+    lightbox.init();
+  </script>
+</BaseLayout>
+
