@@ -1,7 +1,17 @@
 $ astro dev
-[33m[1m17:11:53[22m [WARN][39m The injected route "/_image" by @astrojs/image specifies the entry point with the "entryPoint" property. This property is deprecated, please use "entrypoint" instead.
-[2m17:11:54[22m [34m[types][39m Generated [2m1ms[22m
-[2m17:11:54[22m [34m[content][39m Syncing content
-[2m17:11:54[22m [34m[content][39m Synced content
-[2m17:11:54[22m [34m[vite][39m Re-optimizing dependencies because vite config has changed
+[33m[1m09:10:32[22m [WARN][39m The injected route "/_image" by @astrojs/image specifies the entry point with the "entryPoint" property. This property is deprecated, please use "entrypoint" instead.
+[2m09:10:32[22m [34m[types][39m Generated [2m1ms[22m
+[2m09:10:32[22m [34m[content][39m Syncing content
+[2m09:10:32[22m [34m[content][39m Synced content
 
+[42m[1m astro [22m[49m [32mv5.15.4[39m [2mready in[22m 1238 [2mms[22m
+
+[2m┃[22m Local    [36mhttp://localhost:4321/[39m
+[2m┃[22m Network  [2muse --host to expose[22m
+
+[2m09:10:32[22m [32mwatching for file changes...[39m
+[2m09:10:37[22m [34m[vite][39m [32m✨ optimized dependencies changed. reloading[39m
+[2m09:10:38[22m [34m[200][39m / [2m193ms[22m
+[2m09:11:38[22m [34m[watch][39m /src/styles/global.css
+[2m09:11:40[22m [34m[200][39m / [2m436ms[22m
+[2m09:11:51[22m [34m[200][39m / [2m9ms[22m

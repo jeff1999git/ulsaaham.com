@@ -17,8 +17,8 @@ import {
   SRGBColorSpace
 } from "three";
 
-const DOT_PRIMARY = new Color("#ff00ff");
-const DOT_SECONDARY = new Color("#00ffff");
+const DOT_PRIMARY = new Color("#fecc01");
+const DOT_SECONDARY = new Color("#0aa35c");
 
 function createDotTexture() {
   const size = 64;
@@ -54,7 +54,7 @@ const HeroScene = () => {
     }
 
     const scene = new Scene();
-    scene.background = new Color("#020617");
+    scene.background = new Color("#032407");
 
     const camera = new PerspectiveCamera(60, 1, 0.1, 100);
     camera.position.set(0, 0, 2.5);
