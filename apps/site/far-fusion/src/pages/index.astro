@@ -1,8 +1,6 @@
 ---
 import BaseLayout from "../layouts/BaseLayout.astro";
-import { Image } from "@astrojs/image/components";
 import HeroScene from "../components/HeroScene.jsx";
-import "photoswipe/style.css";
 
 const experiences = [
   {
@@ -93,7 +91,6 @@ const clientLogos = [
       muted
       loop
       playsinline
-      poster="/assets/bg_video.mp4"
     ></video>
     <div class="hero-video__overlay"></div>
     <nav class="hero-video__menu">
@@ -205,23 +202,26 @@ const clientLogos = [
         </a>
       </div>
       <div id="event-gallery" class="mt-12 grid gap-6 md:grid-cols-2 lg:grid-cols-4">
-        {gallery.map((image, index) => (
-          <div
+        {gallery.map((item, index) => (
+          <a
+            href={item.src}
+            data-pswp-width={item.width}
+            data-pswp-height={item.height}
             style={`animation-delay: ${(index * 0.1 + 0.2).toFixed(2)}s`}
             class="gallery-card group animate-fade-up overflow-hidden transition-all duration-500 hover:-translate-y-2"
           >
             <img
-              src={image.thumb}
-              alt={image.alt}
-              width={image.width}
-              height={image.height}
+              src={item.thumb}
+              alt={item.alt}
+              width={item.width}
+              height={item.height}
               loading="lazy"
               decoding="async"
               class="h-full w-full object-cover transition duration-700 group-hover:scale-105"
             />
             <div class="pointer-events-none absolute inset-0 bg-[radial-gradient(circle,_rgba(254,204,1,0.22)_0%,_rgba(2,51,1,0.6)_100%)] opacity-0 transition-opacity duration-500 group-hover:opacity-100"></div>
             <div class="pointer-events-none absolute inset-0 -translate-x-full bg-gradient-to-r from-transparent via-light/30 to-transparent opacity-0 transition duration-700 group-hover:translate-x-full group-hover:opacity-100"></div>
-          </div>
+          </a>
         ))}
       </div>
     </div>

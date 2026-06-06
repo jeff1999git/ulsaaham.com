@@ -21,7 +21,7 @@ const DOT_PRIMARY = new Color("#fecc01");
 const DOT_SECONDARY = new Color("#0aa35c");
 
 function createDotTexture() {
-  const size = 64;
+  const size = 32;
   const canvas = document.createElement("canvas");
   canvas.width = size;
   canvas.height = size;
@@ -60,11 +60,11 @@ const HeroScene = () => {
     camera.position.set(0, 0, 2.5);
 
     const renderer = new WebGLRenderer({
-      antialias: true,
+      antialias: false,
       alpha: false,
-      powerPreference: "high-performance"
+      powerPreference: "low-power"
     });
-    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 1.8));
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 1));
     renderer.setSize(container.clientWidth, container.clientHeight);
     renderer.outputColorSpace = SRGBColorSpace;
     container.appendChild(renderer.domElement);
@@ -75,7 +75,7 @@ const HeroScene = () => {
       container.style.opacity = "1";
     });
 
-    const particlesCount = 900;
+    const particlesCount = 450;
     const geometry = new BufferGeometry();
     const positions = new Float32Array(particlesCount * 3);
     const colors = new Float32Array(particlesCount * 3);

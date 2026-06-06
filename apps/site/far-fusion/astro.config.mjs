@@ -1,31 +1,16 @@
 import { defineConfig } from "astro/config";
 import react from "@astrojs/react";
 import tailwind from "@astrojs/tailwind";
-import image from "@astrojs/image";
 
 export default defineConfig({
   integrations: [
     react(),
-    tailwind({
-      applyBaseStyles: false
-    }),
-    image()
+    tailwind({ applyBaseStyles: false }),
   ],
   image: {
-    service: {
-      entrypoint: "@astrojs/image/sharp"
-    },
     remotePatterns: [
-      {
-        protocol: "https",
-        hostname: "images.unsplash.com",
-        pathname: "/**"
-      },
-      {
-        protocol: "https",
-        hostname: "res.cloudinary.com",
-        pathname: "/**"
-      }
-    ]
-  }
+      { protocol: "https", hostname: "images.unsplash.com" },
+      { protocol: "https", hostname: "res.cloudinary.com" },
+    ],
+  },
 });
