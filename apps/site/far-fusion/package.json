@@ -9,16 +9,19 @@
     "astro": "astro"
   },
   "dependencies": {
-    "@astrojs/image": "^0.18.0",
     "@astrojs/react": "^4.0.5",
     "@astrojs/tailwind": "^5.1.2",
+    "@astrojs/vercel": "^8.0.0",
     "astro": "^5.15.4",
+    "nodemailer": "^6.9.16",
     "photoswipe": "^5.4.4",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
+    "react-qr-code": "^2.0.21",
     "three": "^0.169.0"
   },
   "devDependencies": {
+    "@types/nodemailer": "^6.4.17",
     "autoprefixer": "^10.4.20",
     "tailwindcss": "^3.4.14"
   }

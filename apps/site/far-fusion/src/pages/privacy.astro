@@ -1,0 +1,89 @@
+﻿---
+export const prerender = true;
+import BaseLayout from "../layouts/BaseLayout.astro";
+---
+
+<BaseLayout title="Privacy Policy — Ulsaham Entertainments" description="Privacy policy for Ulsaham Entertainments events and ticketing platform.">
+  <div class="min-h-screen bg-primary text-light">
+
+    <header class="page-topbar">
+      <div class="mx-auto max-w-6xl px-6 flex items-center justify-between">
+        <a href="/" class="page-topbar__brand"><img src="/brand_logo.avif" alt="Ulsaham" class="topbar-logo" /></a>
+        <div class="flex items-center gap-5">
+          <a href="/events" class="page-topbar__link">Events</a>
+          <a id="topbar-auth" href="/login" class="topbar-avatar" aria-label="Login"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg></a>
+        </div>
+      </div>
+    </header>
+    <script>
+      const u = JSON.parse(localStorage.getItem("ulsaham_user") || "null");
+      const el = document.getElementById("topbar-auth");
+      if (el && u) { el.href = "/account"; el.setAttribute("aria-label", "My Account"); el.innerHTML = `<span class="topbar-avatar__letter">${(u.name||"?")[0].toUpperCase()}</span>`; }
+    </script>
+
+    <div class="mx-auto max-w-3xl px-6 pt-20 pb-24">
+      <h1 class="section-title text-3xl mb-2">Privacy Policy</h1>
+      <p class="section-subtitle mb-12">Last updated: June 2025</p>
+
+      <div class="space-y-10 text-light/80 leading-relaxed">
+
+        <section class="space-y-4">
+          <h2 class="text-lg font-semibold uppercase tracking-[0.2em] text-accent">1. Information We Collect</h2>
+          <p>When you register for an event or create an account on our platform, we collect personal information such as your name, email address, and phone number. We also collect ticket purchase details and payment confirmation records.</p>
+          <p>We do not store full payment card details. Payments are processed securely through our payment partners.</p>
+        </section>
+
+        <section class="space-y-4">
+          <h2 class="text-lg font-semibold uppercase tracking-[0.2em] text-accent">2. How We Use Your Information</h2>
+          <p>We use your information to:</p>
+          <ul class="list-disc list-inside space-y-2 ml-2">
+            <li>Process and confirm your event registrations</li>
+            <li>Send you ticket confirmations and event updates</li>
+            <li>Manage your account and provide customer support</li>
+            <li>Improve our platform and event experiences</li>
+          </ul>
+          <p>We do not sell or rent your personal information to third parties.</p>
+        </section>
+
+        <section class="space-y-4">
+          <h2 class="text-lg font-semibold uppercase tracking-[0.2em] text-accent">3. Data Storage</h2>
+          <p>Your data is stored securely on our servers. We take reasonable measures to protect your information from unauthorized access, disclosure, or loss. Account data is retained for as long as your account is active or as required by law.</p>
+        </section>
+
+        <section class="space-y-4">
+          <h2 class="text-lg font-semibold uppercase tracking-[0.2em] text-accent">4. Cookies</h2>
+          <p>Our website uses local storage to keep you logged in across sessions. We do not use tracking cookies for advertising purposes.</p>
+        </section>
+
+        <section class="space-y-4">
+          <h2 class="text-lg font-semibold uppercase tracking-[0.2em] text-accent">5. Third-Party Services</h2>
+          <p>We use trusted third-party services for payment processing and media hosting. These services have their own privacy policies and we encourage you to review them.</p>
+        </section>
+
+        <section class="space-y-4">
+          <h2 class="text-lg font-semibold uppercase tracking-[0.2em] text-accent">6. Your Rights</h2>
+          <p>You have the right to access, correct, or request deletion of your personal data. To exercise these rights, contact us at <a href="mailto:ulsaham1@gmail.com" class="text-accent hover:underline">ulsaham1@gmail.com</a>.</p>
+        </section>
+
+        <section class="space-y-4">
+          <h2 class="text-lg font-semibold uppercase tracking-[0.2em] text-accent">7. Changes to This Policy</h2>
+          <p>We may update this policy from time to time. Any changes will be posted on this page with an updated date. Continued use of our platform after changes constitutes acceptance of the revised policy.</p>
+        </section>
+
+        <section class="space-y-4">
+          <h2 class="text-lg font-semibold uppercase tracking-[0.2em] text-accent">8. Contact</h2>
+          <p>If you have any questions about this Privacy Policy, reach us at:</p>
+          <p><a href="mailto:ulsaham1@gmail.com" class="text-accent hover:underline">ulsaham1@gmail.com</a></p>
+        </section>
+
+      </div>
+    </div>
+
+    <footer class="bg-primary py-8 border-t border-light/10 text-center text-sm text-light/50">
+      <a href="/" class="hover:text-accent transition">← Back to Home</a>
+      <span class="mx-4">·</span>
+      <a href="/terms" class="hover:text-accent transition">Terms &amp; Conditions</a>
+    </footer>
+
+  </div>
+</BaseLayout>

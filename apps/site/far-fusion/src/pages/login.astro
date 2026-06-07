@@ -1,0 +1,26 @@
+﻿---
+export const prerender = true;
+import BaseLayout from "../layouts/BaseLayout.astro";
+import AuthForm from "../components/AuthForm.jsx";
+---
+
+<BaseLayout title="Login — Ulsaham" description="Sign in or create your Ulsaham account.">
+  <div class="min-h-screen bg-primary text-light">
+
+    <header class="page-topbar">
+      <div class="mx-auto max-w-6xl px-6 flex items-center justify-between">
+        <a href="/" class="page-topbar__brand"><img src="/brand_logo.avif" alt="Ulsaham" class="topbar-logo" /></a>
+        <a href="/events" class="page-topbar__link">Events</a>
+      </div>
+    </header>
+
+    <div class="mx-auto max-w-sm px-6 pt-20 pb-24">
+      <h1 class="section-title text-3xl mb-2">Sign In</h1>
+      <p class="section-subtitle mb-10">
+        Access your tickets and register for events.
+      </p>
+      <AuthForm client:load />
+    </div>
+
+  </div>
+</BaseLayout>

@@ -1,34 +1,46 @@
 $ astro build
-[2m17:14:33[22m [34m[vite][39m Re-optimizing dependencies because vite config has changed
-[2m17:14:35[22m [34m[content][39m Syncing content
-[2m17:14:35[22m [34m[content][39m Synced content
-[2m17:14:35[22m [34m[types][39m Generated [2m2.28s[22m
-[2m17:14:35[22m [34m[build][39m output: [34m"static"[39m
-[2m17:14:35[22m [34m[build][39m mode: [34m"static"[39m
-[2m17:14:35[22m [34m[build][39m directory: [34mF:\Ulsaaham\webapp\web-app\apps\site\far-fusion\dist\[39m
-[2m17:14:35[22m [34m[build][39m Collecting build info...
-[2m17:14:35[22m [34m[build][39m [32m✓ Completed in 2.75s.[39m
-[2m17:14:35[22m [34m[build][39m Building static entrypoints...
-[2m17:14:41[22m [34m[vite][39m [32m✓ built in 5.17s[39m
-[2m17:14:41[22m [34m[build][39m [32m✓ Completed in 5.48s.[39m
+[baseline-browser-mapping] The data in this module is over two months old.  To ensure accurate Baseline data, please update: `npm i baseline-browser-mapping@latest -D`
+[2m20:36:08[22m [34m[content][39m Syncing content
+[2m20:36:08[22m [34m[content][39m Synced content
+[2m20:36:08[22m [34m[types][39m Generated [2m52ms[22m
+[2m20:36:08[22m [34m[build][39m output: [34m"static"[39m
+[2m20:36:08[22m [34m[build][39m mode: [34m"static"[39m
+[2m20:36:08[22m [34m[build][39m directory: [34mF:\Ulsaaham\webapp\web-app\apps\site\far-fusion\dist\[39m
+[2m20:36:08[22m [34m[build][39m Collecting build info...
+[2m20:36:08[22m [34m[build][39m [32m✓ Completed in 169ms.[39m
+[2m20:36:08[22m [34m[build][39m Building static entrypoints...
+Browserslist: browsers data (caniuse-lite) is 7 months old. Please run:
+  npx update-browserslist-db@latest
+  Why you should do it regularly: https://github.com/browserslist/update-db#readme
+[33m[1m20:36:10[22m [WARN] [vite][39m [33m"isRemoteAllowed", "matchHostname", "matchPathname", "matchPort" and "matchProtocol" are imported from external module "@astrojs/internal-helpers/remote" but never used in "../../../node_modules/.bun/astro@5.15.4+1fb4c65d43e298b9/node_modules/astro/dist/assets/utils/remotePattern.js".[39m
+[2m20:36:10[22m [34m[vite][39m [32m✓ built in 1.53s[39m
+[2m20:36:10[22m [34m[build][39m [32m✓ Completed in 1.60s.[39m
 
 [42m[30m building client (vite) [39m[49m
-[2m17:14:41[22m [34m[vite][39m transforming...
-[2m17:14:42[22m [34m[vite][39m [32m✓[39m 21 modules transformed.
-[2m17:14:42[22m [34m[vite][39m rendering chunks...
-[2m17:14:42[22m [34m[vite][39m computing gzip size...
-[2m17:14:42[22m [34m[vite][39m [2mdist/[22m[36m_astro/client.CCqJHTmc.js  [39m[1m[2m194.63 kB[22m[1m[22m[2m │ gzip: 60.99 kB[22m
-[2m17:14:42[22m [34m[vite][39m [32m✓ built in 1.36s[39m
+[2m20:36:10[22m [34m[vite][39m transforming...
+[2m20:36:11[22m [34m[vite][39m [32m✓[39m 38 modules transformed.
+[2m20:36:11[22m [34m[vite][39m rendering chunks...
+[2m20:36:11[22m [34m[vite][39m computing gzip size...
+[2m20:36:12[22m [34m[vite][39m [2mdist/[22m[36m_astro/jsx-runtime.D_zvdyIk.js    [39m[1m[2m  0.73 kB[22m[1m[22m[2m │ gzip:   0.46 kB[22m
+[2m20:36:12[22m [34m[vite][39m [2mdist/[22m[36m_astro/api.dkR8Bm1V.js            [39m[1m[2m  1.16 kB[22m[1m[22m[2m │ gzip:   0.53 kB[22m
+[2m20:36:12[22m [34m[vite][39m [2mdist/[22m[36m_astro/TicketChecker.CNmd1oow.js  [39m[1m[2m  1.97 kB[22m[1m[22m[2m │ gzip:   0.85 kB[22m
+[2m20:36:12[22m [34m[vite][39m [2mdist/[22m[36m_astro/EventsList.CbKKHVKG.js     [39m[1m[2m  3.31 kB[22m[1m[22m[2m │ gzip:   1.36 kB[22m
+[2m20:36:12[22m [34m[vite][39m [2mdist/[22m[36m_astro/EventDetail.CR4Eeqaa.js    [39m[1m[2m  6.70 kB[22m[1m[22m[2m │ gzip:   2.22 kB[22m
+[2m20:36:12[22m [34m[vite][39m [2mdist/[22m[36m_astro/index.Cd_vQiNd.js          [39m[1m[2m  7.85 kB[22m[1m[22m[2m │ gzip:   3.05 kB[22m
+[2m20:36:12[22m [34m[vite][39m [2mdist/[22m[36m_astro/client.BLUn-lwI.js         [39m[1m[2m186.62 kB[22m[1m[22m[2m │ gzip:  58.54 kB[22m
+[2m20:36:12[22m [34m[vite][39m [2mdist/[22m[36m_astro/HeroScene.BcASQJY4.js      [39m[1m[2m467.01 kB[22m[1m[22m[2m │ gzip: 118.34 kB[22m
+[2m20:36:12[22m [34m[vite][39m [32m✓ built in 1.52s[39m
 
 [42m[30m generating static routes [39m[49m
-[2m17:14:42[22m [32m▶[39m src/pages/index.astro
-[2m17:14:42[22m   [34m└─[39m [2m/index.html[22m [2m(+22ms)[22m 
-[2m17:14:42[22m [32m✓ Completed in 71ms.
+[2m20:36:12[22m [32m▶[39m src/pages/events/detail.astro
+[2m20:36:12[22m   [34m└─[39m [2m/events/detail/index.html[22m [2m(+34ms)[22m 
+[2m20:36:12[22m [32m▶[39m src/pages/events/index.astro
+[2m20:36:12[22m   [34m└─[39m [2m/events/index.html[22m [2m(+6ms)[22m 
+[2m20:36:12[22m [32m▶[39m src/pages/ticket.astro
+[2m20:36:12[22m   [34m└─[39m [2m/ticket/index.html[22m [2m(+6ms)[22m 
+[2m20:36:12[22m [32m▶[39m src/pages/index.astro
+[2m20:36:12[22m   [34m└─[39m [2m/index.html[22m [2m(+6ms)[22m 
+[2m20:36:12[22m [32m✓ Completed in 121ms.
 [39m
- optimizing 7 images in batches of 8 
-05:14:43 PM [@astrojs/image] "https://images.unsplash.com/photo-1529634898388-84d3e7f6c58b?auto=format&fit=crop&w=600&q=60" image could not be fetched
-05:14:43 PM [@astrojs/image] "https://images.unsplash.com/photo-1529158062015-cad636e69505?auto=format&fit=crop&w=600&q=60" image could not be fetched
-Completed in 0.95s.
-
-[2m17:14:43[22m [34m[build][39m 1 page(s) built in [1m10.77s[22m
-[2m17:14:43[22m [34m[build][39m [1mComplete![22m
+[2m20:36:12[22m [34m[build][39m 4 page(s) built in [1m3.43s[22m
+[2m20:36:12[22m [34m[build][39m [1mComplete![22m

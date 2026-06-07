@@ -1,17 +1,390 @@
 $ astro dev
-[33m[1m09:10:32[22m [WARN][39m The injected route "/_image" by @astrojs/image specifies the entry point with the "entryPoint" property. This property is deprecated, please use "entrypoint" instead.
-[2m09:10:32[22m [34m[types][39m Generated [2m1ms[22m
-[2m09:10:32[22m [34m[content][39m Syncing content
-[2m09:10:32[22m [34m[content][39m Synced content
+[baseline-browser-mapping] The data in this module is over two months old.  To ensure accurate Baseline data, please update: `npm i baseline-browser-mapping@latest -D`
+[2m18:05:45[22m [34m[types][39m Generated [2m1ms[22m
+[2m18:05:45[22m [34m[content][39m Syncing content
+[2m18:05:45[22m [34m[content][39m Synced content
 
-[42m[1m astro [22m[49m [32mv5.15.4[39m [2mready in[22m 1238 [2mms[22m
+[42m[1m astro [22m[49m [32mv5.15.4[39m [2mready in[22m 729 [2mms[22m
 
 [2m┃[22m Local    [36mhttp://localhost:4321/[39m
 [2m┃[22m Network  [2muse --host to expose[22m
 
-[2m09:10:32[22m [32mwatching for file changes...[39m
-[2m09:10:37[22m [34m[vite][39m [32m✨ optimized dependencies changed. reloading[39m
-[2m09:10:38[22m [34m[200][39m / [2m193ms[22m
-[2m09:11:38[22m [34m[watch][39m /src/styles/global.css
-[2m09:11:40[22m [34m[200][39m / [2m436ms[22m
-[2m09:11:51[22m [34m[200][39m / [2m9ms[22m
+[2m18:05:45[22m [32mwatching for file changes...[39m
+Browserslist: browsers data (caniuse-lite) is 7 months old. Please run:
+  npx update-browserslist-db@latest
+  Why you should do it regularly: https://github.com/browserslist/update-db#readme
+[2m18:05:48[22m [34m[200][39m /login [2m260ms[22m
+[2m18:06:19[22m [34m[200][39m [34mPOST[39m /api/auth/send-otp [2m3565ms[22m
+[2m18:06:44[22m [34m[200][39m [34mPOST[39m /api/auth/verify-otp [2m3ms[22m
+[2m18:06:44[22m [34m[200][39m /events/detail [2m20ms[22m
+[2m18:09:25[22m [34m[200][39m /events/detail [2m12ms[22m
+[2m18:20:52[22m [34m[200][39m / [2m9ms[22m
+[2m18:20:53[22m [34m[200][39m /account [2m8ms[22m
+[2m18:20:56[22m [34m[200][39m / [2m6ms[22m
+[2m18:21:05[22m [34m[200][39m /login [2m12ms[22m
+[2m18:22:05[22m [34m[200][39m [34mPOST[39m /api/auth/send-otp [2m2781ms[22m
+[2m18:22:49[22m [34m[200][39m [34mPOST[39m /api/auth/verify-otp [2m1ms[22m
+[2m18:22:49[22m [34m[200][39m / [2m8ms[22m
+[2m18:22:52[22m [34m[200][39m /events [2m11ms[22m
+[2m18:22:57[22m [34m[200][39m /events/detail [2m7ms[22m
+[2m18:24:51[22m [34m[200][39m /events/detail [2m12ms[22m
+[2m18:25:38[22m [34m[watch][39m /src/styles/global.css, /src/components/EventDetail.jsx, /src/components/RegistrationForm.jsx, /src/components/HomeEvents.jsx, /src/components/EventsList.jsx
+[2m18:25:38[22m [34m[watch][39m src/lib/api.js
+[2m18:26:46[22m [34m[watch][39m /src/components/AccountPage.jsx, /src/styles/global.css
+[2m18:26:46[22m [34m[watch][39m src/components/AccountPage.jsx
+[2m18:27:35[22m [34m[watch][39m /src/styles/global.css
+[2m18:27:36[22m [34m[200][39m /events/detail [2m231ms[22m
+[2m18:39:26[22m [34m[200][39m /account [2m5ms[22m
+[2m18:53:38[22m [34m[200][39m /account [2m15ms[22m
+[2m20:17:43[22m [34m[200][39m /account [2m8ms[22m
+[2m20:33:36[22m [34m[200][39m / [2m11ms[22m
+[2m20:33:38[22m [34m[200][39m /events [2m14ms[22m
+[2m20:35:39[22m [34m[watch][39m /src/components/EventCard.jsx, /src/styles/global.css
+[2m20:35:39[22m [34m[watch][39m src/components/EventCard.jsx
+[2m20:35:45[22m [34m[watch][39m /src/components/EventDetail.jsx, /src/styles/global.css
+[2m20:35:45[22m [34m[watch][39m src/components/EventDetail.jsx
+[2m20:35:50[22m [34m[watch][39m /src/components/EventDetail.jsx, /src/styles/global.css
+[2m20:35:50[22m [34m[watch][39m src/components/EventDetail.jsx
+[2m20:35:55[22m [34m[watch][39m /src/styles/global.css
+[2m20:35:56[22m [34m[200][39m /events [2m209ms[22m
+[2m20:36:00[22m [34m[watch][39m /src/styles/global.css
+[2m20:36:01[22m [34m[200][39m /events [2m182ms[22m
+[2m20:36:07[22m [34m[watch][39m /src/styles/global.css
+[2m20:36:07[22m [34m[200][39m /events [2m166ms[22m
+[2m20:36:13[22m [34m[200][39m /events/detail [2m4ms[22m
+[2m20:36:15[22m [34m[watch][39m /src/components/AccountPage.jsx, /src/styles/global.css
+[2m20:36:15[22m [34m[watch][39m src/components/AccountPage.jsx
+[2m20:37:01[22m [34m[200][39m /events/detail [2m59ms[22m
+[2m20:38:26[22m [34m[watch][39m /src/components/EventCard.jsx, /src/styles/global.css
+[2m20:38:26[22m [34m[watch][39m src/components/EventCard.jsx
+[2m20:38:51[22m [34m[watch][39m /src/components/EventsList.jsx, /src/styles/global.css
+[2m20:38:51[22m [34m[watch][39m src/components/EventsList.jsx
+[2m20:39:00[22m [34m[watch][39m /src/styles/global.css
+[2m20:39:01[22m [34m[200][39m /events [2m162ms[22m
+[2m20:39:48[22m [34m[watch][39m /src/styles/global.css
+[2m20:39:48[22m [34m[200][39m /events [2m195ms[22m
+[2m20:40:08[22m [34m[200][39m /events/detail [2m5ms[22m
+[2m20:42:18[22m [34m[watch][39m /src/components/EventDetail.jsx, /src/styles/global.css
+[2m20:42:18[22m [34m[watch][39m src/components/EventDetail.jsx
+[2m20:42:30[22m [34m[watch][39m /src/styles/global.css
+[2m20:42:30[22m [34m[200][39m /events/detail [2m152ms[22m
+[2m20:45:04[22m [34m[watch][39m /src/components/EventDetail.jsx, /src/styles/global.css
+[2m20:45:04[22m [34m[watch][39m src/components/EventDetail.jsx
+[2m20:45:16[22m [34m[watch][39m /src/styles/global.css
+[2m20:45:17[22m [34m[200][39m /events/detail [2m163ms[22m
+[2m20:51:41[22m [34m[watch][39m /src/styles/global.css
+[2m20:51:42[22m [34m[200][39m /events/detail [2m293ms[22m
+[2m20:52:00[22m [34m[watch][39m src/pages/events/index.astro
+[2m20:52:00[22m [34m[watch][39m src/pages/events/index.astro
+[2m20:52:01[22m [34m[200][39m /events/detail [2m50ms[22m
+[2m20:52:07[22m [34m[watch][39m src/pages/events/detail.astro
+[2m20:52:07[22m [34m[watch][39m src/pages/events/detail.astro
+[2m20:52:08[22m [34m[200][39m /events/detail [2m55ms[22m
+[2m20:52:17[22m [34m[watch][39m src/pages/ticket.astro
+[2m20:52:17[22m [34m[watch][39m src/pages/ticket.astro
+[2m20:52:18[22m [34m[200][39m /events/detail [2m59ms[22m
+[33m[1m20:52:26[22m [WARN][39m Unsupported file type [1mF:\Ulsaaham\webapp\web-app\apps\site\far-fusion\src\pages\index.astro.tmp.13256.057ec035398a[22m found. Prefix filename with an underscore (`_`) to ignore.
+[2m20:52:26[22m [34m[watch][39m src/pages/index.astro
+[2m20:52:26[22m [34m[watch][39m src/pages/index.astro
+[2m20:52:26[22m [34m[200][39m /events/detail [2m53ms[22m
+[33m[1m20:52:33[22m [WARN][39m Unsupported file type [1mF:\Ulsaaham\webapp\web-app\apps\site\far-fusion\src\pages\account.astro.tmp.13256.25f5e9867902[22m found. Prefix filename with an underscore (`_`) to ignore.
+[2m20:52:33[22m [34m[watch][39m src/pages/account.astro
+[2m20:52:33[22m [34m[watch][39m src/pages/account.astro
+[2m20:52:33[22m [34m[200][39m /events/detail [2m48ms[22m
+[2m20:56:06[22m [34m[200][39m / [2m10ms[22m
+[2m20:56:10[22m [34m[200][39m /events [2m8ms[22m
+[2m20:56:15[22m [34m[200][39m /events [2m9ms[22m
+[2m20:56:35[22m [34m[200][39m /events [2m10ms[22m
+[2m20:58:35[22m [34m[200][39m /events [2m9ms[22m
+[2m21:13:06[22m [34m[200][39m /events [2m11ms[22m
+[2m21:14:15[22m [34m[200][39m /events/detail [2m9ms[22m
+[2m21:21:29[22m [34m[watch][39m /src/components/EventDetail.jsx, /src/styles/global.css
+[2m21:21:29[22m [34m[watch][39m src/components/EventDetail.jsx
+[2m21:21:34[22m [34m[watch][39m /src/components/EventDetail.jsx, /src/styles/global.css
+[2m21:21:34[22m [34m[watch][39m src/components/EventDetail.jsx
+[2m21:22:43[22m [34m[watch][39m /src/components/EventDetail.jsx, /src/styles/global.css
+[2m21:22:43[22m [34m[watch][39m src/components/EventDetail.jsx
+[2m22:02:05[22m [34m[200][39m /events/detail [2m148ms[22m
+[2m22:05:54[22m [34m[200][39m / [2m7ms[22m
+[2m22:05:57[22m [34m[200][39m /events [2m12ms[22m
+[2m22:13:49[22m [34m[200][39m /events/detail [2m7ms[22m
+[2m22:15:57[22m [34m[watch][39m /src/styles/global.css, /src/components/EventDetail.jsx, /src/components/RegistrationForm.jsx, /src/components/HomeEvents.jsx, /src/components/EventsList.jsx, /src/components/AccountPage.jsx
+[2m22:15:57[22m [34m[watch][39m src/lib/api.js
+[2m22:16:04[22m [34m[watch][39m /src/components/EventsList.jsx, /src/styles/global.css
+[2m22:16:04[22m [34m[watch][39m src/components/EventsList.jsx
+[2m22:18:19[22m [34m[200][39m /events [2m57ms[22m
+[2m22:19:31[22m [34m[watch][39m /src/components/EventCard.jsx, /src/styles/global.css
+[2m22:19:31[22m [34m[watch][39m src/components/EventCard.jsx
+[2m22:19:45[22m [34m[200][39m /events [2m71ms[22m
+[2m22:21:22[22m [34m[watch][39m /src/components/EventsList.jsx, /src/styles/global.css
+[2m22:21:22[22m [34m[watch][39m src/components/EventsList.jsx
+[2m22:21:29[22m [34m[watch][39m /src/styles/global.css, /src/components/EventDetail.jsx, /src/components/RegistrationForm.jsx, /src/components/HomeEvents.jsx, /src/components/EventsList.jsx, /src/components/AccountPage.jsx
+[2m22:21:29[22m [34m[watch][39m src/lib/api.js
+[2m22:21:37[22m [34m[200][39m /events [2m49ms[22m
+[2m22:24:17[22m [34m[watch][39m /src/components/EventsList.jsx, /src/styles/global.css
+[2m22:24:17[22m [34m[watch][39m src/components/EventsList.jsx
+[2m22:24:21[22m [34m[watch][39m /src/components/EventCard.jsx, /src/styles/global.css
+[2m22:24:21[22m [34m[watch][39m src/components/EventCard.jsx
+[2m22:24:27[22m [34m[watch][39m /src/components/EventDetail.jsx, /src/styles/global.css
+[2m22:24:27[22m [34m[watch][39m src/components/EventDetail.jsx
+[2m22:25:33[22m [34m[200][39m /events [2m56ms[22m
+[2m22:28:18[22m [34m[watch][39m /src/components/EventsList.jsx, /src/styles/global.css
+[2m22:28:18[22m [34m[watch][39m src/components/EventsList.jsx
+[2m22:28:23[22m [34m[watch][39m /src/components/EventCard.jsx, /src/styles/global.css
+[2m22:28:23[22m [34m[watch][39m src/components/EventCard.jsx
+[2m22:28:29[22m [34m[watch][39m /src/components/EventDetail.jsx, /src/styles/global.css
+[2m22:28:29[22m [34m[watch][39m src/components/EventDetail.jsx
+[2m22:29:45[22m [34m[200][39m /events [2m47ms[22m
+[2m22:31:37[22m [34m[watch][39m /src/styles/global.css, /src/components/EventDetail.jsx, /src/components/RegistrationForm.jsx, /src/components/HomeEvents.jsx, /src/components/EventsList.jsx, /src/components/AccountPage.jsx
+[2m22:31:37[22m [34m[watch][39m src/lib/api.js
+[2m22:31:46[22m [34m[watch][39m /src/components/EventsList.jsx, /src/styles/global.css
+[2m22:31:46[22m [34m[watch][39m src/components/EventsList.jsx
+[2m22:32:05[22m [34m[watch][39m /src/components/EventCard.jsx, /src/styles/global.css
+[2m22:32:05[22m [34m[watch][39m src/components/EventCard.jsx
+[2m22:32:13[22m [34m[watch][39m /src/components/RegistrationForm.jsx, /src/styles/global.css
+[2m22:32:13[22m [34m[watch][39m src/components/RegistrationForm.jsx
+[2m22:32:21[22m [34m[watch][39m /src/styles/global.css
+[2m22:32:21[22m [34m[200][39m /events [2m156ms[22m
+[2m22:34:03[22m [34m[200][39m /events [2m10ms[22m
+[2m22:35:09[22m [34m[watch][39m /src/components/EventCard.jsx, /src/styles/global.css
+[2m22:35:09[22m [34m[watch][39m src/components/EventCard.jsx
+[2m22:35:13[22m [34m[watch][39m /src/components/EventDetail.jsx, /src/styles/global.css
+[2m22:35:13[22m [34m[watch][39m src/components/EventDetail.jsx
+[2m22:35:19[22m [34m[watch][39m /src/components/RegistrationForm.jsx, /src/styles/global.css
+[2m22:35:19[22m [34m[watch][39m src/components/RegistrationForm.jsx
+[2m22:35:25[22m [34m[200][39m /events [2m63ms[22m
+[2m22:36:11[22m [34m[watch][39m /src/components/EventsList.jsx, /src/styles/global.css
+[2m22:36:11[22m [34m[watch][39m src/components/EventsList.jsx
+[2m22:36:28[22m [34m[watch][39m /src/components/EventCard.jsx, /src/styles/global.css
+[2m22:36:28[22m [34m[watch][39m src/components/EventCard.jsx
+[2m22:36:37[22m [34m[watch][39m /src/styles/global.css
+[2m22:36:38[22m [34m[200][39m /events [2m148ms[22m
+[2m22:36:43[22m [34m[200][39m /ticket [2m5ms[22m
+[2m22:36:57[22m [34m[200][39m / [2m6ms[22m
+[2m22:36:59[22m [34m[200][39m /account [2m7ms[22m
+[2m22:48:02[22m [34m[200][39m / [2m5ms[22m
+[2m22:48:04[22m [34m[200][39m /events [2m9ms[22m
+[2m22:48:10[22m [34m[200][39m /events [2m9ms[22m
+[2m22:48:37[22m [34m[200][39m /events [2m8ms[22m
+[2m22:48:43[22m [34m[200][39m /events/detail [2m5ms[22m
+[2m22:52:20[22m [34m[200][39m / [2m8ms[22m
+[2m22:52:22[22m [34m[200][39m /events [2m16ms[22m
+[2m22:52:29[22m [34m[200][39m /events [2m8ms[22m
+[2m23:00:22[22m [34m[200][39m / [2m6ms[22m
+[2m23:01:22[22m [34m[200][39m /events [2m8ms[22m
+[2m23:07:07[22m Configuration file updated. Restarting...
+[2m23:07:07[22m [34m[vite][39m Re-optimizing dependencies because vite config has changed
+[2m23:07:08[22m [34m[content][39m Syncing content
+[2m23:07:08[22m [34m[content][39m Synced content
+[2m23:07:08[22m [34m[types][39m Generated [2m411ms[22m
+[2m23:07:08[22m [34m[vite][39m Re-optimizing dependencies because vite config has changed
+[2m23:10:05[22m [34m[200][39m /events [2m79ms[22m
+[2m23:10:12[22m [34m[200][39m /events/detail [2m9ms[22m
+[2m23:10:12[22m [34m[vite][39m [32m✨ new dependencies optimized: [33mreact-qr-code[32m[39m
+[2m23:10:12[22m [34m[vite][39m [32m✨ optimized dependencies changed. reloading[39m
+[2m23:10:13[22m [34m[200][39m /events/detail [2m9ms[22m
+[2m23:14:37[22m [34m[200][39m / [2m11ms[22m
+[2m23:15:11[22m [34m[200][39m /events [2m13ms[22m
+[2m23:15:12[22m [34m[200][39m / [2m8ms[22m
+[2m23:15:30[22m [34m[watch][39m /src/styles/global.css
+[2m23:15:31[22m [34m[200][39m / [2m226ms[22m
+[2m23:15:39[22m [34m[watch][39m src/pages/index.astro
+[2m23:15:39[22m [34m[watch][39m src/pages/index.astro
+[2m23:15:40[22m [34m[200][39m / [2m75ms[22m
+[33m[1m23:15:45[22m [WARN][39m Unsupported file type [1mF:\Ulsaaham\webapp\web-app\apps\site\far-fusion\src\pages\events\index.astro.tmp.13256.35e6c7763ff3[22m found. Prefix filename with an underscore (`_`) to ignore.
+[2m23:15:45[22m [34m[watch][39m src/pages/events/index.astro
+[2m23:15:45[22m [34m[watch][39m src/pages/events/index.astro
+[2m23:15:46[22m [34m[200][39m / [2m64ms[22m
+[2m23:15:50[22m [34m[watch][39m src/pages/events/detail.astro
+[2m23:15:50[22m [34m[watch][39m src/pages/events/detail.astro
+[2m23:15:50[22m [34m[200][39m / [2m70ms[22m
+[2m23:15:55[22m [34m[watch][39m src/pages/account.astro
+[2m23:15:55[22m [34m[watch][39m src/pages/account.astro
+[2m23:15:55[22m [34m[200][39m / [2m76ms[22m
+[2m23:15:59[22m [34m[watch][39m src/pages/ticket.astro
+[2m23:15:59[22m [34m[watch][39m src/pages/ticket.astro
+[2m23:15:59[22m [34m[200][39m / [2m95ms[22m
+[2m23:16:04[22m [34m[watch][39m src/pages/login.astro
+[2m23:16:04[22m [34m[watch][39m src/pages/login.astro
+[2m23:16:04[22m [34m[200][39m / [2m61ms[22m
+[2m23:18:08[22m [34m[watch][39m /src/styles/global.css
+[2m23:18:09[22m [34m[200][39m / [2m257ms[22m
+[2m23:18:17[22m [34m[watch][39m /src/styles/global.css
+[2m23:18:17[22m [34m[200][39m / [2m187ms[22m
+[2m23:18:25[22m [34m[watch][39m /src/styles/global.css
+[2m23:18:26[22m [34m[200][39m / [2m132ms[22m
+[2m23:18:39[22m [34m[watch][39m /src/styles/global.css
+[2m23:18:40[22m [34m[200][39m / [2m156ms[22m
+[2m23:18:45[22m [34m[watch][39m /src/styles/global.css
+[2m23:18:46[22m [34m[200][39m / [2m134ms[22m
+[2m23:18:59[22m [34m[watch][39m src/pages/index.astro
+[2m23:18:59[22m [34m[watch][39m src/pages/index.astro
+[2m23:18:59[22m [34m[200][39m / [2m88ms[22m
+[2m23:25:32[22m [34m[watch][39m /src/styles/global.css
+[2m23:25:33[22m [34m[200][39m / [2m169ms[22m
+[2m23:25:39[22m [34m[watch][39m /src/styles/global.css
+[2m23:25:40[22m [34m[200][39m / [2m177ms[22m
+[2m23:28:17[22m [34m[watch][39m src/pages/index.astro
+[2m23:28:17[22m [34m[watch][39m src/pages/index.astro
+[2m23:28:17[22m [34m[200][39m / [2m80ms[22m
+[2m23:28:25[22m [34m[watch][39m /src/styles/global.css
+[2m23:28:26[22m [34m[200][39m / [2m210ms[22m
+[2m23:28:31[22m [34m[watch][39m /src/styles/global.css
+[2m23:28:31[22m [34m[200][39m / [2m180ms[22m
+[2m23:30:36[22m [34m[watch][39m src/pages/index.astro
+[2m23:30:36[22m [34m[watch][39m src/pages/index.astro
+[2m23:30:36[22m [34m[200][39m / [2m75ms[22m
+[2m23:31:11[22m [34m[200][39m /account [2m9ms[22m
+[2m23:33:03[22m [34m[watch][39m src/components/AccountPage.jsx
+[2m23:33:03[22m [34m[watch][39m src/components/AccountPage.jsx
+[2m23:33:04[22m [34m[200][39m /account [2m111ms[22m
+[2m23:34:34[22m [34m[watch][39m src/components/AccountPage.jsx
+[2m23:34:34[22m [34m[watch][39m src/components/AccountPage.jsx
+[2m23:34:34[22m [34m[200][39m /account [2m87ms[22m
+[2m23:34:39[22m [34m[watch][39m src/components/AccountPage.jsx
+[2m23:34:39[22m [34m[watch][39m src/components/AccountPage.jsx
+[2m23:34:39[22m [34m[200][39m /account [2m55ms[22m
+[2m23:35:56[22m [34m[watch][39m src/layouts/BaseLayout.astro
+[2m23:35:56[22m [34m[watch][39m src/layouts/BaseLayout.astro
+[2m23:35:56[22m [34m[200][39m /account [2m76ms[22m
+[2m23:36:05[22m [34m[200][39m / [2m6ms[22m
+[2m23:36:44[22m [34m[200][39m / [2m6ms[22m
+[2m23:36:46[22m [34m[200][39m / [2m9ms[22m
+[2m23:37:27[22m [34m[watch][39m /src/styles/global.css
+[2m23:37:27[22m [34m[200][39m / [2m232ms[22m
+[2m23:38:09[22m [34m[watch][39m /src/styles/global.css
+[2m23:38:10[22m [34m[200][39m / [2m222ms[22m
+[2m23:38:59[22m [34m[watch][39m /src/styles/global.css
+[2m23:39:00[22m [34m[200][39m / [2m231ms[22m
+[2m23:39:37[22m [34m[watch][39m /src/styles/global.css
+[2m23:39:38[22m [34m[200][39m / [2m204ms[22m
+[2m23:41:46[22m [34m[watch][39m src/layouts/BaseLayout.astro
+[2m23:41:46[22m [34m[watch][39m src/layouts/BaseLayout.astro
+[2m23:41:46[22m [34m[200][39m / [2m111ms[22m
+[33m[1m23:41:51[22m [WARN][39m Unsupported file type [1mF:\Ulsaaham\webapp\web-app\apps\site\far-fusion\src\pages\index.astro.tmp.13256.74102e065554[22m found. Prefix filename with an underscore (`_`) to ignore.
+[2m23:41:51[22m [34m[watch][39m src/pages/index.astro
+[2m23:41:51[22m [34m[watch][39m src/pages/index.astro
+[2m23:41:51[22m [34m[200][39m / [2m125ms[22m
+[2m23:41:55[22m [34m[watch][39m src/pages/index.astro
+[2m23:41:55[22m [34m[watch][39m src/pages/index.astro
+[2m23:41:56[22m [34m[200][39m / [2m81ms[22m
+[2m23:42:00[22m [34m[watch][39m src/pages/index.astro
+[2m23:42:00[22m [34m[watch][39m src/pages/index.astro
+[2m23:42:00[22m [34m[200][39m / [2m79ms[22m
+[33m[1m23:42:05[22m [WARN][39m Unsupported file type [1mF:\Ulsaaham\webapp\web-app\apps\site\far-fusion\src\pages\index.astro.tmp.13256.3d7f3da22e47[22m found. Prefix filename with an underscore (`_`) to ignore.
+[2m23:42:05[22m [34m[watch][39m src/pages/index.astro
+[2m23:42:05[22m [34m[watch][39m src/pages/index.astro
+[2m23:42:06[22m [34m[200][39m / [2m116ms[22m
+[33m[1m23:42:14[22m [WARN][39m Unsupported file type [1mF:\Ulsaaham\webapp\web-app\apps\site\far-fusion\src\pages\index.astro.tmp.13256.6fc1cb829305[22m found. Prefix filename with an underscore (`_`) to ignore.
+[2m23:42:14[22m [34m[watch][39m src/pages/index.astro
+[2m23:42:14[22m [34m[watch][39m src/pages/index.astro
+[2m23:42:14[22m [34m[200][39m / [2m71ms[22m
+[2m23:42:19[22m [34m[watch][39m src/pages/index.astro
+[2m23:42:19[22m [34m[watch][39m src/pages/index.astro
+[2m23:42:19[22m [34m[200][39m / [2m106ms[22m
+[2m23:42:24[22m [34m[watch][39m src/pages/events/index.astro
+[2m23:42:24[22m [34m[watch][39m src/pages/events/index.astro
+[2m23:42:24[22m [34m[200][39m / [2m96ms[22m
+[2m23:42:28[22m [34m[watch][39m src/pages/events/index.astro
+[2m23:42:28[22m [34m[watch][39m src/pages/events/index.astro
+[2m23:42:28[22m [34m[200][39m / [2m90ms[22m
+[2m23:42:32[22m [34m[watch][39m src/pages/events/detail.astro
+[2m23:42:32[22m [34m[watch][39m src/pages/events/detail.astro
+[2m23:42:33[22m [34m[200][39m / [2m110ms[22m
+[2m23:42:37[22m [34m[watch][39m src/pages/ticket.astro
+[2m23:42:37[22m [34m[watch][39m src/pages/ticket.astro
+[2m23:42:38[22m [34m[200][39m / [2m72ms[22m
+[33m[1m23:44:29[22m [WARN][39m Unsupported file type [1mF:\Ulsaaham\webapp\web-app\apps\site\far-fusion\src\pages\index.astro.tmp.13256.6708f669ed23[22m found. Prefix filename with an underscore (`_`) to ignore.
+[2m23:44:29[22m [34m[watch][39m src/pages/index.astro
+[2m23:44:29[22m [34m[watch][39m src/pages/index.astro
+[2m23:44:29[22m [34m[200][39m / [2m79ms[22m
+[2m23:44:40[22m [34m[watch][39m /src/styles/global.css
+[2m23:44:41[22m [34m[200][39m / [2m287ms[22m
+[2m23:46:28[22m [34m[watch][39m src/pages/index.astro
+[2m23:46:28[22m [34m[watch][39m src/pages/index.astro
+[2m23:46:28[22m [34m[200][39m / [2m79ms[22m
+[2m23:48:34[22m [34m[watch][39m /src/styles/global.css
+[2m23:48:35[22m [34m[200][39m / [2m282ms[22m
+[2m23:48:41[22m [34m[watch][39m src/pages/index.astro
+[2m23:48:41[22m [34m[watch][39m src/pages/index.astro
+[2m23:48:41[22m [34m[200][39m / [2m81ms[22m
+[2m23:50:27[22m [34m[watch][39m src/pages/index.astro
+[2m23:50:27[22m [34m[watch][39m src/pages/index.astro
+[2m23:50:27[22m [34m[200][39m / [2m80ms[22m
+[2m23:50:32[22m [34m[watch][39m src/pages/index.astro
+[2m23:50:32[22m [34m[watch][39m src/pages/index.astro
+[2m23:50:33[22m [34m[200][39m / [2m69ms[22m
+[2m23:53:53[22m [34m[watch][39m src/pages/index.astro
+[2m23:53:53[22m [34m[watch][39m src/pages/index.astro
+[2m23:53:53[22m [34m[200][39m / [2m65ms[22m
+[2m23:54:03[22m [34m[watch][39m src/pages/index.astro
+[2m23:54:03[22m [34m[watch][39m src/pages/index.astro
+[2m23:54:03[22m [34m[200][39m / [2m145ms[22m
+[2m23:54:23[22m [33m[404][39m /privacy [2m5ms[22m
+[2m23:55:14[22m [34m[200][39m /privacy [2m6ms[22m
+[2m23:55:23[22m [34m[200][39m /terms [2m4ms[22m
+[2m23:55:27[22m [34m[200][39m / [2m9ms[22m
+[2m23:57:02[22m [34m[watch][39m src/pages/index.astro
+[2m23:57:02[22m [34m[watch][39m src/pages/index.astro
+[31m[1m23:57:03[22m [ERROR][39m [31m[CompilerError][39m Unable to find matching import statement for client:only component
+  [1mHint:[22m
+[33m    A client:only component must match an import statement, either the default export or a named exported, and can't be derived from a variable in the frontmatter.[39m
+  [1mStack trace:[22m
+[2m    at F:/Ulsaaham/webapp/web-app/apps/site/far-fusion/src/pages/index.astro:118:10
+    [...] See full stack trace in the browser, or rerun with --verbose.[22m
+[2m23:57:07[22m [34m[watch][39m src/pages/index.astro
+[2m23:57:07[22m [34m[watch][39m src/pages/index.astro
+[31m[1m23:57:07[22m [ERROR][39m [31m[CompilerError][39m Unable to find matching import statement for client:only component
+  [1mHint:[22m
+[33m    A client:only component must match an import statement, either the default export or a named exported, and can't be derived from a variable in the frontmatter.[39m
+  [1mStack trace:[22m
+[2m    at F:/Ulsaaham/webapp/web-app/apps/site/far-fusion/src/pages/index.astro:118:10
+    [...] See full stack trace in the browser, or rerun with --verbose.[22m
+[2m23:57:25[22m [34m[watch][39m src/pages/index.astro
+[2m23:57:25[22m [34m[watch][39m src/pages/index.astro
+[2m23:57:25[22m [34m[200][39m / [2m65ms[22m
+[2m23:57:31[22m [34m[watch][39m src/pages/index.astro
+[2m23:57:31[22m [34m[watch][39m src/pages/index.astro
+[2m23:57:31[22m [34m[200][39m / [2m71ms[22m
+[2m23:57:37[22m [34m[watch][39m src/pages/index.astro
+[2m23:57:37[22m [34m[watch][39m src/pages/index.astro
+[2m23:57:38[22m [34m[200][39m / [2m70ms[22m
+[2m23:57:41[22m [34m[watch][39m src/pages/index.astro
+[2m23:57:41[22m [34m[watch][39m src/pages/index.astro
+[2m23:57:42[22m [34m[200][39m / [2m67ms[22m
+[2m23:57:46[22m [34m[watch][39m src/pages/index.astro
+[2m23:57:46[22m [34m[watch][39m src/pages/index.astro
+[2m23:57:46[22m [34m[200][39m / [2m110ms[22m
+[33m[1m23:58:14[22m [WARN][39m Unsupported file type [1mF:\Ulsaaham\webapp\web-app\apps\site\far-fusion\src\pages\about.astro.tmp.13256.7cd9135689a4[22m found. Prefix filename with an underscore (`_`) to ignore.
+[2m23:58:21[22m [34m[watch][39m src/pages/privacy.astro
+[2m23:58:21[22m [34m[watch][39m src/pages/privacy.astro
+[2m23:58:22[22m [34m[200][39m / [2m83ms[22m
+[33m[1m23:58:25[22m [WARN][39m Unsupported file type [1mF:\Ulsaaham\webapp\web-app\apps\site\far-fusion\src\pages\terms.astro.tmp.13256.bc769d64a6ac[22m found. Prefix filename with an underscore (`_`) to ignore.
+[2m23:58:25[22m [34m[watch][39m src/pages/terms.astro
+[2m23:58:25[22m [34m[watch][39m src/pages/terms.astro
+[2m23:58:25[22m [34m[200][39m / [2m65ms[22m
+[2m23:58:59[22m [34m[200][39m /about [2m7ms[22m
+[2m24:00:11[22m [34m[watch][39m src/components/AccountPage.jsx
+[2m24:00:11[22m [34m[watch][39m src/components/AccountPage.jsx
+[2m24:00:11[22m [34m[watch][39m src/components/AuthForm.jsx
+[2m24:00:11[22m [34m[watch][39m src/components/AuthForm.jsx
+[2m24:00:11[22m [34m[watch][39m src/components/RegistrationForm.jsx
+[2m24:00:11[22m [34m[watch][39m src/components/RegistrationForm.jsx
+[2m24:00:11[22m [34m[watch][39m src/layouts/BaseLayout.astro
+[2m24:00:11[22m [34m[watch][39m src/layouts/BaseLayout.astro
+[2m24:00:11[22m [34m[watch][39m src/lib/auth.js
+[2m24:00:11[22m [34m[watch][39m src/lib/auth.js
+[2m24:00:11[22m [34m[watch][39m src/pages/about.astro
+[2m24:00:11[22m [34m[watch][39m src/pages/about.astro
+[2m24:00:11[22m [34m[watch][39m src/pages/account.astro
+[2m24:00:11[22m [34m[watch][39m src/pages/account.astro
+[2m24:00:12[22m [34m[watch][39m src/pages/login.astro
+[2m24:00:12[22m [34m[watch][39m src/pages/login.astro
+[2m24:00:12[22m [34m[watch][39m src/pages/privacy.astro
+[2m24:00:12[22m [34m[watch][39m src/pages/privacy.astro
+[2m24:00:12[22m [34m[watch][39m src/pages/terms.astro
+[2m24:00:12[22m [34m[watch][39m src/pages/terms.astro
+[2m24:00:12[22m [34m[watch][39m src/pages/ticket.astro
+[2m24:00:12[22m [34m[watch][39m src/pages/ticket.astro
+[2m24:00:12[22m [34m[watch][39m src/pages/index.astro
+[2m24:00:12[22m [34m[watch][39m src/pages/index.astro
