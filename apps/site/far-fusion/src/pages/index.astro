@@ -64,6 +64,9 @@ const clientLogos = [
       const el = document.getElementById("hero-auth");
       if (el && u) { el.href = "/account"; el.setAttribute("aria-label", "My Account"); el.innerHTML = `<span class="topbar-avatar__letter">${(u.name||"?")[0].toUpperCase()}</span>`; }
     </script>
+    <div class="hero-quote">
+      <p class="hero-quote__text">"Entertainment is Pure Experience"</p>
+    </div>
     <a class="scroll-indicator" href="#gallery">
       <span aria-hidden="true"></span>
     </a>
