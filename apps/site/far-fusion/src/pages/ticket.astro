@@ -1,0 +1,25 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import TicketChecker from "../components/TicketChecker.jsx";
+---
+
+<BaseLayout title="Check Your Ticket — Ulsaaham Celebrations" description="Look up your Ulsaaham event registration using your ticket code.">
+  <div class="min-h-screen bg-primary text-light">
+
+    <header class="page-topbar">
+      <div class="mx-auto max-w-6xl px-6 flex items-center justify-between">
+        <a href="/" class="page-topbar__brand">Ulsaaham</a>
+        <a href="/events" class="page-topbar__link">All Events</a>
+      </div>
+    </header>
+
+    <div class="mx-auto max-w-lg px-6 pt-20 pb-24">
+      <h1 class="section-title text-3xl mb-2">Ticket Lookup</h1>
+      <p class="section-subtitle mb-10">
+        Enter your ticket code to view your registration details.
+      </p>
+      <TicketChecker client:load />
+    </div>
+
+  </div>
+</BaseLayout>

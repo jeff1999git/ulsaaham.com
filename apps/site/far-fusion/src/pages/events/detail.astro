@@ -1,0 +1,19 @@
+---
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import EventDetail from "../../components/EventDetail.jsx";
+---
+
+<BaseLayout title="Event Details — Ulsaaham Celebrations">
+  <div class="min-h-screen bg-primary text-light">
+
+    <header class="page-topbar">
+      <div class="mx-auto max-w-6xl px-6 flex items-center justify-between">
+        <a href="/" class="page-topbar__brand">Ulsaaham</a>
+        <a href="/ticket" class="page-topbar__link">Check Ticket</a>
+      </div>
+    </header>
+
+    <EventDetail client:load />
+
+  </div>
+</BaseLayout>

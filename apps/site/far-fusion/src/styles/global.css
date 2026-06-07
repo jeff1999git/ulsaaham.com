@@ -502,3 +502,381 @@ a:hover {
   padding: clamp(0.6rem, 1.5vw, 0.85rem);
 }
 
+/* ─── Page topbar (events / ticket pages) ─── */
+.page-topbar {
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  background: rgba(2, 51, 1, 0.92);
+  border-bottom: 1px solid rgba(254, 204, 1, 0.12);
+  backdrop-filter: blur(12px);
+  height: 56px;
+  display: flex;
+  align-items: center;
+}
+.page-topbar__brand {
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+  color: #fecc01;
+  text-decoration: none;
+  transition: opacity 0.2s;
+}
+.page-topbar__brand:hover { opacity: 0.75; }
+.page-topbar__link {
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.5);
+  text-decoration: none;
+  transition: color 0.2s;
+}
+.page-topbar__link:hover { color: #fecc01; }
+
+/* ─── Event cards ─── */
+.event-card {
+  display: flex;
+  flex-direction: column;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(254, 204, 1, 0.15);
+  border-radius: 1.25rem;
+  overflow: hidden;
+  text-decoration: none;
+  transition: transform 0.35s ease, border-color 0.35s ease, box-shadow 0.35s ease;
+}
+.event-card:hover {
+  transform: translateY(-5px);
+  border-color: rgba(254, 204, 1, 0.45);
+  box-shadow: 0 20px 48px rgba(2, 51, 1, 0.5);
+  color: inherit;
+}
+.event-card__image {
+  position: relative;
+  aspect-ratio: 16 / 9;
+  overflow: hidden;
+  background: rgba(2, 51, 1, 0.6);
+}
+.event-card__image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.5s ease;
+  display: block;
+}
+.event-card:hover .event-card__image img { transform: scale(1.05); }
+.event-card__placeholder {
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(135deg, rgba(254, 204, 1, 0.1), rgba(2, 51, 1, 0.8));
+}
+.event-card__price {
+  position: absolute;
+  top: 0.65rem;
+  right: 0.65rem;
+  padding: 0.18rem 0.6rem;
+  border-radius: 999px;
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+.event-card__price.free { background: #fecc01; color: #023301; }
+.event-card__price.paid { background: rgba(2, 51, 1, 0.9); color: #fecc01; border: 1px solid rgba(254, 204, 1, 0.4); }
+.event-card__full {
+  position: absolute;
+  top: 0.65rem;
+  left: 0.65rem;
+  background: rgba(220, 38, 38, 0.85);
+  color: #fff;
+  font-size: 0.65rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  padding: 0.18rem 0.5rem;
+  border-radius: 999px;
+}
+.event-card__featured {
+  position: absolute;
+  bottom: 0.65rem;
+  left: 0.65rem;
+  background: rgba(254, 204, 1, 0.18);
+  border: 1px solid rgba(254, 204, 1, 0.45);
+  color: #fecc01;
+  font-size: 0.65rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  padding: 0.18rem 0.5rem;
+  border-radius: 999px;
+}
+.event-card__body {
+  padding: 1.1rem 1.35rem 1.4rem;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+}
+.event-card__title {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.1rem;
+  color: #ffffff;
+  line-height: 1.35;
+}
+.event-card__meta { font-size: 0.8rem; color: rgba(255, 255, 255, 0.55); }
+.event-card__cta {
+  margin-top: auto;
+  padding-top: 0.7rem;
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: #fecc01;
+}
+.event-card-skeleton {
+  border-radius: 1.25rem;
+  background: rgba(255, 255, 255, 0.05);
+  height: 260px;
+}
+
+/* ─── Event detail page ─── */
+.event-detail { padding-bottom: 5rem; }
+.event-detail__banner {
+  width: 100%;
+  max-height: 460px;
+  overflow: hidden;
+}
+.event-detail__banner img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+.event-detail__body {
+  max-width: 72rem;
+  margin: 0 auto;
+  padding: 2.5rem 1.5rem 0;
+  display: grid;
+  gap: 2.5rem;
+}
+@media (min-width: 1024px) {
+  .event-detail__body { grid-template-columns: 1fr 1fr; }
+}
+.back-link {
+  display: inline-block;
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.4);
+  text-decoration: none;
+  transition: color 0.2s;
+}
+.back-link:hover { color: #fecc01; }
+.badge-featured {
+  display: inline-block;
+  margin-top: 0.6rem;
+  background: rgba(254, 204, 1, 0.12);
+  border: 1px solid rgba(254, 204, 1, 0.35);
+  color: #fecc01;
+  font-size: 0.65rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  padding: 0.18rem 0.55rem;
+  border-radius: 999px;
+}
+.event-meta {
+  display: flex;
+  flex-direction: column;
+  gap: 0.45rem;
+  margin: 1.25rem 0;
+}
+.event-meta p { font-size: 0.9rem; color: rgba(255, 255, 255, 0.65); }
+.event-detail__desc { margin-top: 0.5rem; }
+.event-detail__desc p { color: rgba(255, 255, 255, 0.7); line-height: 1.85; font-size: 0.95rem; }
+.event-detail-state {
+  min-height: 50vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+}
+.spinner {
+  width: 34px;
+  height: 34px;
+  border: 3px solid rgba(254, 204, 1, 0.2);
+  border-top-color: #fecc01;
+  border-radius: 50%;
+  animation: spin 0.7s linear infinite;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+
+/* ─── Registration form ─── */
+.reg-form {
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(254, 204, 1, 0.15);
+  border-radius: 1.5rem;
+  padding: 1.75rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.9rem;
+}
+.reg-error {
+  background: rgba(220, 38, 38, 0.12);
+  border: 1px solid rgba(220, 38, 38, 0.35);
+  border-radius: 0.65rem;
+  padding: 0.65rem 0.9rem;
+  color: #fca5a5;
+  font-size: 0.85rem;
+}
+.reg-field { display: flex; flex-direction: column; gap: 0.3rem; }
+.reg-field label {
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.5);
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+.reg-field-hint { font-weight: 400; text-transform: none; letter-spacing: 0; color: rgba(255, 255, 255, 0.3); }
+.reg-field input {
+  background: rgba(255, 255, 255, 0.07);
+  border: 1px solid rgba(254, 204, 1, 0.18);
+  border-radius: 0.65rem;
+  padding: 0.6rem 0.9rem;
+  color: #fff;
+  font-size: 0.95rem;
+  outline: none;
+  transition: border-color 0.2s;
+  width: 100%;
+}
+.reg-field input:focus { border-color: rgba(254, 204, 1, 0.55); }
+.reg-field input::placeholder { color: rgba(255, 255, 255, 0.2); }
+.reg-field-error { font-size: 0.75rem; color: #fca5a5; }
+.reg-row { display: grid; grid-template-columns: 1fr 1fr; gap: 0.9rem; }
+.reg-submit {
+  width: 100%;
+  padding: 0.75rem 1.5rem;
+  background: #fecc01;
+  color: #023301;
+  font-weight: 700;
+  font-size: 0.85rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  border: none;
+  border-radius: 999px;
+  cursor: pointer;
+  transition: opacity 0.2s, transform 0.2s;
+  margin-top: 0.25rem;
+}
+.reg-submit:hover:not(:disabled) { opacity: 0.88; transform: translateY(-2px); }
+.reg-submit:disabled { opacity: 0.45; cursor: not-allowed; }
+.reg-closed {
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(254, 204, 1, 0.15);
+  border-radius: 1.5rem;
+  padding: 2.5rem;
+  text-align: center;
+}
+
+/* ─── Ticket success (shown after registration) ─── */
+.ticket-success {
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(254, 204, 1, 0.22);
+  border-radius: 1.5rem;
+  padding: 1.75rem;
+}
+.ticket-success__header {
+  border-bottom: 1px solid rgba(254, 204, 1, 0.12);
+  padding-bottom: 1.1rem;
+  margin-bottom: 1.4rem;
+}
+.ticket-success__body {
+  display: flex;
+  gap: 1.5rem;
+  flex-wrap: wrap;
+  align-items: flex-start;
+}
+.ticket-qr {
+  width: 130px;
+  height: 130px;
+  border-radius: 0.65rem;
+  border: 2px solid rgba(254, 204, 1, 0.25);
+  flex-shrink: 0;
+}
+.ticket-code {
+  font-family: monospace;
+  font-size: 1.4rem;
+  font-weight: 700;
+  color: #fecc01;
+  letter-spacing: 0.15em;
+  margin-bottom: 0.9rem;
+}
+.ticket-dl {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 0.35rem 0.85rem;
+  font-size: 0.82rem;
+}
+.ticket-dl dt {
+  color: rgba(255, 255, 255, 0.38);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  font-size: 0.68rem;
+  align-self: center;
+}
+.ticket-dl dd { color: rgba(255, 255, 255, 0.82); }
+
+/* ─── Ticket checker page ─── */
+.ticket-checker__form { margin-bottom: 1.5rem; }
+.ticket-input {
+  flex: 1;
+  min-width: 0;
+  background: rgba(255, 255, 255, 0.07);
+  border: 1px solid rgba(254, 204, 1, 0.22);
+  border-radius: 0.75rem;
+  padding: 0.7rem 1.1rem;
+  color: #fff;
+  font-size: 1rem;
+  font-family: monospace;
+  letter-spacing: 0.08em;
+  outline: none;
+  transition: border-color 0.2s;
+}
+.ticket-input:focus { border-color: rgba(254, 204, 1, 0.6); }
+.ticket-input::placeholder { color: rgba(255, 255, 255, 0.2); }
+.ticket-submit {
+  padding: 0.7rem 1.35rem;
+  background: #fecc01;
+  color: #023301;
+  font-weight: 700;
+  font-size: 0.85rem;
+  letter-spacing: 0.08em;
+  border: none;
+  border-radius: 0.75rem;
+  cursor: pointer;
+  transition: opacity 0.2s;
+  white-space: nowrap;
+}
+.ticket-submit:disabled { opacity: 0.45; cursor: not-allowed; }
+.ticket-error { color: #fca5a5; font-size: 0.875rem; }
+.ticket-result {
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(254, 204, 1, 0.18);
+  border-radius: 1.25rem;
+  padding: 1.6rem;
+}
+.ticket-result__code {
+  font-family: monospace;
+  font-size: 1.35rem;
+  font-weight: 700;
+  color: #fecc01;
+  letter-spacing: 0.15em;
+  margin-bottom: 1.1rem;
+}
+

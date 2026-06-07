@@ -13,4 +13,15 @@ export default defineConfig({
       { protocol: "https", hostname: "res.cloudinary.com" },
     ],
   },
+  vite: {
+    server: {
+      proxy: {
+        "/api/public": {
+          target: "https://ulsaham-admin-panel.vercel.app",
+          changeOrigin: true,
+          secure: true,
+        },
+      },
+    },
+  },
 });
