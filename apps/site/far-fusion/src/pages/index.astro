@@ -1,7 +1,6 @@
 ---
 export const prerender = true;
 import BaseLayout from "../layouts/BaseLayout.astro";
-import HeroScene from "../components/HeroScene.jsx";
 import HomeEvents from "../components/HomeEvents.jsx";
 
 const clientLogos = [
@@ -54,8 +53,7 @@ const clientLogos = [
       <div class="hero-video__menu-links">
         <a class="hero-video__menu-link" href="#gallery">Events</a>
         <a class="hero-video__menu-link" href="#testimonials">Partners</a>
-        <a class="hero-video__menu-link" href="#overview">About Us</a>
-        <a class="hero-video__menu-link" href="#consult">Contact</a>
+<a class="hero-video__menu-link" href="#connect">Connect</a>
         <a id="hero-auth" class="topbar-avatar" href="/login" aria-label="Login"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg></a>
       </div>
     </nav>
@@ -67,9 +65,7 @@ const clientLogos = [
     <div class="hero-quote">
       <p class="hero-quote__text">"Entertainment is Pure Experience"</p>
     </div>
-    <a class="scroll-indicator" href="#gallery">
-      <span aria-hidden="true"></span>
-    </a>
+    <a class="scroll-indicator" href="#gallery" aria-label="Scroll to events"><span aria-hidden="true"></span></a>
   </section>
 
   <section class="bg-primary py-24 text-light" id="gallery">
@@ -116,61 +112,14 @@ const clientLogos = [
     </div>
   </section>
 
-  <section class="relative bg-primary py-24 text-light" id="overview">
-    <div class="profile-scene">
-      <div class="hero-scene-wrapper">
-        <HeroScene client:only="react" />
-      </div>
-    </div>
-    <div class="relative z-10 mx-auto max-w-6xl px-6 py-12 lg:px-10">
-      <div class="relative flex flex-col gap-10 animate-fade-up lg:flex-row lg:items-start lg:gap-16">
-        <div class="flex-1 space-y-8 text-light/85">
-          <div class="space-y-5">
-            <img
-              src="https://res.cloudinary.com/dscbuwvgg/image/upload/v1762587370/Adobe_Express_-_file_1_fvilwg.png"
-              alt="Ulsaaham Entertainments logo"
-              class="overview-logo"
-              loading="lazy"
-              decoding="async"
-            />
-            <p class="inline-flex items-center rounded-full border border-light/30 bg-light/10 px-4 py-1 text-sm font-semibold uppercase tracking-[0.3em] text-light/80">
-              Entertainments
-            </p>
-          </div>
-          <div class="space-y-4">
-            <h3 class="text-xl font-semibold uppercase tracking-[0.2em] text-accent">Mission</h3>
-            <p>To provide expert and professional event coordination, where every client feels like a guest at their own event, enjoying every moment while we handle every detail.</p>
-          </div>
-          <div class="space-y-4">
-            <h3 class="text-xl font-semibold uppercase tracking-[0.2em] text-accent">Vision</h3>
-            <p>To craft extraordinary celebrations that go beyond expectations and create unforgettable experiences filled with joy, creativity, and lasting memories for every guest and client.</p>
-          </div>
-        </div>
-        <div class="hidden h-full w-px self-stretch bg-light/20 mix-blend-screen lg:block"></div>
-        <div class="flex-1 space-y-4 text-base leading-relaxed text-light/90">
-          <h2 class="text-2xl font-semibold uppercase tracking-[0.25em] text-accent">About Us</h2>
-          <p>
-            Ulsaaham Entertainments is a Thrissur-based venture created by a team of young, energetic minds who believe that events should feel extraordinary. We don't just plan events—we design experiences.
-          </p>
-          <p>
-            Today, many parties and functions feel routine, predictable, and stressful for the hosts. At Ulsaaham, we change that. We bring creativity, technical precision, and high-energy entertainment to every occasion, making sure the event is not just organized—but felt.
-          </p>
-          <p>
-            From DJ nights, neon parties, theme-based celebrations, Halloween shows, college fests, corporate functions, and nightlife events, to premium collaborations with Hotel, we specialize in creating moments full of excitement, music, and unforgettable ambience.
-          </p>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <section class="relative isolate overflow-hidden bg-primary py-24 text-light" id="consult">
+  <section class="relative isolate overflow-hidden bg-primary py-24 text-light" id="connect">
     <div class="absolute inset-0">
       <div class="absolute inset-0 bg-[radial-gradient(circle_at_top,_rgba(254,204,1,0.12),_transparent)] opacity-70 animate-gradient-x"></div>
       <div class="absolute inset-x-0 bottom-0 h-72 bg-gradient-to-t from-primary via-primary/90 to-transparent"></div>
       <div class="absolute right-10 top-10 h-48 w-48 rounded-full bg-accent/35 blur-3xl"></div>
     </div>
     <div class="relative mx-auto max-w-5xl px-6 text-center">
-      <p class="animate-fade-up text-sm uppercase tracking-[0.4em] text-light/70">Your Celebration, Elevated</p>
+      <p class="animate-fade-up text-sm uppercase tracking-[0.4em] text-light/70">Connect With Us</p>
       <h2 class="section-title animate-fade-up animation-delay-200 mt-4">
         Ready to choreograph a celebration<br />that feels like a cinematic experience?
       </h2>
@@ -179,10 +128,10 @@ const clientLogos = [
       </p>
       <div class="mt-10 flex flex-col items-center justify-center gap-4 sm:flex-row sm:gap-6">
         <a
-          href="mailto:contactulsaaham@gmail.com"
+          href="mailto:ulsaham1@gmail.com"
           class="inline-flex items-center justify-center rounded-full bg-accent px-8 py-3 text-base font-semibold text-primary shadow-lg transition-transform duration-300 hover:-translate-y-1 hover:scale-[1.04] hover:bg-accent/80"
         >
-          contactulsaaham@gmail.com
+          ulsaham1@gmail.com
         </a>
         <a
           href="https://wa.me/9446266011"
@@ -200,14 +149,16 @@ const clientLogos = [
         <p class="text-sm uppercase tracking-[0.4em] text-light/60">Ulsaaham Entertainments</p>
         <p class="mt-2 text-sm text-light/70">"You celebrate. We create."</p>
       </div>
-      <div class="flex gap-6 text-sm text-light/70">
+      <div class="flex flex-wrap gap-6 text-sm text-light/70">
         <a href="/events" class="transition hover:text-accent">Events</a>
         <a href="#testimonials" class="transition hover:text-accent">Partners</a>
-        <a href="#overview" class="transition hover:text-accent">About Us</a>
+        <a href="/about" class="transition hover:text-accent">About Us</a>
         <a href="/ticket" class="transition hover:text-accent">Check Ticket</a>
         <a href="https://www.instagram.com/ulsaaham_?igsh=MTFsdzF4d2J5YXdzdQ==" target="_blank" rel="noreferrer" class="transition hover:text-accent">Instagram</a>
         <a href="https://wa.me/9446266011" target="_blank" rel="noreferrer" class="transition hover:text-accent">WhatsApp</a>
-        <a href="mailto:contactulsaaham@gmail.com" class="transition hover:text-accent">Email</a>
+        <a href="mailto:ulsaham1@gmail.com" class="transition hover:text-accent">Email</a>
+        <a href="/privacy" class="transition hover:text-accent">Privacy Policy</a>
+        <a href="/terms" class="transition hover:text-accent">Terms &amp; Conditions</a>
       </div>
     </div>
     <div class="mt-10 border-t border-light/20 pt-6 text-center text-xs text-light/50">

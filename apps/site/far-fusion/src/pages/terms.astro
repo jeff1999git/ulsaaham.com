@@ -1,0 +1,94 @@
+---
+export const prerender = true;
+import BaseLayout from "../layouts/BaseLayout.astro";
+---
+
+<BaseLayout title="Terms & Conditions — Ulsaaham Entertainments" description="Terms and conditions for using Ulsaaham Entertainments events and ticketing platform.">
+  <div class="min-h-screen bg-primary text-light">
+
+    <header class="page-topbar">
+      <div class="mx-auto max-w-6xl px-6 flex items-center justify-between">
+        <a href="/" class="page-topbar__brand"><img src="/brand_logo.avif" alt="Ulsaaham" class="topbar-logo" /></a>
+        <div class="flex items-center gap-5">
+          <a href="/events" class="page-topbar__link">Events</a>
+          <a id="topbar-auth" href="/login" class="topbar-avatar" aria-label="Login"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg></a>
+        </div>
+      </div>
+    </header>
+    <script>
+      const u = JSON.parse(localStorage.getItem("ulsaaham_user") || "null");
+      const el = document.getElementById("topbar-auth");
+      if (el && u) { el.href = "/account"; el.setAttribute("aria-label", "My Account"); el.innerHTML = `<span class="topbar-avatar__letter">${(u.name||"?")[0].toUpperCase()}</span>`; }
+    </script>
+
+    <div class="mx-auto max-w-3xl px-6 pt-20 pb-24">
+      <h1 class="section-title text-3xl mb-2">Terms &amp; Conditions</h1>
+      <p class="section-subtitle mb-12">Last updated: June 2025</p>
+
+      <div class="space-y-10 text-light/80 leading-relaxed">
+
+        <section class="space-y-4">
+          <h2 class="text-lg font-semibold uppercase tracking-[0.2em] text-accent">1. Acceptance of Terms</h2>
+          <p>By accessing or using the Ulsaaham Entertainments platform — including registering for events, purchasing tickets, or creating an account — you agree to be bound by these Terms &amp; Conditions. If you do not agree, please do not use our services.</p>
+        </section>
+
+        <section class="space-y-4">
+          <h2 class="text-lg font-semibold uppercase tracking-[0.2em] text-accent">2. Event Tickets</h2>
+          <p>All ticket purchases are final. Tickets are non-transferable and non-refundable unless an event is cancelled or rescheduled by Ulsaaham Entertainments. Each ticket is valid for one-time entry only and must be presented at the venue.</p>
+          <p>Ulsaaham Entertainments reserves the right to deny entry to anyone who presents a duplicate, altered, or invalid ticket.</p>
+        </section>
+
+        <section class="space-y-4">
+          <h2 class="text-lg font-semibold uppercase tracking-[0.2em] text-accent">3. Event Cancellation &amp; Refunds</h2>
+          <p>In the event of a cancellation or significant rescheduling by Ulsaaham Entertainments, registered attendees will be notified via email. Refunds, where applicable, will be processed within 7–14 business days to the original payment method.</p>
+          <p>Ulsaaham Entertainments is not liable for any indirect costs (travel, accommodation, etc.) incurred by attendees in connection with a cancelled event.</p>
+        </section>
+
+        <section class="space-y-4">
+          <h2 class="text-lg font-semibold uppercase tracking-[0.2em] text-accent">4. User Accounts</h2>
+          <p>You are responsible for maintaining the confidentiality of your account credentials. You agree to notify us immediately of any unauthorized use of your account. Ulsaaham Entertainments is not liable for any loss arising from unauthorized account access due to your failure to secure your credentials.</p>
+        </section>
+
+        <section class="space-y-4">
+          <h2 class="text-lg font-semibold uppercase tracking-[0.2em] text-accent">5. Conduct at Events</h2>
+          <p>Attendees are expected to behave respectfully at all Ulsaaham Entertainments events. We reserve the right to refuse entry or remove any individual who engages in disruptive, dangerous, or unlawful behaviour without refund.</p>
+          <p>Photography and video recording may be permitted at certain events. Attendees consent to being photographed or recorded for promotional purposes unless they opt out at the venue.</p>
+        </section>
+
+        <section class="space-y-4">
+          <h2 class="text-lg font-semibold uppercase tracking-[0.2em] text-accent">6. Intellectual Property</h2>
+          <p>All content on this platform — including logos, graphics, event descriptions, and media — is the property of Ulsaaham Entertainments. Reproduction or redistribution without written permission is prohibited.</p>
+        </section>
+
+        <section class="space-y-4">
+          <h2 class="text-lg font-semibold uppercase tracking-[0.2em] text-accent">7. Limitation of Liability</h2>
+          <p>Ulsaaham Entertainments is not liable for any loss, injury, or damage arising from attendance at our events beyond what is required by applicable law. We do not guarantee uninterrupted access to our platform and are not responsible for technical failures beyond our control.</p>
+        </section>
+
+        <section class="space-y-4">
+          <h2 class="text-lg font-semibold uppercase tracking-[0.2em] text-accent">8. Governing Law</h2>
+          <p>These terms are governed by the laws of India. Any disputes arising shall be subject to the exclusive jurisdiction of the courts of Thrissur, Kerala.</p>
+        </section>
+
+        <section class="space-y-4">
+          <h2 class="text-lg font-semibold uppercase tracking-[0.2em] text-accent">9. Changes to Terms</h2>
+          <p>We reserve the right to modify these terms at any time. Updated terms will be posted on this page. Continued use of our platform after changes constitutes acceptance.</p>
+        </section>
+
+        <section class="space-y-4">
+          <h2 class="text-lg font-semibold uppercase tracking-[0.2em] text-accent">10. Contact</h2>
+          <p>For questions regarding these terms, contact us at:</p>
+          <p><a href="mailto:ulsaham1@gmail.com" class="text-accent hover:underline">ulsaham1@gmail.com</a></p>
+        </section>
+
+      </div>
+    </div>
+
+    <footer class="bg-primary py-8 border-t border-light/10 text-center text-sm text-light/50">
+      <a href="/" class="hover:text-accent transition">← Back to Home</a>
+      <span class="mx-4">·</span>
+      <a href="/privacy" class="hover:text-accent transition">Privacy Policy</a>
+    </footer>
+
+  </div>
+</BaseLayout>
