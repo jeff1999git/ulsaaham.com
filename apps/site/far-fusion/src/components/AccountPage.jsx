@@ -198,14 +198,22 @@ function TicketCard({ ticket, onRepay }) {
         </p>
       </div>
 
-      {ticket.amountPaid && ticket.qrCodeUrl ? (
-        <div style={{ padding: "12px 16px", borderTop: "1px solid rgba(255,255,255,0.06)" }}>
-          {/* Hidden QR SVG — used only by canvas generator */}
-          <div ref={qrRef} style={{ position: "absolute", visibility: "hidden", pointerEvents: "none", width: 0, height: 0, overflow: "hidden" }}>
-            <QRCode value={ticket.ticketCode} size={260} />
-          </div>
+      {/* QR rendered off-screen — always present for confirmed tickets, canvas reads it */}
+      {ticket.amountPaid && (
+        <div ref={qrRef} style={{ position: "fixed", left: -9999, top: -9999, pointerEvents: "none" }}>
+          <QRCode value={ticket.ticketCode} size={260} />
+        </div>
+      )}
 
-          <img src={ticket.qrCodeUrl} alt="QR code" style={{ width: "100%", maxWidth: 150, display: "block", margin: "0 auto 8px" }} />
+      {ticket.amountPaid ? (
+        <div style={{ padding: "12px 16px", borderTop: "1px solid rgba(255,255,255,0.06)" }}>
+          {ticket.qrCodeUrl ? (
+            <img src={ticket.qrCodeUrl} alt="QR code" style={{ width: "100%", maxWidth: 150, display: "block", margin: "0 auto 8px" }} />
+          ) : (
+            <div style={{ background: "#fff", padding: 8, display: "block", width: "fit-content", margin: "0 auto 8px", borderRadius: 6 }}>
+              <QRCode value={ticket.ticketCode} size={130} />
+            </div>
+          )}
           <p style={{ fontFamily: "monospace", fontSize: "0.8rem", textAlign: "center", letterSpacing: "0.12em", color: "rgba(255,255,255,0.5)", marginBottom: 10 }}>
             {ticket.ticketCode}
           </p>
@@ -216,7 +224,7 @@ function TicketCard({ ticket, onRepay }) {
             <button onClick={handleShare} className="account-btn" style={{ fontSize: 11, padding: "5px 12px" }}>Share</button>
           </div>
         </div>
-      ) : !ticket.amountPaid ? (
+      ) : (
         <div style={{ padding: "12px 16px", borderTop: "1px solid rgba(255,255,255,0.06)" }}>
           <button onClick={() => onRepay(ticket)} className="reg-submit" style={{ width: "100%", padding: "10px 16px", margin: 0 }}>
             Complete Payment →
@@ -225,7 +233,7 @@ function TicketCard({ ticket, onRepay }) {
             If you already paid, wait 30 s and refresh.
           </p>
         </div>
-      ) : null}
+      )}
     </div>
   );
 }
