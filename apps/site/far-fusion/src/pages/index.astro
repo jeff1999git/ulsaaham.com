@@ -44,23 +44,26 @@ const clientLogos = [
     ></video>
     <div class="hero-video__overlay"></div>
     <nav class="hero-video__menu">
-      <a class="hero-video__menu-link" href="/events">Events</a>
-      <a class="hero-video__menu-link" href="#testimonials">Partners</a>
-      <a class="hero-video__menu-link" href="#overview">About Us</a>
-      <a class="hero-video__menu-link" href="#consult">Contact</a>
-      <a id="hero-auth" class="topbar-avatar" href="/login" aria-label="Login"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg></a>
+      <a href="/" class="hero-logo-link" aria-label="Ulsaaham Home">
+        <img src="/brand_logo.avif" alt="Ulsaaham" class="topbar-logo" />
+        <div class="hero-logo-link__brand">
+          <span class="hero-logo-link__name">ULSAAHAM</span>
+          <span class="hero-logo-link__sub">Entertainments</span>
+        </div>
+      </a>
+      <div class="hero-video__menu-links">
+        <a class="hero-video__menu-link" href="/events">Events</a>
+        <a class="hero-video__menu-link" href="#testimonials">Partners</a>
+        <a class="hero-video__menu-link" href="#overview">About Us</a>
+        <a class="hero-video__menu-link" href="#consult">Contact</a>
+        <a id="hero-auth" class="topbar-avatar" href="/login" aria-label="Login"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg></a>
+      </div>
     </nav>
     <script>
       const u = JSON.parse(localStorage.getItem("ulsaaham_user") || "null");
       const el = document.getElementById("hero-auth");
       if (el && u) { el.href = "/account"; el.setAttribute("aria-label", "My Account"); el.innerHTML = `<span class="topbar-avatar__letter">${(u.name||"?")[0].toUpperCase()}</span>`; }
     </script>
-    <div class="hero-video__content">
-      <a class="hero-video__cta" href="#gallery">
-        <span class="hero-video__eyebrow">ULSAAHAM</span>
-        <h1 class="hero-video__title">Entertainments</h1>
-      </a>
-    </div>
     <a class="scroll-indicator" href="#gallery">
       <span aria-hidden="true"></span>
     </a>
