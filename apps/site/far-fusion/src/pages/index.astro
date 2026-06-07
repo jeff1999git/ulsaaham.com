@@ -1,37 +1,7 @@
 ---
 import BaseLayout from "../layouts/BaseLayout.astro";
 import HeroScene from "../components/HeroScene.jsx";
-
-const gallery = [
-  {
-    src: "https://res.cloudinary.com/dscbuwvgg/image/upload/v1762657843/strangers_onam_rzkxtn.jpg",
-    thumb: "https://res.cloudinary.com/dscbuwvgg/image/upload/c_fill,w_940,h_788/v1762657843/strangers_onam_rzkxtn.jpg",
-    width: 940,
-    height: 788,
-    alt: "Strangers Onam celebration stage with dynamic lighting."
-  },
-  {
-    src: "https://res.cloudinary.com/dscbuwvgg/image/upload/v1762657842/dark_hours_thrissur_p6ntel.jpg",
-    thumb: "https://res.cloudinary.com/dscbuwvgg/image/upload/c_fill,w_940,h_788/v1762657842/dark_hours_thrissur_p6ntel.jpg",
-    width: 940,
-    height: 788,
-    alt: "Dark Hours Thrissur nightlife experience."
-  },
-  {
-    src: "https://res.cloudinary.com/dscbuwvgg/image/upload/v1762657842/Halloween_Dj_Night_t9m1hw.jpg",
-    thumb: "https://res.cloudinary.com/dscbuwvgg/image/upload/c_fill,w_940,h_788/v1762657842/Halloween_Dj_Night_t9m1hw.jpg",
-    width: 940,
-    height: 788,
-    alt: "Halloween DJ night with immersive lighting."
-  },
-  {
-    src: "https://res.cloudinary.com/dscbuwvgg/image/upload/v1762657842/thriller_night_fb6gj5.jpg",
-    thumb: "https://res.cloudinary.com/dscbuwvgg/image/upload/c_fill,w_940,h_788/v1762657842/thriller_night_fb6gj5.jpg",
-    width: 940,
-    height: 788,
-    alt: "Thriller night performance with dramatic stage effects."
-  }
-];
+import HomeEvents from "../components/HomeEvents.jsx";
 
 const clientLogos = [
   {
@@ -95,7 +65,7 @@ const clientLogos = [
         <div>
           <h2 class="section-title">Our Events</h2>
           <p class="section-subtitle max-w-xl">
-            A peek into our celebrations.
+            Upcoming events you can be part of.
           </p>
         </div>
         <a
@@ -105,29 +75,7 @@ const clientLogos = [
           View All Events
         </a>
       </div>
-      <div id="event-gallery" class="mt-12 grid gap-6 md:grid-cols-2 lg:grid-cols-4">
-        {gallery.map((item, index) => (
-          <a
-            href={item.src}
-            data-pswp-width={item.width}
-            data-pswp-height={item.height}
-            style={`animation-delay: ${(index * 0.1 + 0.2).toFixed(2)}s`}
-            class="gallery-card group animate-fade-up overflow-hidden transition-all duration-500 hover:-translate-y-2"
-          >
-            <img
-              src={item.thumb}
-              alt={item.alt}
-              width={item.width}
-              height={item.height}
-              loading="lazy"
-              decoding="async"
-              class="h-full w-full object-cover transition duration-700 group-hover:scale-105"
-            />
-            <div class="pointer-events-none absolute inset-0 bg-[radial-gradient(circle,_rgba(254,204,1,0.22)_0%,_rgba(2,51,1,0.6)_100%)] opacity-0 transition-opacity duration-500 group-hover:opacity-100"></div>
-            <div class="pointer-events-none absolute inset-0 -translate-x-full bg-gradient-to-r from-transparent via-light/30 to-transparent opacity-0 transition duration-700 group-hover:translate-x-full group-hover:opacity-100"></div>
-          </a>
-        ))}
-      </div>
+      <HomeEvents client:load />
     </div>
   </section>
 
@@ -253,16 +201,4 @@ const clientLogos = [
     </div>
   </footer>
 
-  <script type="module">
-    import PhotoSwipeLightbox from "photoswipe/lightbox";
-    import "photoswipe/style.css";
-
-    const lightbox = new PhotoSwipeLightbox({
-      gallery: "#event-gallery",
-      children: "a",
-      pswpModule: () => import("photoswipe")
-    });
-
-    lightbox.init();
-  </script>
 </BaseLayout>
