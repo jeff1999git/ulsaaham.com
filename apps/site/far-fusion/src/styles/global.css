@@ -109,11 +109,7 @@ a:hover {
 }
 
 .hero-video__overlay {
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(185deg, rgba(2, 51, 1, 0.55) 0%, rgba(2, 51, 1, 0.85) 55%, rgba(2, 51, 1, 0.9) 100%);
-  mix-blend-mode: multiply;
-  z-index: 1;
+  display: none;
 }
 
 .hero-video__content {
