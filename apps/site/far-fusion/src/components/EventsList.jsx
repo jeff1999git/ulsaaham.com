@@ -78,8 +78,6 @@ function Section({ title, params, limit = 12, filter, cardProps, paginate = true
   );
 }
 
-const isPast = (ev) => new Date(ev.date) < new Date();
-
 export default function EventsList() {
   return (
     <div>
@@ -87,11 +85,10 @@ export default function EventsList() {
       <Section title="Upcoming Events" params={{ upcoming: true }} limit={12} />
       <Section
         title="Past Events"
-        params={{}}
-        limit={50}
-        filter={isPast}
+        params={{ past: true }}
+        limit={6}
         cardProps={{ linkable: false }}
-        paginate={false}
+        paginate={true}
       />
     </div>
   );

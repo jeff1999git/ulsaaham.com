@@ -13,10 +13,11 @@ async function apiFetch(path) {
   return { ok: res.ok, status: res.status, data };
 }
 
-export function getEvents({ page = 1, limit = 12, featured, upcoming } = {}) {
+export function getEvents({ page = 1, limit = 12, featured, upcoming, past } = {}) {
   const p = new URLSearchParams({ page, limit });
   if (featured) p.set("featured", "true");
   if (upcoming) p.set("upcoming", "true");
+  if (past) p.set("past", "true");
   return apiFetch(`/events?${p}`);
 }
 

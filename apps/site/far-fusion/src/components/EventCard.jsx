@@ -4,6 +4,7 @@ export default function EventCard({ event, linkable = true }) {
   }).format(new Date(event.date));
 
   const isUpcoming = new Date(event.date) >= new Date();
+
   const Tag = linkable ? "a" : "div";
   const tagProps = linkable
     ? { href: `/events/detail?slug=${event.slug}` }
@@ -28,8 +29,14 @@ export default function EventCard({ event, linkable = true }) {
       <div className="event-card__body">
         <h3 className="event-card__title">{event.name}</h3>
         <p className="event-card__meta">📅 {date} · {event.startTime}</p>
-        <p className="event-card__meta">📍 {event.venue}</p>
-        {linkable && <span className="event-card__cta">{isUpcoming ? "Register Now →" : "View Details →"}</span>}
+        <p className="event-card__meta">
+          📍 {!linkable && event.venueLink
+            ? <a href={event.venueLink} target="_blank" rel="noopener noreferrer" onClick={(e) => e.stopPropagation()} style={{ color: "inherit", textDecoration: "underline", textUnderlineOffset: "3px" }}>{event.venue}</a>
+            : event.venue}
+        </p>
+        {linkable && (
+          <span className="event-card__cta">{isUpcoming ? "Register Now →" : "View Details →"}</span>
+        )}
       </div>
     </Tag>
   );

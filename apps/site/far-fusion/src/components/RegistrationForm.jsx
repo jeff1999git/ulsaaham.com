@@ -87,6 +87,13 @@ export default function RegistrationForm({ event }) {
       </div>
     );
   }
+  if (new Date(event.date) < new Date()) {
+    return (
+      <div className="reg-closed">
+        <p className="font-serif text-2xl text-light/60">This event has ended.</p>
+      </div>
+    );
+  }
   if (event.status !== "PUBLISHED") {
     return (
       <div className="reg-closed">

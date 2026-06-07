@@ -139,7 +139,10 @@ export default function EventDetail() {
 
           <div className="event-meta">
             <p>📅 {date} · {event.startTime} – {event.endTime}</p>
-            <p>📍 {event.venue}</p>
+            <p>📍 {event.venueLink
+              ? <a href={event.venueLink} target="_blank" rel="noopener noreferrer" style={{ color: "inherit", textDecoration: "underline", textUnderlineOffset: "3px", opacity: 0.85 }}>{event.venue}</a>
+              : event.venue}
+            </p>
             {!isPast && <p>{event.isFree ? "🎟 Free Entry" : `🎟 ₹${event.amount} per person`}</p>}
             {event.capacity != null && (
               <p className={event.isFull || spotsLeft <= 20 ? "text-red-400" : "text-light/50"}>
