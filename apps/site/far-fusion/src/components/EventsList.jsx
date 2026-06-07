@@ -2,17 +2,20 @@ import { useState, useEffect } from "react";
 import { getEvents } from "../lib/api.js";
 import EventCard from "./EventCard.jsx";
 
-const FILTERS = [
-  { label: "All Events", params: {} },
-  { label: "Upcoming", params: { upcoming: true } },
-  { label: "Featured", params: { featured: true } },
-];
+function Skeletons({ count = 6 }) {
+  return (
+    <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+      {Array.from({ length: count }).map((_, i) => (
+        <div key={i} className="event-card-skeleton animate-pulse" />
+      ))}
+    </div>
+  );
+}
 
-export default function EventsList() {
+function Section({ title, params, limit = 12 }) {
   const [events, setEvents] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [filter, setFilter] = useState(0);
   const [page, setPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
 
@@ -20,9 +23,9 @@ export default function EventsList() {
     let cancelled = false;
     setLoading(true);
     setError(null);
-    getEvents({ ...FILTERS[filter].params, page, limit: 12 }).then(({ ok, data }) => {
+    getEvents({ ...params, page, limit }).then(({ ok, data }) => {
       if (cancelled) return;
-      if (!ok) { setError(data.error || "Failed to load events."); setLoading(false); return; }
+      if (!ok) { setError(data?.error || "Failed to load events."); setLoading(false); return; }
       setEvents(data.data.events);
       setTotalPages(data.data.totalPages);
       setLoading(false);
@@ -30,52 +33,29 @@ export default function EventsList() {
       if (!cancelled) { setError("Network error. Please check your connection."); setLoading(false); }
     });
     return () => { cancelled = true; };
-  }, [filter, page]);
+  }, [page]);
 
-  const changeFilter = (i) => { setFilter(i); setPage(1); };
+  // hide section entirely if it loaded with no events
+  if (!loading && !error && events.length === 0) return null;
 
   return (
-    <div>
-      <div className="flex flex-wrap gap-3 mb-10">
-        {FILTERS.map((f, i) => (
-          <button
-            key={f.label}
-            onClick={() => changeFilter(i)}
-            className={`px-5 py-2 rounded-full text-sm font-semibold uppercase tracking-widest border transition-all ${
-              filter === i
-                ? "bg-accent text-primary border-accent"
-                : "border-light/20 text-light/60 hover:border-accent hover:text-accent"
-            }`}
-          >
-            {f.label}
-          </button>
-        ))}
-      </div>
+    <div className="mb-16">
+      <h2 className="text-xl font-semibold uppercase tracking-[0.2em] text-accent mb-8">{title}</h2>
 
-      {loading && (
-        <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-          {Array.from({ length: 6 }).map((_, i) => (
-            <div key={i} className="event-card-skeleton animate-pulse" />
-          ))}
-        </div>
-      )}
+      {loading && <Skeletons count={3} />}
 
       {!loading && error && (
-        <p className="text-center text-light/50 py-20">{error}</p>
+        <p className="text-light/40 py-10">{error}</p>
       )}
 
-      {!loading && !error && events.length === 0 && (
-        <p className="text-center text-light/50 py-20">No events found.</p>
-      )}
-
-      {!loading && !error && events.length > 0 && (
+      {!loading && !error && (
         <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
           {events.map((ev) => <EventCard key={ev.id} event={ev} />)}
         </div>
       )}
 
       {totalPages > 1 && !loading && (
-        <div className="flex items-center justify-center gap-4 mt-12">
+        <div className="flex items-center justify-center gap-4 mt-10">
           <button
             onClick={() => setPage((p) => Math.max(1, p - 1))}
             disabled={page === 1}
@@ -93,6 +73,16 @@ export default function EventsList() {
           </button>
         </div>
       )}
+    </div>
+  );
+}
+
+export default function EventsList() {
+  return (
+    <div>
+      <Section title="Featured Events" params={{ featured: true }} limit={12} />
+      <Section title="Upcoming Events" params={{ upcoming: true }} limit={12} />
+      <Section title="All Events" params={{}} limit={12} />
     </div>
   );
 }

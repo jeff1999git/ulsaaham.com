@@ -3,6 +3,8 @@ export default function EventCard({ event }) {
     day: "numeric", month: "short", year: "numeric",
   }).format(new Date(event.date));
 
+  const isUpcoming = new Date(event.date) >= new Date();
+
   return (
     <a href={`/events/detail?slug=${event.slug}`} className="event-card group">
       <div className="event-card__image">
@@ -21,7 +23,7 @@ export default function EventCard({ event }) {
         <h3 className="event-card__title">{event.name}</h3>
         <p className="event-card__meta">📅 {date} · {event.startTime}</p>
         <p className="event-card__meta">📍 {event.venue}</p>
-        <span className="event-card__cta">View Details →</span>
+        <span className="event-card__cta">{isUpcoming ? "Register Now →" : "View Details →"}</span>
       </div>
     </a>
   );
