@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef, useCallback } from "react";
+﻿import { useState, useEffect, useRef, useCallback } from "react";
 import QRCode from "react-qr-code";
 import { getUser, setUser, clearUser, addTicket } from "../lib/auth.js";
 import { fetchMyTickets, getEvent, createPaymentOrder, verifyPayment } from "../lib/api.js";
@@ -80,7 +80,7 @@ function RepayPanel({ ticket, user, onSuccess, onClose }) {
       key: ord.keyId,
       amount: ord.amount,
       currency: ord.currency,
-      name: "Ulsaaham Entertainments",
+      name: "Ulsaham Entertainments",
       description: event.name,
       order_id: ord.orderId,
       prefill: { name: user.name, email: user.email || "", contact: user.phone },
@@ -89,7 +89,7 @@ function RepayPanel({ ticket, user, onSuccess, onClose }) {
         setPhase("verifying");
         const result = await verifyPayment(ticket.event.slug, { ...response, ...body });
         if (!result.ok) {
-          setError(`Payment received but confirmation failed. Save your Payment ID: ${response.razorpay_payment_id} and contact support@ulsaaham.com.`);
+          setError(`Payment received but confirmation failed. Save your Payment ID: ${response.razorpay_payment_id} and contact support@ulsaham.com.`);
           setPhase("breakdown");
           return;
         }

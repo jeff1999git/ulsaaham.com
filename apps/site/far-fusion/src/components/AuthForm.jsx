@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from "react";
+﻿import { useState, useEffect, useRef } from "react";
 import { getUser, setUser, hashPassword, verifyPassword } from "../lib/auth.js";
 
 function Field({ label, hint, error, children }) {
@@ -147,7 +147,7 @@ function SignupStep({ email, onOtpSent, onBack }) {
   return (
     <form onSubmit={submit} className="auth-form" noValidate>
       <p className="text-light/50 text-sm mb-4">
-        Create your Ulsaaham account to register for events and track your tickets.
+        Create your Ulsaham account to register for events and track your tickets.
       </p>
 
       {globalError && <div className="reg-error">{globalError}</div>}

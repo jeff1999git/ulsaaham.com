@@ -1,4 +1,4 @@
----
+﻿---
 export const prerender = true;
 import BaseLayout from "../layouts/BaseLayout.astro";
 import HomeEvents from "../components/HomeEvents.jsx";
@@ -31,7 +31,7 @@ const clientLogos = [
 ];
 ---
 
-<BaseLayout title="Ulsaaham Entertainments | Immersive Events Crafted to Perfection">
+<BaseLayout title="Ulsaham Entertainments | Immersive Events Crafted to Perfection">
   <section class="hero-video">
     <video
       class="hero-video__media"
@@ -43,10 +43,10 @@ const clientLogos = [
     ></video>
     <div class="hero-video__overlay"></div>
     <nav class="hero-video__menu">
-      <a href="/" class="hero-logo-link" aria-label="Ulsaaham Home">
-        <img src="/brand_logo.avif" alt="Ulsaaham" class="topbar-logo" />
+      <a href="/" class="hero-logo-link" aria-label="Ulsaham Home">
+        <img src="/brand_logo.avif" alt="Ulsaham" class="topbar-logo" />
         <div class="hero-logo-link__brand">
-          <span class="hero-logo-link__name">ULSAAHAM</span>
+          <span class="hero-logo-link__name">ULSAHAM</span>
           <span class="hero-logo-link__sub">Entertainments</span>
         </div>
       </a>
@@ -58,7 +58,7 @@ const clientLogos = [
       </div>
     </nav>
     <script>
-      const u = JSON.parse(localStorage.getItem("ulsaaham_user") || "null");
+      const u = JSON.parse(localStorage.getItem("ulsaham_user") || "null");
       const el = document.getElementById("hero-auth");
       if (el && u) { el.href = "/account"; el.setAttribute("aria-label", "My Account"); el.innerHTML = `<span class="topbar-avatar__letter">${(u.name||"?")[0].toUpperCase()}</span>`; }
     </script>
@@ -146,7 +146,7 @@ const clientLogos = [
   <footer class="bg-primary py-12 text-light">
     <div class="mx-auto flex max-w-6xl flex-col gap-8 px-6 sm:flex-row sm:items-center sm:justify-between">
       <div>
-        <p class="text-sm uppercase tracking-[0.4em] text-light/60">Ulsaaham Entertainments</p>
+        <p class="text-sm uppercase tracking-[0.4em] text-light/60">Ulsaham Entertainments</p>
         <p class="mt-2 text-sm text-light/70">"You celebrate. We create."</p>
       </div>
       <div class="flex flex-wrap gap-6 text-sm text-light/70">
@@ -154,7 +154,7 @@ const clientLogos = [
         <a href="#testimonials" class="transition hover:text-accent">Partners</a>
         <a href="/about" class="transition hover:text-accent">About Us</a>
         <a href="/ticket" class="transition hover:text-accent">Check Ticket</a>
-        <a href="https://www.instagram.com/ulsaaham_?igsh=MTFsdzF4d2J5YXdzdQ==" target="_blank" rel="noreferrer" class="transition hover:text-accent">Instagram</a>
+        <a href="https://www.instagram.com/ulsaham_?igsh=MTFsdzF4d2J5YXdzdQ==" target="_blank" rel="noreferrer" class="transition hover:text-accent">Instagram</a>
         <a href="https://wa.me/9446266011" target="_blank" rel="noreferrer" class="transition hover:text-accent">WhatsApp</a>
         <a href="mailto:ulsaham1@gmail.com" class="transition hover:text-accent">Email</a>
         <a href="/privacy" class="transition hover:text-accent">Privacy Policy</a>
@@ -162,7 +162,7 @@ const clientLogos = [
       </div>
     </div>
     <div class="mt-10 border-t border-light/20 pt-6 text-center text-xs text-light/50">
-      © {new Date().getFullYear()} Ulsaaham Entertainments
+      © {new Date().getFullYear()} Ulsaham Entertainments
     </div>
   </footer>
 

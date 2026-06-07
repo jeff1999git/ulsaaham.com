@@ -1,15 +1,15 @@
----
+﻿---
 export const prerender = true;
 import BaseLayout from "../layouts/BaseLayout.astro";
 import HeroScene from "../components/HeroScene.jsx";
 ---
 
-<BaseLayout title="About Us — Ulsaaham Entertainments" description="Learn about Ulsaaham Entertainments — a Thrissur-based team crafting extraordinary event experiences.">
+<BaseLayout title="About Us — Ulsaham Entertainments" description="Learn about Ulsaham Entertainments — a Thrissur-based team crafting extraordinary event experiences.">
   <div class="min-h-screen bg-primary text-light">
 
     <header class="page-topbar">
       <div class="mx-auto max-w-6xl px-6 flex items-center justify-between">
-        <a href="/" class="page-topbar__brand"><img src="/brand_logo.avif" alt="Ulsaaham" class="topbar-logo" /></a>
+        <a href="/" class="page-topbar__brand"><img src="/brand_logo.avif" alt="Ulsaham" class="topbar-logo" /></a>
         <div class="flex items-center gap-5">
           <a href="/events" class="page-topbar__link">Events</a>
           <a id="topbar-auth" href="/login" class="topbar-avatar" aria-label="Login"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg></a>
@@ -17,7 +17,7 @@ import HeroScene from "../components/HeroScene.jsx";
       </div>
     </header>
     <script>
-      const u = JSON.parse(localStorage.getItem("ulsaaham_user") || "null");
+      const u = JSON.parse(localStorage.getItem("ulsaham_user") || "null");
       const el = document.getElementById("topbar-auth");
       if (el && u) { el.href = "/account"; el.setAttribute("aria-label", "My Account"); el.innerHTML = `<span class="topbar-avatar__letter">${(u.name||"?")[0].toUpperCase()}</span>`; }
     </script>
@@ -34,7 +34,7 @@ import HeroScene from "../components/HeroScene.jsx";
             <div class="space-y-5">
               <img
                 src="https://res.cloudinary.com/dscbuwvgg/image/upload/v1762587370/Adobe_Express_-_file_1_fvilwg.png"
-                alt="Ulsaaham Entertainments logo"
+                alt="Ulsaham Entertainments logo"
                 class="overview-logo"
                 loading="lazy"
                 decoding="async"
@@ -56,10 +56,10 @@ import HeroScene from "../components/HeroScene.jsx";
           <div class="flex-1 space-y-4 text-base leading-relaxed text-light/90">
             <h2 class="text-2xl font-semibold uppercase tracking-[0.25em] text-accent">About Us</h2>
             <p>
-              Ulsaaham Entertainments is a Thrissur-based venture created by a team of young, energetic minds who believe that events should feel extraordinary. We don't just plan events—we design experiences.
+              Ulsaham Entertainments is a Thrissur-based venture created by a team of young, energetic minds who believe that events should feel extraordinary. We don't just plan events—we design experiences.
             </p>
             <p>
-              Today, many parties and functions feel routine, predictable, and stressful for the hosts. At Ulsaaham, we change that. We bring creativity, technical precision, and high-energy entertainment to every occasion, making sure the event is not just organized—but felt.
+              Today, many parties and functions feel routine, predictable, and stressful for the hosts. At Ulsaham, we change that. We bring creativity, technical precision, and high-energy entertainment to every occasion, making sure the event is not just organized—but felt.
             </p>
             <p>
               From DJ nights, neon parties, theme-based celebrations, Halloween shows, college fests, corporate functions, and nightlife events, to premium collaborations with Hotel, we specialize in creating moments full of excitement, music, and unforgettable ambience.

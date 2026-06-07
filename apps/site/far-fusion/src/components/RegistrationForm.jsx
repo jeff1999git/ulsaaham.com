@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from "react";
+﻿import { useState, useEffect, useRef } from "react";
 import QRCode from "react-qr-code";
 import { registerForEvent, createPaymentOrder, verifyPayment } from "../lib/api.js";
 import { getUser, addTicket } from "../lib/auth.js";
@@ -233,7 +233,7 @@ export default function RegistrationForm({ event }) {
       key: orderData.keyId,
       amount: orderData.amount,
       currency: orderData.currency,
-      name: "Ulsaaham Entertainments",
+      name: "Ulsaham Entertainments",
       description: event.name,
       order_id: orderData.orderId,
       prefill: { name: form.name, email: form.email || "", contact: form.phone },
@@ -245,7 +245,7 @@ export default function RegistrationForm({ event }) {
         if (!result.ok) {
           const pid = response.razorpay_payment_id;
           setGlobalError(
-            `Payment was received but we couldn't confirm your registration. Please save your Payment ID: ${pid} and contact support@ulsaaham.com.`
+            `Payment was received but we couldn't confirm your registration. Please save your Payment ID: ${pid} and contact support@ulsaham.com.`
           );
           setPhase("form");
           return;

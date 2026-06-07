@@ -1,4 +1,4 @@
-import nodemailer from "nodemailer";
+﻿import nodemailer from "nodemailer";
 import {
   signCookie, verifyCookie, generateOtp, hashOtp,
   jsonErr, jsonOk,
@@ -21,13 +21,13 @@ function makeTransporter() {
 async function sendOtpEmail(to, otp) {
   const transporter = makeTransporter();
   await transporter.sendMail({
-    from: import.meta.env.EMAIL_FROM || `"Ulsaaham Entertainments" <noreply@ulsaaham.com>`,
+    from: import.meta.env.EMAIL_FROM || `"Ulsaham Entertainments" <noreply@ulsaham.com>`,
     to,
-    subject: `Your Ulsaaham verification code: ${otp}`,
+    subject: `Your Ulsaham verification code: ${otp}`,
     text: `Your one-time verification code is: ${otp}\n\nThis code expires in 10 minutes. Do not share it with anyone.\n\nIf you did not request this, ignore this email.`,
     html: `
       <div style="font-family:Arial,sans-serif;max-width:480px;margin:0 auto;padding:32px;background:#023301;border-radius:12px;color:#fff">
-        <p style="font-size:11px;font-weight:700;letter-spacing:.22em;text-transform:uppercase;color:#fecc01;margin:0 0 6px">Ulsaaham Entertainments</p>
+        <p style="font-size:11px;font-weight:700;letter-spacing:.22em;text-transform:uppercase;color:#fecc01;margin:0 0 6px">Ulsaham Entertainments</p>
         <h2 style="font-size:22px;margin:0 0 24px;color:#fff">Your verification code</h2>
         <div style="background:rgba(254,204,1,.1);border:1px solid rgba(254,204,1,.35);border-radius:10px;padding:28px;text-align:center;margin-bottom:24px">
           <p style="font-size:44px;font-weight:700;letter-spacing:.35em;color:#fecc01;margin:0;font-family:monospace">${otp}</p>

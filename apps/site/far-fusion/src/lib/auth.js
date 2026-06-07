@@ -1,4 +1,4 @@
-const KEY = "ulsaaham_user";
+﻿const KEY = "ulsaham_user";
 
 export function getUser() {
   try { return JSON.parse(localStorage.getItem(KEY) || "null"); } catch { return null; }
@@ -31,7 +31,7 @@ export function addTicket(ticket) {
  * Uses Web Crypto SHA-256 — no packages needed.
  */
 export async function hashPassword(password, email) {
-  const data = new TextEncoder().encode(`${email.toLowerCase()}:${password}:ulsaaham`);
+  const data = new TextEncoder().encode(`${email.toLowerCase()}:${password}:ulsaham`);
   const buf = await crypto.subtle.digest("SHA-256", data);
   return Array.from(new Uint8Array(buf))
     .map((b) => b.toString(16).padStart(2, "0"))
