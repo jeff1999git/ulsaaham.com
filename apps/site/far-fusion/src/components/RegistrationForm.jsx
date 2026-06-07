@@ -1,6 +1,8 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
+import QRCode from "react-qr-code";
 import { registerForEvent, createPaymentOrder, verifyPayment } from "../lib/api.js";
 import { getUser, addTicket } from "../lib/auth.js";
+import { generateTicketCanvas, downloadCanvasAsPng } from "../lib/generate-ticket.js";
 
 function calcFees(amount, count) {
   const base = amount * count;
@@ -22,7 +24,34 @@ function loadRazorpay() {
 }
 
 function TicketSuccess({ ticket }) {
+  const qrRef = useRef(null);
+  const [dlLoading, setDlLoading] = useState(false);
+
   const date = new Intl.DateTimeFormat("en-IN", { dateStyle: "full" }).format(new Date(ticket.eventDate));
+  const eventDateShort = new Intl.DateTimeFormat("en-IN", { day: "numeric", month: "short", year: "numeric" }).format(new Date(ticket.eventDate));
+
+  const handleDownload = async () => {
+    const svgEl = qrRef.current?.querySelector("svg");
+    if (!svgEl) return;
+    setDlLoading(true);
+    try {
+      const canvas = await generateTicketCanvas(svgEl, {
+        ticketCode: ticket.ticketCode,
+        participantName: ticket.participantName,
+        eventName: ticket.eventName,
+        eventDate: eventDateShort,
+        eventVenue: ticket.eventVenue,
+        numberOfParticipants: ticket.numberOfParticipants,
+        bannerImageUrl: ticket.bannerImageUrl || null,
+      });
+      downloadCanvasAsPng(canvas, `ticket-${ticket.ticketCode}.png`);
+    } catch {
+      alert("Failed to generate ticket. Please try again.");
+    } finally {
+      setDlLoading(false);
+    }
+  };
+
   return (
     <div className="ticket-success">
       <div className="ticket-success__header">
@@ -30,6 +59,10 @@ function TicketSuccess({ ticket }) {
         <h3 className="font-serif text-xl text-light mt-1">{ticket.eventName}</h3>
       </div>
       <div className="ticket-success__body">
+        {/* Hidden QR SVG — used only by canvas generator */}
+        <div ref={qrRef} style={{ position: "absolute", visibility: "hidden", pointerEvents: "none", width: 0, height: 0, overflow: "hidden" }}>
+          <QRCode value={ticket.ticketCode} size={260} />
+        </div>
         {ticket.qrCodeUrl && (
           <img src={ticket.qrCodeUrl} alt="QR ticket" className="ticket-qr" />
         )}
@@ -47,7 +80,10 @@ function TicketSuccess({ ticket }) {
       <p className="text-light/40 text-xs mt-5 text-center">
         Screenshot this ticket — show the QR code at the venue. It's also saved in your account.
       </p>
-      <div className="mt-4 text-center">
+      <div className="mt-4 flex items-center justify-center gap-4 flex-wrap">
+        <button onClick={handleDownload} disabled={dlLoading} className="account-btn" style={{ fontSize: 12, padding: "6px 16px" }}>
+          {dlLoading ? "Generating…" : "Download Ticket"}
+        </button>
         <a href="/account" className="text-accent text-xs font-semibold uppercase tracking-widest hover:underline">
           View My Tickets →
         </a>

@@ -1,6 +1,8 @@
 import { useState, useEffect, useRef, useCallback } from "react";
+import QRCode from "react-qr-code";
 import { getUser, setUser, clearUser, addTicket } from "../lib/auth.js";
 import { fetchMyTickets, getEvent, createPaymentOrder, verifyPayment } from "../lib/api.js";
+import { generateTicketCanvas, downloadCanvasAsPng } from "../lib/generate-ticket.js";
 
 function loadRazorpay() {
   return new Promise((resolve) => {
@@ -143,16 +145,35 @@ function RepayPanel({ ticket, user, onSuccess, onClose }) {
 // ── Ticket card ───────────────────────────────────────────────────────────────
 
 function TicketCard({ ticket, onRepay }) {
+  const qrRef = useRef(null);
+  const [dlLoading, setDlLoading] = useState(false);
+
   const name = ticket.event?.name;
   const date = fmtDate(ticket.event?.date);
   const venue = ticket.event?.venue;
   const banner = ticket.event?.bannerImageUrl;
 
-  const handleDownload = () => {
-    const a = document.createElement("a");
-    a.href = ticket.qrCodeUrl;
-    a.download = `${ticket.ticketCode}.png`;
-    a.click();
+  const handleDownloadTicket = async () => {
+    const svgEl = qrRef.current?.querySelector("svg");
+    if (!svgEl) return;
+    setDlLoading(true);
+    try {
+      const eventDate = new Intl.DateTimeFormat("en-IN", { day: "numeric", month: "short", year: "numeric" }).format(new Date(ticket.event?.date));
+      const canvas = await generateTicketCanvas(svgEl, {
+        ticketCode: ticket.ticketCode,
+        participantName: ticket.participantName,
+        eventName: name,
+        eventDate,
+        eventVenue: venue,
+        numberOfParticipants: ticket.numberOfParticipants,
+        bannerImageUrl: banner,
+      });
+      downloadCanvasAsPng(canvas, `ticket-${ticket.ticketCode}.png`);
+    } catch {
+      alert("Failed to generate ticket. Please try again.");
+    } finally {
+      setDlLoading(false);
+    }
   };
 
   const handleShare = async () => {
@@ -179,12 +200,19 @@ function TicketCard({ ticket, onRepay }) {
 
       {ticket.amountPaid && ticket.qrCodeUrl ? (
         <div style={{ padding: "12px 16px", borderTop: "1px solid rgba(255,255,255,0.06)" }}>
+          {/* Hidden QR SVG — used only by canvas generator */}
+          <div ref={qrRef} style={{ position: "absolute", visibility: "hidden", pointerEvents: "none", width: 0, height: 0, overflow: "hidden" }}>
+            <QRCode value={ticket.ticketCode} size={260} />
+          </div>
+
           <img src={ticket.qrCodeUrl} alt="QR code" style={{ width: "100%", maxWidth: 150, display: "block", margin: "0 auto 8px" }} />
           <p style={{ fontFamily: "monospace", fontSize: "0.8rem", textAlign: "center", letterSpacing: "0.12em", color: "rgba(255,255,255,0.5)", marginBottom: 10 }}>
             {ticket.ticketCode}
           </p>
           <div style={{ display: "flex", gap: 8, justifyContent: "center" }}>
-            <button onClick={handleDownload} className="account-btn" style={{ fontSize: 11, padding: "5px 12px" }}>Download QR</button>
+            <button onClick={handleDownloadTicket} disabled={dlLoading} className="account-btn" style={{ fontSize: 11, padding: "5px 12px" }}>
+              {dlLoading ? "Generating…" : "Download Ticket"}
+            </button>
             <button onClick={handleShare} className="account-btn" style={{ fontSize: 11, padding: "5px 12px" }}>Share</button>
           </div>
         </div>

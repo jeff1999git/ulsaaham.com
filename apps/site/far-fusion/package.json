@@ -17,6 +17,7 @@
     "photoswipe": "^5.4.4",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
+    "react-qr-code": "^2.0.21",
     "three": "^0.169.0"
   },
   "devDependencies": {
