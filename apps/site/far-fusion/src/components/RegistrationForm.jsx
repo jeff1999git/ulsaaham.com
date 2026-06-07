@@ -1,7 +1,25 @@
-import { useState } from "react";
-import { registerForEvent } from "../lib/api.js";
+import { useState, useEffect } from "react";
+import { registerForEvent, createPaymentOrder, verifyPayment } from "../lib/api.js";
+import { getUser, addTicket } from "../lib/auth.js";
 
-const empty = { name: "", phone: "", email: "", age: "", numberOfParticipants: "1" };
+function calcFees(amount, count) {
+  const base = amount * count;
+  const gst = Math.round(base * 0.18 * 100) / 100;
+  const platformFee = Math.round(base * 0.02 * 100) / 100;
+  const total = Math.round((base + gst + platformFee) * 100) / 100;
+  return { base, gst, platformFee, total };
+}
+
+function loadRazorpay() {
+  return new Promise((resolve) => {
+    if (window.Razorpay) { resolve(true); return; }
+    const s = document.createElement("script");
+    s.src = "https://checkout.razorpay.com/v1/checkout.js";
+    s.onload = () => resolve(true);
+    s.onerror = () => resolve(false);
+    document.body.appendChild(s);
+  });
+}
 
 function TicketSuccess({ ticket }) {
   const date = new Intl.DateTimeFormat("en-IN", { dateStyle: "full" }).format(new Date(ticket.eventDate));
@@ -22,23 +40,44 @@ function TicketSuccess({ ticket }) {
             <dt>Date</dt><dd>{date}</dd>
             <dt>Venue</dt><dd>{ticket.eventVenue}</dd>
             <dt>Participants</dt><dd>{ticket.numberOfParticipants}</dd>
-            <dt>Entry</dt><dd>{ticket.isFree ? "Free" : `₹${ticket.amount}`}</dd>
+            {ticket.paymentId && <><dt>Payment</dt><dd className="text-xs opacity-60">{ticket.paymentId}</dd></>}
           </dl>
         </div>
       </div>
       <p className="text-light/40 text-xs mt-5 text-center">
-        Screenshot this ticket — show the QR code at the venue.
+        Screenshot this ticket — show the QR code at the venue. It's also saved in your account.
       </p>
+      <div className="mt-4 text-center">
+        <a href="/account" className="text-accent text-xs font-semibold uppercase tracking-widest hover:underline">
+          View My Tickets →
+        </a>
+      </div>
     </div>
   );
 }
 
 export default function RegistrationForm({ event }) {
-  const [form, setForm] = useState(empty);
-  const [submitting, setSubmitting] = useState(false);
+  const [authStatus, setAuthStatus] = useState("loading"); // "loading" | "guest" | "user"
+  const [user, setUser] = useState(null);
+  const [form, setForm] = useState({ name: "", phone: "", email: "", age: "", numberOfParticipants: "1" });
+  const [phase, setPhase] = useState("form"); // "form" | "breakdown" | "paying" | "verifying" | "success"
+  const [ticket, setTicket] = useState(null);
   const [fieldErrors, setFieldErrors] = useState({});
   const [globalError, setGlobalError] = useState(null);
-  const [ticket, setTicket] = useState(null);
+
+  useEffect(() => {
+    const u = getUser();
+    if (!u) { setAuthStatus("guest"); return; }
+    setUser(u);
+    setAuthStatus("user");
+    setForm({
+      name: u.name || "",
+      phone: u.phone || "",
+      email: u.email || "",
+      age: u.age ? String(u.age) : "",
+      numberOfParticipants: "1",
+    });
+  }, []);
 
   if (event.isFull) {
     return (
@@ -56,19 +95,35 @@ export default function RegistrationForm({ event }) {
       </div>
     );
   }
-  if (ticket) return <TicketSuccess ticket={ticket} />;
+
+  if (authStatus === "loading") {
+    return <div className="reg-closed" style={{ minHeight: "120px", display: "flex", alignItems: "center", justifyContent: "center" }}><div className="spinner" /></div>;
+  }
+
+  if (authStatus === "guest") {
+    const next = encodeURIComponent(typeof window !== "undefined" ? window.location.pathname + window.location.search : "/events");
+    return (
+      <div className="auth-gate">
+        <p className="text-accent text-xs font-semibold uppercase tracking-widest mb-2">Login Required</p>
+        <p className="text-light/60 text-sm mb-6">
+          Sign in to register for this event and access your tickets.
+        </p>
+        <a href={`/login?next=${next}`} className="reg-submit" style={{ display: "block", textAlign: "center", textDecoration: "none" }}>
+          Login / Sign Up →
+        </a>
+      </div>
+    );
+  }
+
+  if (phase === "success") return <TicketSuccess ticket={ticket} />;
 
   const set = (field) => (e) => {
     setForm((f) => ({ ...f, [field]: e.target.value }));
     setFieldErrors((fe) => { const n = { ...fe }; delete n[field]; return n; });
+    setGlobalError(null);
   };
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    setSubmitting(true);
-    setFieldErrors({});
-    setGlobalError(null);
-
+  const buildBody = () => {
     const body = {
       name: form.name.trim(),
       phone: form.phone.trim(),
@@ -76,23 +131,165 @@ export default function RegistrationForm({ event }) {
       numberOfParticipants: Number(form.numberOfParticipants),
     };
     if (form.email.trim()) body.email = form.email.trim();
-
-    const { ok, status, data } = await registerForEvent(event.slug, body);
-    setSubmitting(false);
-
-    if (ok) { setTicket(data.data); return; }
-    if (status === 400 && data.fieldErrors) { setFieldErrors(data.fieldErrors); return; }
-    setGlobalError(data.error || "Something went wrong. Please try again.");
+    return body;
   };
+
+  // ── Free event: direct registration ──────────────────────────────────────────
+  const handleFreeSubmit = async (e) => {
+    e.preventDefault();
+    setPhase("paying");
+    setFieldErrors({});
+    setGlobalError(null);
+
+    const { ok, status, data } = await registerForEvent(event.slug, buildBody());
+    if (ok) {
+      const ticketData = data.data;
+      addTicket({ ...ticketData, registeredAt: new Date().toISOString() });
+      setTicket(ticketData);
+      setPhase("success");
+      return;
+    }
+    setPhase("form");
+    if (status === 400 && data.fieldErrors) { setFieldErrors(data.fieldErrors); return; }
+    if (status === 409) { setGlobalError("This phone number is already registered for this event."); return; }
+    if (status === 410) { setGlobalError("This event is now full."); return; }
+    setGlobalError(data?.error || "Something went wrong. Please try again.");
+  };
+
+  // ── Paid event: show breakdown before opening Razorpay ──────────────────────
+  const handlePaidSubmit = (e) => {
+    e.preventDefault();
+    setFieldErrors({});
+    setGlobalError(null);
+    setPhase("breakdown");
+  };
+
+  const handlePay = async () => {
+    setGlobalError(null);
+    setPhase("paying");
+
+    const loaded = await loadRazorpay();
+    if (!loaded) {
+      setGlobalError("Could not load the payment gateway. Please check your connection and try again.");
+      setPhase("breakdown");
+      return;
+    }
+
+    const body = buildBody();
+    const { ok, status, data } = await createPaymentOrder(event.slug, body);
+    if (!ok) {
+      setPhase("breakdown");
+      if (status === 409) { setGlobalError("This phone number is already registered for this event."); return; }
+      if (status === 410) { setGlobalError("This event is now full."); return; }
+      setGlobalError(data?.error || "Could not initiate payment. Please try again.");
+      return;
+    }
+
+    const orderData = data.data;
+    const rzp = new window.Razorpay({
+      key: orderData.keyId,
+      amount: orderData.amount,
+      currency: orderData.currency,
+      name: "Ulsaaham Entertainments",
+      description: event.name,
+      order_id: orderData.orderId,
+      prefill: { name: form.name, email: form.email || "", contact: form.phone },
+      theme: { color: "#014421" },
+      handler: async (response) => {
+        setPhase("verifying");
+        const vBody = { ...response, ...body };
+        const result = await verifyPayment(event.slug, vBody);
+        if (!result.ok) {
+          const pid = response.razorpay_payment_id;
+          setGlobalError(
+            `Payment was received but we couldn't confirm your registration. Please save your Payment ID: ${pid} and contact support@ulsaaham.com.`
+          );
+          setPhase("form");
+          return;
+        }
+        const ticketData = result.data.data;
+        addTicket({ ...ticketData, registeredAt: new Date().toISOString() });
+        setTicket(ticketData);
+        setPhase("success");
+      },
+      modal: {
+        ondismiss: () => setPhase("breakdown"),
+      },
+    });
+    rzp.open();
+  };
+
+  const count = Number(form.numberOfParticipants) || 1;
+  const fees = !event.isFree ? calcFees(event.amount, count) : null;
+  const spotsLeft = event.capacity ? event.capacity - event.registeredCount : null;
+
+  // ── Paying / Verifying spinner ───────────────────────────────────────────────
+  if (phase === "paying" || phase === "verifying") {
+    return (
+      <div className="reg-form" style={{ minHeight: "160px", alignItems: "center", justifyContent: "center" }}>
+        <div className="spinner" />
+        <p className="text-light/40 text-sm mt-4">
+          {phase === "verifying" ? "Confirming your payment…" : "Opening payment gateway…"}
+        </p>
+      </div>
+    );
+  }
+
+  // ── Breakdown: show fee table before Razorpay ────────────────────────────────
+  if (phase === "breakdown" && fees) {
+    const bd = calcFees(event.amount, count);
+    return (
+      <div className="reg-form">
+        <h3 className="font-serif text-xl text-light mb-1">Order Summary</h3>
+        <p className="text-light/40 text-sm mb-5">{event.name}</p>
+
+        {globalError && <div className="reg-error">{globalError}</div>}
+
+        <div className="fee-breakdown">
+          <div className="fee-breakdown__row">
+            <span>₹{event.amount} × {count} person{count !== 1 ? "s" : ""}</span>
+            <span>₹{bd.base.toFixed(2)}</span>
+          </div>
+          <div className="fee-breakdown__row">
+            <span>GST (18%)</span>
+            <span>₹{bd.gst.toFixed(2)}</span>
+          </div>
+          <div className="fee-breakdown__row">
+            <span>Platform fee (2%)</span>
+            <span>₹{bd.platformFee.toFixed(2)}</span>
+          </div>
+          <div className="fee-breakdown__divider" />
+          <div className="fee-breakdown__total">
+            <span>Total</span>
+            <span>₹{bd.total.toFixed(2)}</span>
+          </div>
+        </div>
+
+        <p className="text-light/40 text-xs mb-4">Registered as: <strong className="text-light/70">{form.name}</strong> (+91 {form.phone})</p>
+
+        <button onClick={handlePay} className="reg-submit">
+          Pay ₹{bd.total.toFixed(2)} →
+        </button>
+        <button
+          onClick={() => { setPhase("form"); setGlobalError(null); }}
+          className="text-light/30 text-xs uppercase tracking-widest hover:text-light/60 transition mt-2 text-center"
+        >
+          ← Edit Details
+        </button>
+      </div>
+    );
+  }
+
+  // ── Registration form ────────────────────────────────────────────────────────
+  const handleSubmit = event.isFree ? handleFreeSubmit : handlePaidSubmit;
+  const isSubmitting = phase === "paying" || phase === "verifying";
 
   return (
     <form onSubmit={handleSubmit} className="reg-form" noValidate>
       <h3 className="font-serif text-xl text-light mb-1">Register</h3>
       <p className="text-light/40 text-sm mb-5">
-        {event.isFree ? "Free entry" : `₹${event.amount} per person`}
-        {event.capacity && !event.isFull
-          ? ` · ${event.capacity - event.registeredCount} spots left`
-          : ""}
+        {event.isFree ? "Free entry" : `₹${event.amount} per person (+ 18% GST + 2% platform fee)`}
+        {spotsLeft != null && !event.isFull ? ` · ${spotsLeft} spot${spotsLeft !== 1 ? "s" : ""} left` : ""}
       </p>
 
       {globalError && <div className="reg-error">{globalError}</div>}
@@ -115,7 +312,7 @@ export default function RegistrationForm({ event }) {
       <div className="reg-field">
         <label>
           Email
-          <span className="reg-field-hint">optional</span>
+          <span className="reg-field-hint">optional — for receipt</span>
         </label>
         <input type="email" value={form.email} onChange={set("email")} placeholder="rahul@example.com" />
         {fieldErrors.email && <span className="reg-field-error">{fieldErrors.email[0]}</span>}
@@ -134,8 +331,18 @@ export default function RegistrationForm({ event }) {
         </div>
       </div>
 
-      <button type="submit" disabled={submitting} className="reg-submit">
-        {submitting ? "Registering…" : `Register${event.isFree ? " — Free" : ` — ₹${event.amount}`}`}
+      {fees && (
+        <p className="text-light/40 text-xs">
+          Estimated total: <strong className="text-accent">₹{calcFees(event.amount, count).total.toFixed(2)}</strong> (breakdown shown before payment)
+        </p>
+      )}
+
+      <button type="submit" disabled={isSubmitting} className="reg-submit">
+        {isSubmitting
+          ? "Processing…"
+          : event.isFree
+          ? "Register — Free"
+          : `Pay & Register — ₹${fees ? calcFees(event.amount, count).total.toFixed(2) : "…"}`}
       </button>
     </form>
   );

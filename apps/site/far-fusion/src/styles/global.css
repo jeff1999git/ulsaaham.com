@@ -880,3 +880,148 @@ a:hover {
   margin-bottom: 1.1rem;
 }
 
+/* ─── Auth gate (shown in RegistrationForm when guest) ─── */
+.auth-gate {
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(254, 204, 1, 0.15);
+  border-radius: 1.5rem;
+  padding: 2rem;
+  text-align: center;
+}
+
+/* ─── Auth form (login/signup page) ─── */
+.auth-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+.auth-form__back {
+  background: none;
+  border: none;
+  padding: 0;
+  color: rgba(255, 255, 255, 0.3);
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  cursor: pointer;
+  text-align: left;
+  transition: color 0.2s;
+  margin-top: 0.25rem;
+}
+.auth-form__back:hover { color: #fecc01; }
+
+/* ─── Fee breakdown (paid events) ─── */
+.fee-breakdown {
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(254, 204, 1, 0.15);
+  border-radius: 1rem;
+  padding: 1.25rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.55rem;
+  margin-bottom: 0.5rem;
+}
+.fee-breakdown__row {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.85rem;
+  color: rgba(255, 255, 255, 0.55);
+}
+.fee-breakdown__divider {
+  border-top: 1px solid rgba(254, 204, 1, 0.15);
+  margin: 0.25rem 0;
+}
+.fee-breakdown__total {
+  display: flex;
+  justify-content: space-between;
+  font-size: 1rem;
+  font-weight: 700;
+  color: #fecc01;
+}
+
+/* ─── Account page ─── */
+.account-page {
+  display: flex;
+  flex-direction: column;
+  gap: 2.5rem;
+}
+.account-section {
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(254, 204, 1, 0.12);
+  border-radius: 1.5rem;
+  padding: 2rem;
+}
+.account-profile {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+@media (min-width: 640px) {
+  .account-profile {
+    flex-direction: row;
+    align-items: flex-start;
+    justify-content: space-between;
+  }
+}
+.account-edit-form {
+  margin-top: 1.5rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid rgba(254, 204, 1, 0.1);
+  display: flex;
+  flex-direction: column;
+  gap: 0.9rem;
+}
+.account-btn {
+  padding: 0.45rem 1.1rem;
+  border: 1px solid rgba(254, 204, 1, 0.25);
+  border-radius: 999px;
+  background: transparent;
+  color: rgba(255, 255, 255, 0.55);
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: border-color 0.2s, color 0.2s;
+  white-space: nowrap;
+}
+.account-btn:hover { border-color: #fecc01; color: #fecc01; }
+.account-btn--danger { border-color: rgba(220, 38, 38, 0.3); color: rgba(252, 165, 165, 0.6); }
+.account-btn--danger:hover { border-color: rgba(220, 38, 38, 0.7); color: #fca5a5; }
+
+/* ─── My Tickets grid ─── */
+.my-tickets-grid {
+  display: grid;
+  gap: 1.25rem;
+  grid-template-columns: 1fr;
+}
+@media (min-width: 640px) {
+  .my-tickets-grid { grid-template-columns: repeat(2, 1fr); }
+}
+@media (min-width: 1024px) {
+  .my-tickets-grid { grid-template-columns: repeat(3, 1fr); }
+}
+.my-ticket {
+  display: flex;
+  gap: 1rem;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(254, 204, 1, 0.12);
+  border-radius: 1rem;
+  padding: 1.1rem;
+  align-items: flex-start;
+}
+.my-ticket__qr {
+  width: 80px;
+  height: 80px;
+  object-fit: contain;
+  border-radius: 0.5rem;
+  border: 1px solid rgba(254, 204, 1, 0.2);
+  flex-shrink: 0;
+}
+.my-ticket__info {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+}
+

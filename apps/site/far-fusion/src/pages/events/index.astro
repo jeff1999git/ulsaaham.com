@@ -9,9 +9,17 @@ import EventsList from "../../components/EventsList.jsx";
     <header class="page-topbar">
       <div class="mx-auto max-w-6xl px-6 flex items-center justify-between">
         <a href="/" class="page-topbar__brand">Ulsaaham</a>
-        <a href="/ticket" class="page-topbar__link">Check Ticket</a>
+        <div class="flex items-center gap-5">
+          <a href="/ticket" class="page-topbar__link">Check Ticket</a>
+          <a id="topbar-auth" href="/login" class="page-topbar__link">Login</a>
+        </div>
       </div>
     </header>
+    <script>
+      const u = JSON.parse(localStorage.getItem("ulsaaham_user") || "null");
+      const el = document.getElementById("topbar-auth");
+      if (el && u) { el.textContent = "My Account"; el.href = "/account"; }
+    </script>
 
     <div class="mx-auto max-w-6xl px-6 pt-14 pb-24">
       <div class="mb-12">

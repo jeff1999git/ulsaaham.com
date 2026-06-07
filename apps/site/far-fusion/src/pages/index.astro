@@ -47,7 +47,13 @@ const clientLogos = [
       <a class="hero-video__menu-link" href="#testimonials">Partners</a>
       <a class="hero-video__menu-link" href="#overview">About Us</a>
       <a class="hero-video__menu-link" href="#consult">Contact</a>
+      <a id="hero-auth" class="hero-video__menu-link" href="/login">Login</a>
     </nav>
+    <script>
+      const u = JSON.parse(localStorage.getItem("ulsaaham_user") || "null");
+      const el = document.getElementById("hero-auth");
+      if (el && u) { el.textContent = "Account"; el.href = "/account"; }
+    </script>
     <div class="hero-video__content">
       <a class="hero-video__cta" href="#gallery">
         <span class="hero-video__eyebrow">ULSAAHAM</span>

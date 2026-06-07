@@ -43,3 +43,27 @@ export async function checkTicket(ticketCode) {
   }
   return { ok: res.ok, status: res.status, data: await res.json() };
 }
+
+export async function createPaymentOrder(slug, body) {
+  const res = await fetch(`${BASE}/events/${encodeURIComponent(slug)}/payment/order`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(body),
+  });
+  if (res.status === 429) {
+    return { ok: false, status: 429, data: { success: false, error: "Too many attempts. Please wait before trying again." } };
+  }
+  return { ok: res.ok, status: res.status, data: await res.json() };
+}
+
+export async function verifyPayment(slug, body) {
+  const res = await fetch(`${BASE}/events/${encodeURIComponent(slug)}/payment/verify`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(body),
+  });
+  if (res.status === 429) {
+    return { ok: false, status: 429, data: { success: false, error: "Too many attempts. Please wait before trying again." } };
+  }
+  return { ok: res.ok, status: res.status, data: await res.json() };
+}

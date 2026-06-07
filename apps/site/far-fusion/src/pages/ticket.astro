@@ -9,9 +9,17 @@ import TicketChecker from "../components/TicketChecker.jsx";
     <header class="page-topbar">
       <div class="mx-auto max-w-6xl px-6 flex items-center justify-between">
         <a href="/" class="page-topbar__brand">Ulsaaham</a>
-        <a href="/events" class="page-topbar__link">All Events</a>
+        <div class="flex items-center gap-5">
+          <a href="/events" class="page-topbar__link">All Events</a>
+          <a id="topbar-auth" href="/login" class="page-topbar__link">Login</a>
+        </div>
       </div>
     </header>
+    <script>
+      const u = JSON.parse(localStorage.getItem("ulsaaham_user") || "null");
+      const el = document.getElementById("topbar-auth");
+      if (el && u) { el.textContent = "My Account"; el.href = "/account"; }
+    </script>
 
     <div class="mx-auto max-w-lg px-6 pt-20 pb-24">
       <h1 class="section-title text-3xl mb-2">Ticket Lookup</h1>
