@@ -176,14 +176,6 @@ function TicketCard({ ticket, onRepay }) {
     }
   };
 
-  const handleShare = async () => {
-    if (navigator.share) {
-      try { await navigator.share({ title: name, text: `My ticket: ${ticket.ticketCode}` }); } catch {}
-    } else {
-      try { await navigator.clipboard.writeText(ticket.ticketCode); alert("Ticket code copied!"); } catch {}
-    }
-  };
-
   return (
     <div className="my-ticket">
       {banner && (
@@ -217,11 +209,10 @@ function TicketCard({ ticket, onRepay }) {
           <p style={{ fontFamily: "monospace", fontSize: "0.8rem", textAlign: "center", letterSpacing: "0.12em", color: "rgba(255,255,255,0.5)", marginBottom: 10 }}>
             {ticket.ticketCode}
           </p>
-          <div style={{ display: "flex", gap: 8, justifyContent: "center" }}>
+          <div style={{ display: "flex", justifyContent: "center" }}>
             <button onClick={handleDownloadTicket} disabled={dlLoading} className="account-btn" style={{ fontSize: 11, padding: "5px 12px" }}>
               {dlLoading ? "Generating…" : "Download Ticket"}
             </button>
-            <button onClick={handleShare} className="account-btn" style={{ fontSize: 11, padding: "5px 12px" }}>Share</button>
           </div>
         </div>
       ) : (
