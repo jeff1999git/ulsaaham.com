@@ -12,7 +12,7 @@ function Skeletons({ count = 6 }) {
   );
 }
 
-function Section({ title, params, limit = 12 }) {
+function Section({ title, params, limit = 12, filter, cardProps, paginate = true }) {
   const [events, setEvents] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -35,8 +35,9 @@ function Section({ title, params, limit = 12 }) {
     return () => { cancelled = true; };
   }, [page]);
 
-  // hide section entirely if it loaded with no events
-  if (!loading && !error && events.length === 0) return null;
+  const displayed = filter ? events.filter(filter) : events;
+
+  if (!loading && !error && displayed.length === 0) return null;
 
   return (
     <div className="mb-16">
@@ -50,11 +51,11 @@ function Section({ title, params, limit = 12 }) {
 
       {!loading && !error && (
         <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-          {events.map((ev) => <EventCard key={ev.id} event={ev} />)}
+          {displayed.map((ev) => <EventCard key={ev.id} event={ev} {...(cardProps || {})} />)}
         </div>
       )}
 
-      {totalPages > 1 && !loading && (
+      {paginate && totalPages > 1 && !loading && (
         <div className="flex items-center justify-center gap-4 mt-10">
           <button
             onClick={() => setPage((p) => Math.max(1, p - 1))}
@@ -77,12 +78,21 @@ function Section({ title, params, limit = 12 }) {
   );
 }
 
+const isPast = (ev) => new Date(ev.date) < new Date();
+
 export default function EventsList() {
   return (
     <div>
       <Section title="Featured Events" params={{ featured: true }} limit={12} />
       <Section title="Upcoming Events" params={{ upcoming: true }} limit={12} />
-      <Section title="All Events" params={{}} limit={12} />
+      <Section
+        title="Past Events"
+        params={{}}
+        limit={50}
+        filter={isPast}
+        cardProps={{ linkable: false }}
+        paginate={false}
+      />
     </div>
   );
 }

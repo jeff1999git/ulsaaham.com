@@ -67,3 +67,15 @@ export async function verifyPayment(slug, body) {
   }
   return { ok: res.ok, status: res.status, data: await res.json() };
 }
+
+export async function fetchMyTickets(ticketCodes) {
+  const res = await fetch(`${BASE}/participants/my-tickets`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ ticketCodes }),
+  });
+  if (res.status === 429) {
+    return { ok: false, status: 429, data: { success: false, error: "Too many requests. Please try again later." } };
+  }
+  return { ok: res.ok, status: res.status, data: await res.json() };
+}

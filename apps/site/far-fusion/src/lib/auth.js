@@ -25,3 +25,20 @@ export function addTicket(ticket) {
   }
   setUser({ ...user, tickets });
 }
+
+/**
+ * Hash a password using email as a deterministic salt.
+ * Uses Web Crypto SHA-256 — no packages needed.
+ */
+export async function hashPassword(password, email) {
+  const data = new TextEncoder().encode(`${email.toLowerCase()}:${password}:ulsaaham`);
+  const buf = await crypto.subtle.digest("SHA-256", data);
+  return Array.from(new Uint8Array(buf))
+    .map((b) => b.toString(16).padStart(2, "0"))
+    .join("");
+}
+
+export async function verifyPassword(password, email, storedHash) {
+  const hash = await hashPassword(password, email);
+  return hash === storedHash;
+}

@@ -1,18 +1,60 @@
 $ astro dev
 [baseline-browser-mapping] The data in this module is over two months old.  To ensure accurate Baseline data, please update: `npm i baseline-browser-mapping@latest -D`
-[2m16:31:49[22m [34m[types][39m Generated [2m1ms[22m
-[2m16:31:49[22m [34m[content][39m Syncing content
-[2m16:31:49[22m [34m[content][39m Synced content
+[2m18:05:45[22m [34m[types][39m Generated [2m1ms[22m
+[2m18:05:45[22m [34m[content][39m Syncing content
+[2m18:05:45[22m [34m[content][39m Synced content
 
-[42m[1m astro [22m[49m [32mv5.15.4[39m [2mready in[22m 1017 [2mms[22m
+[42m[1m astro [22m[49m [32mv5.15.4[39m [2mready in[22m 729 [2mms[22m
 
 [2m┃[22m Local    [36mhttp://localhost:4321/[39m
 [2m┃[22m Network  [2muse --host to expose[22m
 
-[2m16:31:49[22m [32mwatching for file changes...[39m
+[2m18:05:45[22m [32mwatching for file changes...[39m
 Browserslist: browsers data (caniuse-lite) is 7 months old. Please run:
   npx update-browserslist-db@latest
   Why you should do it regularly: https://github.com/browserslist/update-db#readme
-[2m16:32:11[22m [34m[200][39m / [2m182ms[22m
-[2m16:32:14[22m [34m[200][39m /events [2m22ms[22m
-[2m16:32:23[22m [34m[200][39m /events/detail [2m5ms[22m
+[2m18:05:48[22m [34m[200][39m /login [2m260ms[22m
+[2m18:06:19[22m [34m[200][39m [34mPOST[39m /api/auth/send-otp [2m3565ms[22m
+[2m18:06:44[22m [34m[200][39m [34mPOST[39m /api/auth/verify-otp [2m3ms[22m
+[2m18:06:44[22m [34m[200][39m /events/detail [2m20ms[22m
+[2m18:09:25[22m [34m[200][39m /events/detail [2m12ms[22m
+[2m18:20:52[22m [34m[200][39m / [2m9ms[22m
+[2m18:20:53[22m [34m[200][39m /account [2m8ms[22m
+[2m18:20:56[22m [34m[200][39m / [2m6ms[22m
+[2m18:21:05[22m [34m[200][39m /login [2m12ms[22m
+[2m18:22:05[22m [34m[200][39m [34mPOST[39m /api/auth/send-otp [2m2781ms[22m
+[2m18:22:49[22m [34m[200][39m [34mPOST[39m /api/auth/verify-otp [2m1ms[22m
+[2m18:22:49[22m [34m[200][39m / [2m8ms[22m
+[2m18:22:52[22m [34m[200][39m /events [2m11ms[22m
+[2m18:22:57[22m [34m[200][39m /events/detail [2m7ms[22m
+[2m18:24:51[22m [34m[200][39m /events/detail [2m12ms[22m
+[2m18:25:38[22m [34m[watch][39m /src/styles/global.css, /src/components/EventDetail.jsx, /src/components/RegistrationForm.jsx, /src/components/HomeEvents.jsx, /src/components/EventsList.jsx
+[2m18:25:38[22m [34m[watch][39m src/lib/api.js
+[2m18:26:46[22m [34m[watch][39m /src/components/AccountPage.jsx, /src/styles/global.css
+[2m18:26:46[22m [34m[watch][39m src/components/AccountPage.jsx
+[2m18:27:35[22m [34m[watch][39m /src/styles/global.css
+[2m18:27:36[22m [34m[200][39m /events/detail [2m231ms[22m
+[2m18:39:26[22m [34m[200][39m /account [2m5ms[22m
+[2m18:53:38[22m [34m[200][39m /account [2m15ms[22m
+[2m20:17:43[22m [34m[200][39m /account [2m8ms[22m
+[2m20:33:36[22m [34m[200][39m / [2m11ms[22m
+[2m20:33:38[22m [34m[200][39m /events [2m14ms[22m
+[2m20:35:39[22m [34m[watch][39m /src/components/EventCard.jsx, /src/styles/global.css
+[2m20:35:39[22m [34m[watch][39m src/components/EventCard.jsx
+[2m20:35:45[22m [34m[watch][39m /src/components/EventDetail.jsx, /src/styles/global.css
+[2m20:35:45[22m [34m[watch][39m src/components/EventDetail.jsx
+[2m20:35:50[22m [34m[watch][39m /src/components/EventDetail.jsx, /src/styles/global.css
+[2m20:35:50[22m [34m[watch][39m src/components/EventDetail.jsx
+[2m20:35:55[22m [34m[watch][39m /src/styles/global.css
+[2m20:35:56[22m [34m[200][39m /events [2m209ms[22m
+[2m20:36:00[22m [34m[watch][39m /src/styles/global.css
+[2m20:36:01[22m [34m[200][39m /events [2m182ms[22m
+[2m20:36:07[22m [34m[watch][39m /src/styles/global.css
+[2m20:36:07[22m [34m[200][39m /events [2m166ms[22m
+[2m20:36:13[22m [34m[200][39m /events/detail [2m4ms[22m
+[2m20:36:15[22m [34m[watch][39m /src/components/AccountPage.jsx, /src/styles/global.css
+[2m20:36:15[22m [34m[watch][39m src/components/AccountPage.jsx
+[2m20:37:01[22m [34m[200][39m /events/detail [2m59ms[22m
+[2m20:38:26[22m [34m[watch][39m /src/components/EventCard.jsx, /src/styles/global.css
+[2m20:38:26[22m [34m[watch][39m src/components/EventCard.jsx
+[2m20:38:51[22m [34m[watch][39m /src/components/EventsList.jsx, /src/styles/global.css

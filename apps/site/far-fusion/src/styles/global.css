@@ -554,7 +554,7 @@ a:hover {
 }
 .event-card__image {
   position: relative;
-  aspect-ratio: 16 / 9;
+  aspect-ratio: 4 / 5;
   overflow: hidden;
   background: rgba(2, 51, 1, 0.6);
 }
@@ -566,6 +566,8 @@ a:hover {
   display: block;
 }
 .event-card:hover .event-card__image img { transform: scale(1.05); }
+.event-card--static:hover { transform: none; }
+.event-card--static:hover .event-card__image img { transform: none; }
 .event-card__placeholder {
   width: 100%;
   height: 100%;
@@ -637,19 +639,20 @@ a:hover {
 .event-card-skeleton {
   border-radius: 1.25rem;
   background: rgba(255, 255, 255, 0.05);
-  height: 260px;
+  aspect-ratio: 4 / 5;
 }
 
 /* ─── Event detail page ─── */
 .event-detail { padding-bottom: 5rem; }
 .event-detail__banner {
-  width: 100%;
-  max-height: 460px;
-  overflow: hidden;
+  display: flex;
+  justify-content: center;
+  background: #000;
 }
 .event-detail__banner img {
   width: 100%;
-  height: 100%;
+  max-width: 560px;
+  aspect-ratio: 4 / 5;
   object-fit: cover;
   display: block;
 }
@@ -1004,24 +1007,13 @@ a:hover {
 }
 .my-ticket {
   display: flex;
-  gap: 1rem;
+  flex-direction: column;
   background: rgba(255, 255, 255, 0.04);
   border: 1px solid rgba(254, 204, 1, 0.12);
   border-radius: 1rem;
-  padding: 1.1rem;
-  align-items: flex-start;
-}
-.my-ticket__qr {
-  width: 80px;
-  height: 80px;
-  object-fit: contain;
-  border-radius: 0.5rem;
-  border: 1px solid rgba(254, 204, 1, 0.2);
-  flex-shrink: 0;
+  overflow: hidden;
 }
 .my-ticket__info {
-  flex: 1;
-  min-width: 0;
-  overflow: hidden;
+  padding: 1rem;
 }
 

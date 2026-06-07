@@ -41,6 +41,7 @@ export default function EventDetail() {
   }
 
   const date = new Intl.DateTimeFormat("en-IN", { dateStyle: "full" }).format(new Date(event.date));
+  const isPast = new Date(event.date) < new Date();
   const spotsLeft = event.capacity ? event.capacity - event.registeredCount : null;
 
   return (
@@ -60,7 +61,7 @@ export default function EventDetail() {
           <div className="event-meta">
             <p>📅 {date} · {event.startTime} – {event.endTime}</p>
             <p>📍 {event.venue}</p>
-            <p>{event.isFree ? "🎟 Free Entry" : `🎟 ₹${event.amount} per person`}</p>
+            {!isPast && <p>{event.isFree ? "🎟 Free Entry" : `🎟 ₹${event.amount} per person`}</p>}
             {event.capacity != null && (
               <p className={event.isFull || spotsLeft <= 20 ? "text-red-400" : "text-light/50"}>
                 🔢 {event.isFull
