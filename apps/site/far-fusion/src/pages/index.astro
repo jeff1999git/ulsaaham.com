@@ -48,12 +48,12 @@ const clientLogos = [
       <a class="hero-video__menu-link" href="#testimonials">Partners</a>
       <a class="hero-video__menu-link" href="#overview">About Us</a>
       <a class="hero-video__menu-link" href="#consult">Contact</a>
-      <a id="hero-auth" class="hero-video__menu-link" href="/login">Login</a>
+      <a id="hero-auth" class="topbar-avatar" href="/login" aria-label="Login"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg></a>
     </nav>
     <script>
       const u = JSON.parse(localStorage.getItem("ulsaaham_user") || "null");
       const el = document.getElementById("hero-auth");
-      if (el && u) { el.textContent = "Account"; el.href = "/account"; }
+      if (el && u) { el.href = "/account"; el.setAttribute("aria-label", "My Account"); el.innerHTML = `<span class="topbar-avatar__letter">${(u.name||"?")[0].toUpperCase()}</span>`; }
     </script>
     <div class="hero-video__content">
       <a class="hero-video__cta" href="#gallery">

@@ -2,6 +2,100 @@ import { useState, useEffect } from "react";
 import { getEvent } from "../lib/api.js";
 import RegistrationForm from "./RegistrationForm.jsx";
 
+function PosterViewer({ src, alt }) {
+  const [open, setOpen] = useState(false);
+
+  // ESC to close + body scroll lock
+  useEffect(() => {
+    if (!open) return;
+    document.body.style.overflow = "hidden";
+    const onKey = (e) => { if (e.key === "Escape") setOpen(false); };
+    window.addEventListener("keydown", onKey);
+    return () => {
+      document.body.style.overflow = "";
+      window.removeEventListener("keydown", onKey);
+    };
+  }, [open]);
+
+  return (
+    <>
+      <div
+        className="event-detail__poster"
+        style={{ cursor: "zoom-in" }}
+        onClick={() => setOpen(true)}
+      >
+        <img src={src} alt={alt} loading="eager" decoding="async" />
+      </div>
+
+      {open && (
+        <div
+          style={{
+            position: "fixed",
+            inset: 0,
+            background: "rgba(0,0,0,0.93)",
+            zIndex: 100,
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            padding: 16,
+          }}
+          onClick={() => setOpen(false)}
+        >
+          <img
+            src={src}
+            alt={alt}
+            style={{
+              maxWidth: "min(100%, 560px)",
+              maxHeight: "93vh",
+              objectFit: "contain",
+              borderRadius: 12,
+              boxShadow: "0 24px 80px rgba(0,0,0,0.9)",
+              display: "block",
+            }}
+            onClick={(e) => e.stopPropagation()}
+          />
+          <button
+            onClick={() => setOpen(false)}
+            aria-label="Close"
+            style={{
+              position: "absolute",
+              top: 20,
+              right: 20,
+              background: "rgba(255,255,255,0.08)",
+              border: "1px solid rgba(255,255,255,0.18)",
+              backdropFilter: "blur(8px)",
+              color: "#fff",
+              width: 44,
+              height: 44,
+              borderRadius: "50%",
+              cursor: "pointer",
+              fontSize: 18,
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              lineHeight: 1,
+            }}
+          >
+            ✕
+          </button>
+          <p style={{
+            position: "absolute",
+            bottom: 20,
+            left: "50%",
+            transform: "translateX(-50%)",
+            color: "rgba(255,255,255,0.3)",
+            fontSize: 12,
+            letterSpacing: "0.08em",
+            pointerEvents: "none",
+          }}>
+            Click anywhere or press ESC to close
+          </p>
+        </div>
+      )}
+    </>
+  );
+}
+
 export default function EventDetail() {
   const [event, setEvent] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -9,11 +103,7 @@ export default function EventDetail() {
 
   useEffect(() => {
     const slug = new URLSearchParams(window.location.search).get("slug");
-    if (!slug) {
-      setError("No event specified.");
-      setLoading(false);
-      return;
-    }
+    if (!slug) { setError("No event specified."); setLoading(false); return; }
     getEvent(slug)
       .then(({ ok, data }) => {
         if (!ok) throw new Error(data.error || "Event not found.");
@@ -23,22 +113,13 @@ export default function EventDetail() {
       .finally(() => setLoading(false));
   }, []);
 
-  if (loading) {
-    return (
-      <div className="event-detail-state">
-        <div className="spinner" />
-      </div>
-    );
-  }
-
-  if (error) {
-    return (
-      <div className="event-detail-state">
-        <p className="text-light/50 mb-4">{error}</p>
-        <a href="/events" className="back-link">← Back to Events</a>
-      </div>
-    );
-  }
+  if (loading) return <div className="event-detail-state"><div className="spinner" /></div>;
+  if (error) return (
+    <div className="event-detail-state">
+      <p className="text-light/50 mb-4">{error}</p>
+      <a href="/events" className="back-link">← Back to Events</a>
+    </div>
+  );
 
   const date = new Intl.DateTimeFormat("en-IN", { dateStyle: "full" }).format(new Date(event.date));
   const isPast = new Date(event.date) < new Date();
@@ -46,16 +127,14 @@ export default function EventDetail() {
 
   return (
     <div className="event-detail">
-      {event.bannerImageUrl && (
-        <div className="event-detail__banner">
-          <img src={event.bannerImageUrl} alt={event.name} loading="eager" decoding="async" />
-        </div>
-      )}
+      <div className="event-detail__layout">
 
-      <div className="event-detail__body">
-        <div className="event-detail__info">
+        {event.bannerImageUrl && <PosterViewer src={event.bannerImageUrl} alt={event.name} />}
+
+        <div className="event-detail__content">
           <a href="/events" className="back-link">← All Events</a>
-          {event.featured && <span className="badge-featured">Featured</span>}
+          {event.featured && <span className="badge-featured" style={{ marginLeft: "0.75rem" }}>Featured</span>}
+
           <h1 className="font-serif text-3xl text-light mt-4 leading-snug">{event.name}</h1>
 
           <div className="event-meta">
@@ -78,11 +157,10 @@ export default function EventDetail() {
               <p>{event.description}</p>
             </div>
           )}
-        </div>
 
-        <div>
           <RegistrationForm event={event} />
         </div>
+
       </div>
     </div>
   );
