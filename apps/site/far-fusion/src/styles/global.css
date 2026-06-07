@@ -135,8 +135,10 @@ a:hover {
   align-items: center;
   justify-content: space-between;
   padding: clamp(0.6rem, 1.6vw, 1rem) clamp(0.8rem, 3vw, 2rem);
-  background: transparent;
-  border-bottom: none;
+  background: rgba(255, 255, 255, 0.08);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
 }
 .hero-video__menu-links {
   display: flex;
@@ -554,7 +556,7 @@ a:hover {
 }
 .hero-logo-link__name {
   font-family: 'Plus Jakarta Sans', sans-serif;
-  font-size: 0.85rem;
+  font-size: 1.1rem;
   font-weight: 700;
   letter-spacing: 0.22em;
   color: #ffffff;
@@ -562,12 +564,12 @@ a:hover {
 }
 .hero-logo-link__sub {
   font-family: 'Plus Jakarta Sans', sans-serif;
-  font-size: 0.65rem;
+  font-size: 0.78rem;
   font-weight: 500;
   letter-spacing: 0.15em;
   color: #fecc01;
   text-transform: none;
-  margin-top: 2px;
+  margin-top: 3px;
 }
 .page-topbar__brand {
   text-decoration: none;
