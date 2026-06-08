@@ -1,7 +1,7 @@
 ﻿import { useState, useEffect, useRef, useCallback } from "react";
 import QRCode from "react-qr-code";
 import { getUser, setUser, clearUser, addTicket } from "../lib/auth.js";
-import { fetchMyTickets, getEvent, createPaymentOrder, verifyPayment } from "../lib/api.js";
+import { fetchMyTickets, getTicketCodesByIdentifier, getEvent, createPaymentOrder, verifyPayment } from "../lib/api.js";
 import { generateTicketCanvas, downloadCanvasAsPng } from "../lib/generate-ticket.js";
 
 function loadRazorpay() {
@@ -248,8 +248,24 @@ export default function AccountPage() {
   const loadTickets = useCallback(async () => {
     const u = userRef.current;
     if (!u) return;
-    const stored = u.tickets || [];
-    if (stored.length === 0) { setTicketsLoading(false); return; }
+    let stored = u.tickets || [];
+
+    // No tickets in localStorage (e.g. after logout + re-login) — try recovering from backend
+    if (stored.length === 0) {
+      const identifier = u.phone || u.email;
+      if (!identifier) { setTicketsLoading(false); return; }
+      const { ok, data } = await getTicketCodesByIdentifier(identifier);
+      if (ok && data.data?.ticketCodes?.length > 0) {
+        stored = data.data.ticketCodes.map((code) => ({ ticketCode: code }));
+        const restored = { ...u, tickets: stored };
+        setUser(restored);
+        userRef.current = restored;
+        setUserState(restored);
+      } else {
+        setTicketsLoading(false);
+        return;
+      }
+    }
 
     const codes = stored.map((t) => t.ticketCode).slice(0, 20);
     const { ok, data } = await fetchMyTickets(codes);
