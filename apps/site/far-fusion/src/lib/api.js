@@ -1,8 +1,4 @@
-// In dev: proxied through Vite to avoid CORS (backend only allows localhost:3000).
-// In production: direct URL — requires backend to whitelist the live domain.
-const BASE = import.meta.env.DEV
-  ? "/api/public"
-  : "https://ulsaham-admin-panel.vercel.app/api/public";
+const BASE = "/api/public";
 
 async function apiFetch(path) {
   const res = await fetch(`${BASE}${path}`);
