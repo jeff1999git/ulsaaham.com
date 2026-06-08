@@ -57,3 +57,15 @@ Browserslist: browsers data (caniuse-lite) is 7 months old. Please run:
 [2m23:12:08[22m [34m[200][39m / [2m17ms[22m
 [2m23:12:12[22m [34m[200][39m /account [2m8ms[22m
 [2m23:12:25[22m [34m[200][39m /events [2m6ms[22m
+[2m23:12:33[22m [34m[200][39m /events/detail [2m4ms[22m
+[2m23:14:52[22m [34m[watch][39m /src/components/RegistrationForm.jsx, /src/styles/global.css
+[2m23:14:52[22m [34m[watch][39m src/components/RegistrationForm.jsx
+[2m23:14:53[22m [34m[watch][39m /src/components/RegistrationForm.jsx, /src/styles/global.css
+[2m23:14:53[22m [34m[watch][39m src/components/RegistrationForm.jsx
+[2m23:15:08[22m [34m[watch][39m /src/components/RegistrationForm.jsx, /src/styles/global.css
+[2m23:15:08[22m [34m[watch][39m src/components/RegistrationForm.jsx
+[2m23:15:25[22m [34m[watch][39m /src/components/RegistrationForm.jsx, /src/styles/global.css
+[2m23:15:25[22m [34m[watch][39m src/components/RegistrationForm.jsx
+[2m23:15:27[22m [34m[watch][39m /src/components/RegistrationForm.jsx, /src/styles/global.css
+[2m23:15:27[22m [34m[watch][39m src/components/RegistrationForm.jsx
+[2m23:15:27[22m [34m[watch][39m /src/components/RegistrationForm.jsx, /src/styles/global.css
