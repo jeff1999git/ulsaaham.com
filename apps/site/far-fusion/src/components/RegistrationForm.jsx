@@ -222,8 +222,7 @@ export default function RegistrationForm({ event }) {
     const { ok, status, data } = await createPaymentOrder(event.slug, body);
     if (!ok) {
       setPhase("breakdown");
-      if (status === 409) { setGlobalError("This phone number is already registered for this event, try with another phone number."); return; }
-      if (status === 410) { setGlobalError("This event is now full."); return; }
+if (status === 410) { setGlobalError("This event is now full."); return; }
       setGlobalError(data?.error || "Could not initiate payment. Please try again.");
       return;
     }
