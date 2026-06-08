@@ -81,7 +81,7 @@ export async function generateTicketCanvas(svgEl, opts) {
   const INFO_Y_START = posterImg ? BODY_Y + 16 + POSTER_H + 48 : BODY_Y + 24;
   const INFO_H = 52 + 3 * 70;
   const QR_BOX_Y = INFO_Y_START + INFO_H + 16;
-  const QR_BOX_H = QR_SIZE + QR_BOX_PAD * 2 + 30;
+  const QR_BOX_H = QR_SIZE + QR_BOX_PAD * 2 + 56;
   const FOOTER_Y = QR_BOX_Y + QR_BOX_H + 20;
   const H = FOOTER_Y + 84;
 
@@ -179,6 +179,10 @@ export async function generateTicketCanvas(svgEl, opts) {
   ctx.fillStyle = "#666";
   ctx.font = "14px Arial, sans-serif";
   ctx.fillText("Scan this code at the entrance", W / 2, QR_Y_POS + QR_SIZE + 22);
+
+  ctx.fillStyle = "#222";
+  ctx.font = "bold 16px 'Courier New', Courier, monospace";
+  ctx.fillText(opts.ticketCode, W / 2, QR_Y_POS + QR_SIZE + 46);
 
   // Footer
   ctx.strokeStyle = "#00000015";
