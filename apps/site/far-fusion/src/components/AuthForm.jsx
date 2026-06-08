@@ -1,4 +1,4 @@
-﻿import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef } from "react";
 import { getUser, setUser, hashPassword, verifyPassword } from "../lib/auth.js";
 
 function Field({ label, hint, error, children }) {
@@ -11,6 +11,31 @@ function Field({ label, hint, error, children }) {
       {children}
       {error && <span className="reg-field-error">{error}</span>}
     </div>
+  );
+}
+
+function GoogleIcon() {
+  return (
+    <svg width="18" height="18" viewBox="0 0 18 18" xmlns="http://www.w3.org/2000/svg">
+      <path d="M17.64 9.2c0-.637-.057-1.251-.164-1.84H9v3.481h4.844c-.209 1.125-.843 2.078-1.796 2.717v2.258h2.908c1.702-1.567 2.684-3.875 2.684-6.615z" fill="#4285F4"/>
+      <path d="M9 18c2.43 0 4.467-.806 5.956-2.184l-2.908-2.258c-.806.54-1.837.86-3.048.86-2.344 0-4.328-1.584-5.036-3.711H.957v2.332A8.997 8.997 0 0 0 9 18z" fill="#34A853"/>
+      <path d="M3.964 10.707A5.41 5.41 0 0 1 3.682 9c0-.593.102-1.17.282-1.707V4.961H.957A8.996 8.996 0 0 0 0 9c0 1.452.348 2.827.957 4.039l3.007-2.332z" fill="#FBBC05"/>
+      <path d="M9 3.58c1.321 0 2.508.454 3.44 1.345l2.582-2.58C13.463.891 11.426 0 9 0A8.997 8.997 0 0 0 .957 4.961L3.964 7.293C4.672 5.163 6.656 3.58 9 3.58z" fill="#EA4335"/>
+    </svg>
+  );
+}
+
+// ── Google OAuth button ───────────────────────────────────────────────────────
+
+function GoogleButton({ next }) {
+  return (
+    <a
+      href={`/api/auth/google?next=${encodeURIComponent(next)}`}
+      className="auth-google-btn"
+    >
+      <GoogleIcon />
+      Continue with Google
+    </a>
   );
 }
 
@@ -59,6 +84,28 @@ function PasswordStep({ user, next, onBack }) {
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const [submitting, setSubmitting] = useState(false);
+
+  // Google-only account — no password set
+  if (user.googleId && !user.passwordHash) {
+    return (
+      <div className="auth-form">
+        <p className="text-accent text-xs font-semibold uppercase tracking-widest mb-2">Welcome back</p>
+        <h2 className="font-serif text-2xl text-light mb-1">{user.name}</h2>
+        <p className="text-light/40 text-sm mb-6">{user.email}</p>
+        <p className="text-light/50 text-sm mb-6">
+          This account uses Google sign-in. Continue with Google to access your account.
+        </p>
+        <a
+          href={`/api/auth/google?next=${encodeURIComponent(next)}`}
+          className="auth-google-btn"
+        >
+          <GoogleIcon />
+          Continue with Google
+        </a>
+        <button onClick={onBack} className="auth-form__back">← Use a different email</button>
+      </div>
+    );
+  }
 
   const submit = async (e) => {
     e.preventDefault();
@@ -306,16 +353,23 @@ function OtpStep({ email, next }) {
 // ── Root ─────────────────────────────────────────────────────────────────────
 
 export default function AuthForm() {
-  const [next, setNext] = useState("/");
-  const [step, setStep] = useState("email"); // "email" | "password" | "signup" | "otp"
+  const [next, setNext] = useState("/account");
+  const [step, setStep] = useState("email");
   const [email, setEmail] = useState("");
   const [returningUser, setReturningUser] = useState(null);
+  const [googleError, setGoogleError] = useState("");
 
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
-    const dest = params.get("next") || "/";
+    const dest = params.get("next") || "/account";
     setNext(dest);
     if (getUser()) window.location.replace(dest);
+
+    // Show error messages from Google OAuth redirect
+    const err = params.get("error");
+    if (err === "google_denied") setGoogleError("Google sign-in was cancelled.");
+    else if (err === "google_token" || err === "google_profile") setGoogleError("Google sign-in failed. Please try again.");
+    else if (err === "auth_failed") setGoogleError("Sign-in failed. Please try again.");
   }, []);
 
   if (step === "password") return <PasswordStep user={returningUser} next={next} onBack={() => setStep("email")} />;
@@ -323,9 +377,25 @@ export default function AuthForm() {
   if (step === "otp")      return <OtpStep email={email} next={next} />;
 
   return (
-    <EmailStep
-      onReturning={(user) => { setReturningUser(user); setStep("password"); }}
-      onNew={(val) => { setEmail(val); setStep("signup"); }}
-    />
+    <div>
+      {googleError && <div className="reg-error" style={{ marginBottom: "1rem" }}>{googleError}</div>}
+
+      <GoogleButton next={next} />
+
+      <div className="auth-divider"><span>or continue with email</span></div>
+
+      <EmailStep
+        onReturning={(user) => {
+          // Google-only user tried to sign in via email step
+          if (user.googleId && !user.passwordHash) {
+            window.location.href = `/api/auth/google?next=${encodeURIComponent(next)}`;
+            return;
+          }
+          setReturningUser(user);
+          setStep("password");
+        }}
+        onNew={(val) => { setEmail(val); setStep("signup"); }}
+      />
+    </div>
   );
 }

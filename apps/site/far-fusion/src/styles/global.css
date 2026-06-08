@@ -1022,6 +1022,46 @@ a:hover {
 }
 .auth-form__back:hover { color: #fecc01; }
 
+/* ─── Google OAuth button ─── */
+.auth-google-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.65rem;
+  width: 100%;
+  padding: 0.7rem 1.25rem;
+  background: #fff;
+  color: #3c4043;
+  border: 1px solid #dadce0;
+  border-radius: 6px;
+  font-size: 0.9375rem;
+  font-weight: 500;
+  text-decoration: none;
+  transition: background 0.15s, box-shadow 0.15s;
+  cursor: pointer;
+}
+.auth-google-btn:hover {
+  background: #f8f9fa;
+  box-shadow: 0 1px 5px rgba(0, 0, 0, 0.2);
+}
+.auth-divider {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin: 0.25rem 0;
+  color: rgba(255, 255, 255, 0.3);
+  font-size: 0.72rem;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+}
+.auth-divider::before,
+.auth-divider::after {
+  content: "";
+  flex: 1;
+  height: 1px;
+  background: rgba(255, 255, 255, 0.12);
+}
+
 /* ─── Fee breakdown (paid events) ─── */
 .fee-breakdown {
   background: rgba(255, 255, 255, 0.04);
