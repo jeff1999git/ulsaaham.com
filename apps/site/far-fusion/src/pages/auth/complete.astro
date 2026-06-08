@@ -30,11 +30,23 @@ if (cookieValue) {
       try {
         var googleUser = JSON.parse(userJson);
         var KEY = "ulsaham_user";
+        var ACCOUNTS_KEY = "ulsaham_accounts";
         var existing = JSON.parse(localStorage.getItem(KEY) || "null");
         var merged = (existing && existing.email === googleUser.email)
           ? Object.assign({}, existing, googleUser)
           : Object.assign({ tickets: [] }, googleUser);
         localStorage.setItem(KEY, JSON.stringify(merged));
+        // Update known accounts so re-login after logout routes correctly
+        try {
+          var accts = JSON.parse(localStorage.getItem(ACCOUNTS_KEY) || "{}");
+          accts[merged.email.toLowerCase()] = {
+            name: merged.name,
+            phone: merged.phone,
+            hasGoogle: true,
+            googleId: merged.googleId,
+          };
+          localStorage.setItem(ACCOUNTS_KEY, JSON.stringify(accts));
+        } catch(e2) {}
         window.location.replace(next);
       } catch (e) {
         window.location.replace("/login?error=auth_failed");

@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from "react";
-import { getUser, setUser, hashPassword, verifyPassword } from "../lib/auth.js";
+import { getUser, setUser, hashPassword, verifyPassword, getKnownAccount } from "../lib/auth.js";
 
 function Field({ label, hint, error, children }) {
   return (
@@ -54,8 +54,17 @@ function EmailStep({ onReturning, onNew }) {
     }
     setError("");
     const user = getUser();
-    if (user && user.email === val) onReturning(user);
-    else onNew(val);
+    if (user && user.email === val) {
+      onReturning(user);
+    } else {
+      const known = getKnownAccount(val);
+      if (known) {
+        // Returning user whose localStorage was cleared (e.g. after logout)
+        onReturning({ email: val, tickets: [], ...known });
+      } else {
+        onNew(val);
+      }
+    }
   };
 
   return (
@@ -114,6 +123,11 @@ function PasswordStep({ user, next, onBack }) {
     const ok = await verifyPassword(password, user.email, user.passwordHash);
     setSubmitting(false);
     if (!ok) { setError("Incorrect password."); return; }
+    // Restore user to localStorage if it was cleared on logout
+    const existing = getUser();
+    if (!existing || existing.email !== user.email) {
+      setUser({ tickets: [], ...user });
+    }
     window.location.replace(next);
   };
 

@@ -1,7 +1,7 @@
 const BASE = "/api/public";
 
-async function apiFetch(path) {
-  const res = await fetch(`${BASE}${path}`);
+async function apiFetch(path, init) {
+  const res = await fetch(`${BASE}${path}`, init);
   if (res.status === 429) {
     return { ok: false, status: 429, data: { success: false, error: "Too many requests. Please try again in a moment." } };
   }
@@ -75,4 +75,14 @@ export async function fetchMyTickets(ticketCodes) {
     return { ok: false, status: 429, data: { success: false, error: "Too many requests. Please try again later." } };
   }
   return { ok: res.ok, status: res.status, data: await res.json() };
+}
+
+// Looks up ticket codes by phone (10-digit string) or email after re-login
+export function getTicketCodesByIdentifier(identifier) {
+  const key = /^\d{10}$/.test(String(identifier)) ? "phone" : "email";
+  return apiFetch("/participants/my-tickets-by-user", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ [key]: String(identifier) }),
+  });
 }
