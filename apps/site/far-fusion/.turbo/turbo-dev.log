@@ -101,3 +101,9 @@ Browserslist: browsers data (caniuse-lite) is 7 months old. Please run:
 [2m23:45:07[22m [34m[200][39m /account [2m19ms[22m
 [33m[1m23:48:56[22m [WARN][39m Unsupported file type [1mF:\Ulsaaham\webapp\web-app\apps\site\far-fusion\src\pages\api\send-ticket.js.tmp.6528.04590de1ecdb[22m found. Prefix filename with an underscore (`_`) to ignore.
 [2m23:49:04[22m [34m[watch][39m /src/components/RegistrationForm.jsx, /src/styles/global.css
+[2m23:49:04[22m [34m[watch][39m src/components/RegistrationForm.jsx
+[2m23:49:12[22m [34m[watch][39m /src/components/RegistrationForm.jsx, /src/styles/global.css
+[2m23:49:12[22m [34m[watch][39m src/components/RegistrationForm.jsx
+[2m23:49:18[22m [34m[watch][39m /src/components/RegistrationForm.jsx, /src/styles/global.css
+[2m23:49:18[22m [34m[watch][39m src/components/RegistrationForm.jsx
+[2m23:53:05[22m [34m[200][39m /events [2m114ms[22m
