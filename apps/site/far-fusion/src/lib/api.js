@@ -65,6 +65,19 @@ export async function verifyPayment(slug, body) {
   return { ok: res.ok, status: res.status, data: await res.json() };
 }
 
+export async function applyCoupon(slug, couponCode) {
+  const res = await fetch(`${BASE}/events/${encodeURIComponent(slug)}/apply-coupon`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ couponCode }),
+  });
+  if (res.status === 429) {
+    return { ok: false, status: 429, data: { success: false, error: "Too many attempts. Please wait before trying again." } };
+  }
+  const data = await res.json().catch(() => ({ error: `Server error (${res.status}). The coupon endpoint may not be available yet.` }));
+  return { ok: res.ok, status: res.status, data };
+}
+
 export async function fetchMyTickets(ticketCodes) {
   const res = await fetch(`${BASE}/participants/my-tickets`, {
     method: "POST",

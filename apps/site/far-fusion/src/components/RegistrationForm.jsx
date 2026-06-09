@@ -1,15 +1,34 @@
 ﻿import { useState, useEffect, useRef } from "react";
 import QRCode from "react-qr-code";
-import { registerForEvent, createPaymentOrder, verifyPayment } from "../lib/api.js";
-import { getUser, addTicket } from "../lib/auth.js";
+import { registerForEvent, createPaymentOrder, verifyPayment, applyCoupon } from "../lib/api.js";
+import { getUser, setUser as persistUser, addTicket } from "../lib/auth.js";
+
+function sendTicketEmail(email, ticketData) {
+  if (!email) return;
+  fetch("/api/send-ticket", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      email,
+      ticketCode: ticketData.ticketCode,
+      participantName: ticketData.participantName,
+      eventName: ticketData.eventName,
+      eventDate: ticketData.eventDate,
+      eventVenue: ticketData.eventVenue,
+      numberOfParticipants: ticketData.numberOfParticipants,
+      paymentId: ticketData.paymentId,
+    }),
+  }).catch(() => {});
+}
 import { generateTicketCanvas, downloadCanvasAsPng } from "../lib/generate-ticket.js";
 
-function calcFees(amount, count) {
+function calcFees(amount, count, discount = 0) {
   const base = amount * count;
-  const gst = Math.round(base * 0.18 * 100) / 100;
-  const platformFee = Math.round(base * 0.02 * 100) / 100;
-  const total = Math.round((base + gst + platformFee) * 100) / 100;
-  return { base, gst, platformFee, total };
+  const discountedBase = Math.max(0, base - discount);
+  const gst = Math.round(discountedBase * 0.18 * 100) / 100;
+  const platformFee = Math.round(discountedBase * 0.02 * 100) / 100;
+  const total = Math.round((discountedBase + gst + platformFee) * 100) / 100;
+  return { base, discount, discountedBase, gst, platformFee, total };
 }
 
 function loadRazorpay() {
@@ -92,6 +111,60 @@ function TicketSuccess({ ticket }) {
   );
 }
 
+function CompleteProfileStep({ user, onComplete }) {
+  const [form, setForm] = useState({ name: user?.name || "", phone: user?.phone || "", age: user?.age ? String(user.age) : "" });
+  const [errors, setErrors] = useState({});
+
+  const set = (f) => (e) => {
+    setForm((prev) => ({ ...prev, [f]: e.target.value }));
+    setErrors((prev) => { const n = { ...prev }; delete n[f]; return n; });
+  };
+
+  const submit = (e) => {
+    e.preventDefault();
+    const errs = {};
+    if (form.name.trim().length < 2) errs.name = "Name must be at least 2 characters.";
+    const phone = form.phone.trim();
+    if (!phone) errs.phone = "Phone number is required.";
+    else if (!/^\d{10}$/.test(phone)) errs.phone = "Enter a valid 10-digit mobile number.";
+    const age = Number(form.age);
+    if (!form.age.trim()) errs.age = "Age is required.";
+    else if (!Number.isInteger(age) || age < 1 || age > 120) errs.age = "Enter a valid age (1–120).";
+    if (Object.keys(errs).length) { setErrors(errs); return; }
+    onComplete({ name: form.name.trim(), phone, age });
+  };
+
+  return (
+    <form onSubmit={submit} className="reg-form" noValidate>
+      <h3 className="font-serif text-xl text-light mb-1">Complete Your Profile</h3>
+      <p className="text-light/40 text-sm mb-5">We need a few more details to register you for this event.</p>
+      <div className="reg-field">
+        <label>Full Name *</label>
+        <input type="text" value={form.name} onChange={set("name")} placeholder="Rahul Menon" autoFocus required />
+        {errors.name && <span className="reg-field-error">{errors.name}</span>}
+      </div>
+      <div className="reg-field">
+        <label>Mobile Number * <span className="reg-field-hint">10 digits, no +91</span></label>
+        <input
+          type="tel"
+          value={form.phone}
+          onChange={(e) => set("phone")({ target: { value: e.target.value.replace(/\D/g, "").slice(0, 10) } })}
+          placeholder="9876543210"
+          maxLength={10}
+          required
+        />
+        {errors.phone && <span className="reg-field-error">{errors.phone}</span>}
+      </div>
+      <div className="reg-field">
+        <label>Age *</label>
+        <input type="number" value={form.age} onChange={set("age")} placeholder="25" min={1} max={120} required />
+        {errors.age && <span className="reg-field-error">{errors.age}</span>}
+      </div>
+      <button type="submit" className="reg-submit">Continue →</button>
+    </form>
+  );
+}
+
 export default function RegistrationForm({ event }) {
   const [authStatus, setAuthStatus] = useState("loading"); // "loading" | "guest" | "user"
   const [user, setUser] = useState(null);
@@ -100,6 +173,11 @@ export default function RegistrationForm({ event }) {
   const [ticket, setTicket] = useState(null);
   const [fieldErrors, setFieldErrors] = useState({});
   const [globalError, setGlobalError] = useState(null);
+  const [couponInput, setCouponInput] = useState("");
+  const [couponApplied, setCouponApplied] = useState(null); // { couponCode, discount }
+  const [couponError, setCouponError] = useState(null);
+  const [couponLoading, setCouponLoading] = useState(false);
+  const [couponOpen, setCouponOpen] = useState(false);
 
   useEffect(() => {
     const u = getUser();
@@ -160,10 +238,38 @@ export default function RegistrationForm({ event }) {
 
   if (phase === "success") return <TicketSuccess ticket={ticket} />;
 
+  // Profile completion gate — shown for users who signed up via fast OTP (no details collected yet)
+  const needsProfile = !user?.name?.trim() || !user?.phone?.trim() || !user?.age;
+  if (needsProfile) {
+    return (
+      <CompleteProfileStep
+        user={user}
+        onComplete={(profileData) => {
+          const updated = { ...user, ...profileData };
+          persistUser(updated);
+          setUser(updated);
+          setForm((f) => ({ ...f, name: profileData.name, phone: profileData.phone, age: String(profileData.age) }));
+        }}
+      />
+    );
+  }
+
   const set = (field) => (e) => {
     setForm((f) => ({ ...f, [field]: e.target.value }));
     setFieldErrors((fe) => { const n = { ...fe }; delete n[field]; return n; });
     setGlobalError(null);
+  };
+
+  const validate = () => {
+    const errors = {};
+    if (!form.name.trim()) errors.name = ["Full name is required."];
+    const phone = form.phone.trim();
+    if (!phone) errors.phone = ["Phone number is required."];
+    else if (!/^\d{10}$/.test(phone)) errors.phone = ["Enter a valid 10-digit phone number."];
+    const age = Number(form.age);
+    if (!form.age.trim()) errors.age = ["Age is required."];
+    else if (!Number.isInteger(age) || age < 1 || age > 120) errors.age = ["Enter a valid age between 1 and 120."];
+    return errors;
   };
 
   const buildBody = () => {
@@ -180,6 +286,8 @@ export default function RegistrationForm({ event }) {
   // ── Free event: direct registration ──────────────────────────────────────────
   const handleFreeSubmit = async (e) => {
     e.preventDefault();
+    const errors = validate();
+    if (Object.keys(errors).length) { setFieldErrors(errors); return; }
     setPhase("paying");
     setFieldErrors({});
     setGlobalError(null);
@@ -188,6 +296,7 @@ export default function RegistrationForm({ event }) {
     if (ok) {
       const ticketData = data.data;
       addTicket({ ...ticketData, registeredAt: new Date().toISOString() });
+      sendTicketEmail(form.email, ticketData);
       setTicket(ticketData);
       setPhase("success");
       return;
@@ -199,9 +308,43 @@ export default function RegistrationForm({ event }) {
     setGlobalError(data?.error || "Something went wrong. Please try again.");
   };
 
+  const handleApplyCoupon = async () => {
+    const code = couponInput.trim().toUpperCase();
+    if (!code) return;
+    setCouponLoading(true);
+    setCouponError(null);
+    try {
+      const { ok, data } = await applyCoupon(event.slug, code);
+      if (ok) {
+        const couponData = data?.data ?? data;
+        setCouponApplied({
+          couponCode: couponData.couponCode ?? code,
+          discount: Number(couponData.discount ?? 0),
+        });
+        setCouponError(null);
+      } else {
+        setCouponApplied(null);
+        setCouponError(data?.error ?? data?.data?.error ?? "Invalid coupon code.");
+      }
+    } catch {
+      setCouponApplied(null);
+      setCouponError("Network error. Please check your connection and try again.");
+    } finally {
+      setCouponLoading(false);
+    }
+  };
+
+  const handleRemoveCoupon = () => {
+    setCouponApplied(null);
+    setCouponInput("");
+    setCouponError(null);
+  };
+
   // ── Paid event: show breakdown before opening Razorpay ──────────────────────
   const handlePaidSubmit = (e) => {
     e.preventDefault();
+    const errors = validate();
+    if (Object.keys(errors).length) { setFieldErrors(errors); return; }
     setFieldErrors({});
     setGlobalError(null);
     setPhase("breakdown");
@@ -219,10 +362,17 @@ export default function RegistrationForm({ event }) {
     }
 
     const body = buildBody();
+    if (couponApplied) body.couponCode = couponApplied.couponCode;
     const { ok, status, data } = await createPaymentOrder(event.slug, body);
     if (!ok) {
       setPhase("breakdown");
-if (status === 410) { setGlobalError("This event is now full."); return; }
+      if (status === 410) { setGlobalError("This event is now full."); return; }
+      if (status === 404 && couponApplied) {
+        setCouponApplied(null);
+        setCouponError("Coupon code is no longer valid. Please try again without it.");
+        setGlobalError("Coupon rejected. Please review and try again.");
+        return;
+      }
       setGlobalError(data?.error || "Could not initiate payment. Please try again.");
       return;
     }
@@ -251,6 +401,7 @@ if (status === 410) { setGlobalError("This event is now full."); return; }
         }
         const ticketData = result.data.data;
         addTicket({ ...ticketData, registeredAt: new Date().toISOString() });
+        sendTicketEmail(form.email, ticketData);
         setTicket(ticketData);
         setPhase("success");
       },
@@ -262,7 +413,8 @@ if (status === 410) { setGlobalError("This event is now full."); return; }
   };
 
   const count = Number(form.numberOfParticipants) || 1;
-  const fees = !event.isFree ? calcFees(event.amount, count) : null;
+  const appliedDiscount = couponApplied?.discount ?? 0;
+  const fees = !event.isFree ? calcFees(event.amount, count, appliedDiscount) : null;
   const spotsLeft = event.capacity ? event.capacity - event.registeredCount : null;
 
   // ── Paying / Verifying spinner ───────────────────────────────────────────────
@@ -279,7 +431,7 @@ if (status === 410) { setGlobalError("This event is now full."); return; }
 
   // ── Breakdown: show fee table before Razorpay ────────────────────────────────
   if (phase === "breakdown" && fees) {
-    const bd = calcFees(event.amount, count);
+    const bd = fees;
     return (
       <div className="reg-form">
         <h3 className="font-serif text-xl text-light mb-1">Order Summary</h3>
@@ -292,6 +444,18 @@ if (status === 410) { setGlobalError("This event is now full."); return; }
             <span>₹{event.amount} × {count} person{count !== 1 ? "s" : ""}</span>
             <span>₹{bd.base.toFixed(2)}</span>
           </div>
+          {bd.discount > 0 && (
+            <>
+              <div className="fee-breakdown__row" style={{ color: "#22c55e" }}>
+                <span>Coupon ({couponApplied.couponCode})</span>
+                <span>−₹{bd.discount.toFixed(2)}</span>
+              </div>
+              <div className="fee-breakdown__row">
+                <span>Subtotal</span>
+                <span>₹{bd.discountedBase.toFixed(2)}</span>
+              </div>
+            </>
+          )}
           <div className="fee-breakdown__row">
             <span>GST (18%)</span>
             <span>₹{bd.gst.toFixed(2)}</span>
@@ -307,6 +471,7 @@ if (status === 410) { setGlobalError("This event is now full."); return; }
           </div>
         </div>
 
+        {couponError && <p className="text-red-400 text-xs mt-2">{couponError}</p>}
         <p className="text-light/40 text-xs mb-4">Registered as: <strong className="text-light/70">{form.name}</strong> (+91 {form.phone})</p>
 
         <button onClick={handlePay} className="reg-submit">
@@ -374,8 +539,53 @@ if (status === 410) { setGlobalError("This event is now full."); return; }
       </div>
 
       {fees && (
+        <div className="coupon-section">
+          {!couponApplied ? (
+            <>
+              <button
+                type="button"
+                onClick={() => setCouponOpen((o) => !o)}
+                className="coupon-toggle"
+              >
+                {couponOpen ? "▾" : "▸"} Have a coupon code?
+              </button>
+              {couponOpen && (
+                <div className="coupon-input-row">
+                  <input
+                    type="text"
+                    value={couponInput}
+                    onChange={(e) => { setCouponInput(e.target.value.toUpperCase()); setCouponError(null); }}
+                    placeholder="ENTER CODE"
+                    className="coupon-input"
+                    maxLength={32}
+                    onKeyDown={(e) => { if (e.key === "Enter") { e.preventDefault(); handleApplyCoupon(); } }}
+                  />
+                  <button
+                    type="button"
+                    onClick={handleApplyCoupon}
+                    disabled={couponLoading || !couponInput.trim()}
+                    className="coupon-apply-btn"
+                  >
+                    {couponLoading ? "…" : "Apply"}
+                  </button>
+                </div>
+              )}
+              {couponError && <p className="coupon-error">{couponError}</p>}
+            </>
+          ) : (
+            <div className="coupon-applied">
+              <span className="coupon-applied__text">
+                ✓ <strong>{couponApplied.couponCode}</strong> applied — ₹{couponApplied.discount} off
+              </span>
+              <button type="button" onClick={handleRemoveCoupon} className="coupon-remove">Remove</button>
+            </div>
+          )}
+        </div>
+      )}
+
+      {fees && (
         <p className="text-light/40 text-xs">
-          Estimated total: <strong className="text-accent">₹{calcFees(event.amount, count).total.toFixed(2)}</strong> (breakdown shown before payment)
+          Estimated total: <strong className="text-accent">₹{fees.total.toFixed(2)}</strong> (breakdown shown before payment)
         </p>
       )}
 
@@ -384,7 +594,7 @@ if (status === 410) { setGlobalError("This event is now full."); return; }
           ? "Processing…"
           : event.isFree
           ? "Register — Free"
-          : `Pay & Register — ₹${fees ? calcFees(event.amount, count).total.toFixed(2) : "…"}`}
+          : `Pay & Register — ₹${fees ? fees.total.toFixed(2) : "…"}`}
       </button>
     </form>
   );

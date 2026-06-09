@@ -46,6 +46,7 @@ export async function POST({ request, cookies }) {
   // Verified — clear OTP cookie and return user data
   cookies.delete(COOKIE_NAME, { path: "/" });
 
+  // Only return fields that were stored in the session (undefined is dropped by JSON)
   return jsonOk({
     data: {
       email: session.email,
