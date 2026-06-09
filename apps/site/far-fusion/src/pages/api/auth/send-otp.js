@@ -84,19 +84,7 @@ export async function POST({ request, cookies }) {
     return jsonOk();
   }
 
-  // ── First send: validate all fields ──────────────────────────────────────────
-  const { name, phone, age, passwordHash } = body;
-
-  if (!name || String(name).trim().length < 2)
-    return jsonErr(400, "Name must be at least 2 characters.");
-  if (!phone || !/^\d{10}$/.test(phone))
-    return jsonErr(400, "A valid 10-digit phone number is required.");
-  const ageNum = Number(age);
-  if (!age || isNaN(ageNum) || ageNum < 1 || ageNum > 120)
-    return jsonErr(400, "A valid age is required.");
-  if (!passwordHash)
-    return jsonErr(400, "Missing password.");
-
+  // ── First send: only email is required; profile fields are optional ──────────
   // Rate-limit first sends too
   if (existing && existing.email === normalEmail) {
     if (now - existing.lastSentAt < RESEND_COOLDOWN_MS) {
@@ -108,14 +96,11 @@ export async function POST({ request, cookies }) {
     }
   }
 
+  const { name, phone, age, passwordHash } = body;
   const otp = generateOtp();
   const prevCount = existing?.email === normalEmail ? (existing.sendCount ?? 0) : 0;
   const session = {
     email: normalEmail,
-    name: String(name).trim(),
-    phone,
-    age: ageNum,
-    passwordHash,
     hashedOtp: hashOtp(otp),
     expiresAt: now + OTP_TTL_MS,
     attempts: 0,
@@ -123,6 +108,11 @@ export async function POST({ request, cookies }) {
     firstSentAt: prevCount > 0 ? existing.firstSentAt : now,
     sendCount: prevCount + 1,
   };
+  // Include profile fields only if provided (backward-compat with old call sites)
+  if (name) session.name = String(name).trim();
+  if (phone) session.phone = phone;
+  if (age !== undefined) { const n = Number(age); if (!isNaN(n)) session.age = n; }
+  if (passwordHash) session.passwordHash = passwordHash;
   cookies.set(COOKIE_NAME, signCookie(session), COOKIE_OPTS(600));
 
   try { await sendOtpEmail(normalEmail, otp); }

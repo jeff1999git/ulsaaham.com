@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from "react";
-import { getUser, setUser, hashPassword, verifyPassword, getKnownAccount } from "../lib/auth.js";
+import { getUser, setUser, getKnownAccount } from "../lib/auth.js";
 
 function Field({ label, hint, error, children }) {
   return (
@@ -87,177 +87,11 @@ function EmailStep({ onReturning, onNew }) {
   );
 }
 
-// ── Step 2a: returning user — password check ──────────────────────────────────
-
-function PasswordStep({ user, next, onBack }) {
-  const [password, setPassword] = useState("");
-  const [error, setError] = useState("");
-  const [submitting, setSubmitting] = useState(false);
-
-  // Google-only account — no password set
-  if (user.googleId && !user.passwordHash) {
-    return (
-      <div className="auth-form">
-        <p className="text-accent text-xs font-semibold uppercase tracking-widest mb-2">Welcome back</p>
-        <h2 className="font-serif text-2xl text-light mb-1">{user.name}</h2>
-        <p className="text-light/40 text-sm mb-6">{user.email}</p>
-        <p className="text-light/50 text-sm mb-6">
-          This account uses Google sign-in. Continue with Google to access your account.
-        </p>
-        <a
-          href={`/api/auth/google?next=${encodeURIComponent(next)}`}
-          className="auth-google-btn"
-        >
-          <GoogleIcon />
-          Continue with Google
-        </a>
-        <button onClick={onBack} className="auth-form__back">← Use a different email</button>
-      </div>
-    );
-  }
-
-  const submit = async (e) => {
-    e.preventDefault();
-    if (!password) { setError("Enter your password."); return; }
-    setSubmitting(true);
-    const ok = await verifyPassword(password, user.email, user.passwordHash);
-    setSubmitting(false);
-    if (!ok) { setError("Incorrect password."); return; }
-    // Restore user to localStorage if it was cleared on logout
-    const existing = getUser();
-    if (!existing || existing.email !== user.email) {
-      setUser({ tickets: [], ...user });
-    }
-    window.location.replace(next);
-  };
-
-  return (
-    <div className="auth-form">
-      <p className="text-accent text-xs font-semibold uppercase tracking-widest mb-2">Welcome back</p>
-      <h2 className="font-serif text-2xl text-light mb-1">{user.name}</h2>
-      <p className="text-light/40 text-sm mb-6">{user.email}</p>
-      <form onSubmit={submit} noValidate>
-        <Field label="Password *" error={error}>
-          <input
-            type="password"
-            value={password}
-            onChange={(e) => { setPassword(e.target.value); setError(""); }}
-            placeholder="Your password"
-            autoFocus
-            required
-          />
-        </Field>
-        <button type="submit" disabled={submitting} className="reg-submit">
-          {submitting ? "Signing in…" : "Sign In →"}
-        </button>
-      </form>
-      <button onClick={onBack} className="auth-form__back">← Use a different email</button>
-    </div>
-  );
-}
-
-// ── Step 2b: new user — signup form ──────────────────────────────────────────
-
-function SignupStep({ email, onOtpSent, onBack }) {
-  const [form, setForm] = useState({ name: "", phone: "", password: "", confirmPassword: "", age: "" });
-  const [errors, setErrors] = useState({});
-  const [globalError, setGlobalError] = useState("");
-  const [submitting, setSubmitting] = useState(false);
-
-  const set = (f) => (e) => {
-    setForm((prev) => ({ ...prev, [f]: e.target.value }));
-    setErrors((prev) => { const n = { ...prev }; delete n[f]; return n; });
-    setGlobalError("");
-  };
-
-  const submit = async (e) => {
-    e.preventDefault();
-    const errs = {};
-    if (form.name.trim().length < 2) errs.name = "Name must be at least 2 characters.";
-    if (!/^\d{10}$/.test(form.phone)) errs.phone = "Enter a valid 10-digit mobile number.";
-    if (form.password.length < 8) errs.password = "Password must be at least 8 characters.";
-    if (form.password !== form.confirmPassword) errs.confirmPassword = "Passwords do not match.";
-    const age = Number(form.age);
-    if (!form.age || isNaN(age) || age < 1 || age > 120) errs.age = "Enter a valid age (1–120).";
-    if (Object.keys(errs).length) { setErrors(errs); return; }
-
-    setSubmitting(true);
-    setGlobalError("");
-
-    const passwordHash = await hashPassword(form.password, email);
-
-    const res = await fetch("/api/auth/send-otp", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        email,
-        name: form.name.trim(),
-        phone: form.phone.trim(),
-        age,
-        passwordHash,
-      }),
-    });
-
-    const data = await res.json().catch(() => ({}));
-    setSubmitting(false);
-
-    if (!res.ok) { setGlobalError(data.error || "Failed to send verification code. Please try again."); return; }
-    onOtpSent();
-  };
-
-  return (
-    <form onSubmit={submit} className="auth-form" noValidate>
-      <p className="text-light/50 text-sm mb-4">
-        Create your Ulsaham account to register for events and track your tickets.
-      </p>
-
-      {globalError && <div className="reg-error">{globalError}</div>}
-
-      <div className="reg-field">
-        <label>Email</label>
-        <input type="email" value={email} readOnly className="opacity-50 cursor-not-allowed" />
-        <button type="button" onClick={onBack} className="auth-form__back">Change email</button>
-      </div>
-
-      <Field label="Full Name *" error={errors.name}>
-        <input type="text" value={form.name} onChange={set("name")} placeholder="Rahul Menon" autoFocus required />
-      </Field>
-
-      <Field label="Mobile Number *" hint="10 digits, no +91" error={errors.phone}>
-        <input
-          type="tel"
-          value={form.phone}
-          onChange={(e) => { set("phone")({ target: { value: e.target.value.replace(/\D/g, "").slice(0, 10) } }); }}
-          placeholder="9876543210"
-          maxLength={10}
-          required
-        />
-      </Field>
-
-      <Field label="Age *" error={errors.age}>
-        <input type="number" value={form.age} onChange={set("age")} placeholder="25" min={1} max={120} required />
-      </Field>
-
-      <Field label="Password *" hint="min 8 chars" error={errors.password}>
-        <input type="password" value={form.password} onChange={set("password")} placeholder="••••••••" required />
-      </Field>
-
-      <Field label="Confirm Password *" error={errors.confirmPassword}>
-        <input type="password" value={form.confirmPassword} onChange={set("confirmPassword")} placeholder="••••••••" required />
-      </Field>
-
-      <button type="submit" disabled={submitting} className="reg-submit">
-        {submitting ? "Sending code…" : "Send Verification Code →"}
-      </button>
-    </form>
-  );
-}
-
-// ── Step 3: OTP verification ──────────────────────────────────────────────────
+// ── Step 2: OTP verification ──────────────────────────────────────────────────
 
 const RESEND_COOLDOWN = 60;
 
-function OtpStep({ email, next }) {
+function OtpStep({ email, next, knownAccount }) {
   const [otp, setOtp] = useState("");
   const [error, setError] = useState("");
   const [attemptsLeft, setAttemptsLeft] = useState(5);
@@ -315,7 +149,9 @@ function OtpStep({ email, next }) {
       return;
     }
 
-    setUser(data.data);
+    // Merge profile data from known account (returning user re-login via OTP)
+    const userData = knownAccount ? { ...knownAccount, ...data.data } : data.data;
+    setUser(userData);
     window.location.replace(next);
   };
 
@@ -348,7 +184,7 @@ function OtpStep({ email, next }) {
       )}
 
       <button type="submit" disabled={submitting} className="reg-submit">
-        {submitting ? "Verifying…" : "Verify & Create Account →"}
+        {submitting ? "Verifying…" : knownAccount ? "Verify & Sign In →" : "Verify & Create Account →"}
       </button>
 
       <button
@@ -370,8 +206,10 @@ export default function AuthForm() {
   const [next, setNext] = useState("/account");
   const [step, setStep] = useState("email");
   const [email, setEmail] = useState("");
-  const [returningUser, setReturningUser] = useState(null);
+  const [knownAccount, setKnownAccount] = useState(null);
   const [googleError, setGoogleError] = useState("");
+  const [sendError, setSendError] = useState("");
+  const [sending, setSending] = useState(false);
 
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
@@ -379,20 +217,44 @@ export default function AuthForm() {
     setNext(dest);
     if (getUser()) window.location.replace(dest);
 
-    // Show error messages from Google OAuth redirect
     const err = params.get("error");
     if (err === "google_denied") setGoogleError("Google sign-in was cancelled.");
     else if (err === "google_token" || err === "google_profile") setGoogleError("Google sign-in failed. Please try again.");
     else if (err === "auth_failed") setGoogleError("Sign-in failed. Please try again.");
   }, []);
 
-  if (step === "password") return <PasswordStep user={returningUser} next={next} onBack={() => setStep("email")} />;
-  if (step === "signup")   return <SignupStep email={email} onOtpSent={() => setStep("otp")} onBack={() => setStep("email")} />;
-  if (step === "otp")      return <OtpStep email={email} next={next} />;
+  const sendOtp = async (emailVal, known = null) => {
+    setSending(true);
+    setSendError("");
+    const res = await fetch("/api/auth/send-otp", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ email: emailVal }),
+    }).catch(() => null);
+    const data = await res?.json().catch(() => ({}));
+    setSending(false);
+    if (!res?.ok) {
+      setSendError(data?.error || "Failed to send verification code. Please try again.");
+      return;
+    }
+    setKnownAccount(known);
+    setStep("otp");
+  };
+
+  if (sending) return (
+    <div className="auth-form" style={{ minHeight: "160px", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center" }}>
+      <div className="spinner" />
+      <p className="text-light/40 text-sm mt-4">Sending verification code…</p>
+    </div>
+  );
+
+  if (step === "otp") return <OtpStep email={email} next={next} knownAccount={knownAccount} />;
 
   return (
     <div>
-      {googleError && <div className="reg-error" style={{ marginBottom: "1rem" }}>{googleError}</div>}
+      {(googleError || sendError) && (
+        <div className="reg-error" style={{ marginBottom: "1rem" }}>{googleError || sendError}</div>
+      )}
 
       <GoogleButton next={next} />
 
@@ -400,15 +262,17 @@ export default function AuthForm() {
 
       <EmailStep
         onReturning={(user) => {
-          // Google-only user tried to sign in via email step
+          // Google-only accounts must use Google OAuth
           if (user.googleId && !user.passwordHash) {
             window.location.href = `/api/auth/google?next=${encodeURIComponent(next)}`;
             return;
           }
-          setReturningUser(user);
-          setStep("password");
+          // All other returning users verify via OTP
+          const known = getKnownAccount(user.email) || user;
+          setEmail(user.email);
+          sendOtp(user.email, known);
         }}
-        onNew={(val) => { setEmail(val); setStep("signup"); }}
+        onNew={(val) => { setSendError(""); setEmail(val); sendOtp(val, null); }}
       />
     </div>
   );
