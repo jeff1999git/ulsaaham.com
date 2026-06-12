@@ -75,7 +75,7 @@ const HeroScene = () => {
       container.style.opacity = "1";
     });
 
-    const particlesCount = 450;
+    const particlesCount = window.innerWidth < 768 ? 220 : 450;
     const geometry = new BufferGeometry();
     const positions = new Float32Array(particlesCount * 3);
     const colors = new Float32Array(particlesCount * 3);

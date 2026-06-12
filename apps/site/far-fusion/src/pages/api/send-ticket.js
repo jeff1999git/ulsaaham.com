@@ -43,7 +43,7 @@ export async function POST({ request }) {
   const html = `
     <div style="font-family:Arial,sans-serif;max-width:520px;margin:0 auto;padding:32px;background:#023301;border-radius:12px;color:#fff">
       <p style="font-size:11px;font-weight:700;letter-spacing:.22em;text-transform:uppercase;color:#fecc01;margin:0 0 6px">Ulsaham Entertainments</p>
-      <h2 style="font-size:22px;margin:0 0 4px;color:#fff">You're registered!</h2>
+      <h2 style="font-size:22px;margin:0 0 4px;color:#fff">You're booked!</h2>
       <p style="color:rgba(255,255,255,.5);font-size:13px;margin:0 0 24px">${eventName}</p>
 
       <div style="background:rgba(254,204,1,.08);border:1px solid rgba(254,204,1,.3);border-radius:10px;padding:20px 24px;margin-bottom:24px;text-align:center">
@@ -81,8 +81,8 @@ export async function POST({ request }) {
       </table>
 
       <p style="color:rgba(255,255,255,.35);font-size:11px;line-height:1.7;margin:0;border-top:1px solid rgba(255,255,255,.08);padding-top:16px">
-        Screenshot or save this email — bring your QR code to the venue. You can also view your ticket at
-        <a href="https://www.ulsaaham.com/ticket" style="color:#fecc01">ulsaaham.com/ticket</a>.
+        Screenshot or save this email — bring your QR code to the venue. You can also view your bookings in your
+        <a href="https://www.ulsaaham.com/account" style="color:#fecc01">Ulsaham account</a>.
       </p>
     </div>`;
 

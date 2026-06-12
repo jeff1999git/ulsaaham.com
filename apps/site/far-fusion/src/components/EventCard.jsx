@@ -44,7 +44,7 @@ export default function EventCard({ event, linkable = true, index = 0 }) {
             : event.venue}
         </p>
         {linkable && (
-          <span className="event-card__cta">{isUpcoming ? "Register Now →" : "View Details →"}</span>
+          <span className="event-card__cta">{isUpcoming ? "Book Now →" : "View Details →"}</span>
         )}
       </div>
     </Tag>
