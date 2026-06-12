@@ -1,109 +1,18 @@
 $ astro dev
 [baseline-browser-mapping] The data in this module is over two months old.  To ensure accurate Baseline data, please update: `npm i baseline-browser-mapping@latest -D`
-[2m23:08:47[22m [34m[types][39m Generated [2m1ms[22m
-[2m23:08:47[22m [34m[content][39m Syncing content
-[2m23:08:47[22m [34m[content][39m Synced content
+[2m15:11:07[22m [34m[types][39m Generated [2m1ms[22m
+[2m15:11:07[22m [34m[content][39m Syncing content
+[2m15:11:07[22m [34m[content][39m Synced content
 
-[42m[1m astro [22m[49m [32mv5.15.4[39m [2mready in[22m 1063 [2mms[22m
+[42m[1m astro [22m[49m [32mv5.15.4[39m [2mready in[22m 784 [2mms[22m
 
 [2m┃[22m Local    [36mhttp://localhost:4321/[39m
 [2m┃[22m Network  [2muse --host to expose[22m
 
-[2m23:08:47[22m [32mwatching for file changes...[39m
+[2m15:11:07[22m [32mwatching for file changes...[39m
 Browserslist: browsers data (caniuse-lite) is 7 months old. Please run:
   npx update-browserslist-db@latest
   Why you should do it regularly: https://github.com/browserslist/update-db#readme
-[2m23:09:11[22m [34m[200][39m / [2m460ms[22m
-[2m23:09:18[22m [34m[200][39m /events/detail [2m15ms[22m
-[2m23:12:02[22m [34m[watch][39m /src/styles/global.css, /src/components/HomeEvents.jsx, /src/components/EventDetail.jsx, /src/components/RegistrationForm.jsx
-[2m23:12:02[22m [34m[watch][39m src/lib/api.js
-[2m23:19:55[22m [34m[watch][39m /src/components/RegistrationForm.jsx, /src/styles/global.css
-[2m23:19:55[22m [34m[watch][39m src/components/RegistrationForm.jsx
-[2m23:20:00[22m [34m[watch][39m /src/components/RegistrationForm.jsx, /src/styles/global.css
-[2m23:20:00[22m [34m[watch][39m src/components/RegistrationForm.jsx
-[2m23:20:04[22m [34m[watch][39m /src/components/RegistrationForm.jsx, /src/styles/global.css
-[2m23:20:04[22m [34m[watch][39m src/components/RegistrationForm.jsx
-[2m23:20:39[22m [34m[200][39m /events/detail [2m95ms[22m
-[2m23:21:10[22m [34m[200][39m /account [2m36ms[22m
-[2m23:21:12[22m [34m[200][39m / [2m34ms[22m
-[2m23:21:14[22m [34m[200][39m /login [2m27ms[22m
-[2m23:21:19[22m [33m[302][39m /api/auth/google [2m6ms[22m
-[2m23:21:26[22m [33m[302][39m /api/auth/google [2m1ms[22m
-[33m[1m23:27:48[22m [WARN][39m Unsupported file type [1mF:\Ulsaaham\webapp\web-app\apps\site\far-fusion\src\pages\api\auth\send-otp.js.tmp.6528.2a79b27a1f18[22m found. Prefix filename with an underscore (`_`) to ignore.
-[2m23:27:48[22m [34m[watch][39m src/pages/api/auth/send-otp.js
-[2m23:27:48[22m [34m[watch][39m src/pages/api/auth/send-otp.js
-[2m23:27:49[22m [34m[200][39m / [2m107ms[22m
-[33m[1m23:27:54[22m [WARN][39m Unsupported file type [1mF:\Ulsaaham\webapp\web-app\apps\site\far-fusion\src\pages\api\auth\verify-otp.js.tmp.6528.5091ab70ddfb[22m found. Prefix filename with an underscore (`_`) to ignore.
-[2m23:27:54[22m [34m[watch][39m src/pages/api/auth/verify-otp.js
-[2m23:27:54[22m [34m[watch][39m src/pages/api/auth/verify-otp.js
-[2m23:27:55[22m [34m[200][39m / [2m123ms[22m
-[2m23:28:13[22m [34m[watch][39m /src/components/AuthForm.jsx, /src/styles/global.css
-[2m23:28:13[22m [34m[watch][39m src/components/AuthForm.jsx
-[2m23:28:18[22m [34m[watch][39m /src/components/AuthForm.jsx, /src/styles/global.css
-[2m23:28:18[22m [34m[watch][39m src/components/AuthForm.jsx
-[2m23:28:23[22m [34m[watch][39m /src/components/AuthForm.jsx, /src/styles/global.css
-[2m23:28:23[22m [34m[watch][39m src/components/AuthForm.jsx
-[2m23:28:28[22m [34m[watch][39m /src/components/AuthForm.jsx, /src/styles/global.css
-[2m23:28:28[22m [34m[watch][39m src/components/AuthForm.jsx
-[2m23:28:51[22m [34m[watch][39m /src/components/AuthForm.jsx, /src/styles/global.css
-[2m23:28:51[22m [34m[watch][39m src/components/AuthForm.jsx
-[2m23:28:56[22m [34m[watch][39m /src/components/AuthForm.jsx, /src/styles/global.css
-[2m23:28:56[22m [34m[watch][39m src/components/AuthForm.jsx
-[2m23:29:03[22m [34m[watch][39m /src/components/RegistrationForm.jsx, /src/styles/global.css
-[2m23:29:03[22m [34m[watch][39m src/components/RegistrationForm.jsx
-[2m23:29:17[22m [34m[watch][39m /src/components/RegistrationForm.jsx, /src/styles/global.css
-[2m23:29:17[22m [34m[watch][39m src/components/RegistrationForm.jsx
-[2m23:29:25[22m [34m[watch][39m /src/components/RegistrationForm.jsx, /src/styles/global.css
-[2m23:29:25[22m [34m[watch][39m src/components/RegistrationForm.jsx
-[2m23:30:26[22m [34m[200][39m /login [2m147ms[22m
-[2m23:30:40[22m [34m[200][39m [34mPOST[39m /api/auth/send-otp [2m3344ms[22m
-[2m23:31:02[22m [34m[200][39m [34mPOST[39m /api/auth/verify-otp [2m6ms[22m
-[2m23:31:02[22m [34m[200][39m /account [2m26ms[22m
-[2m23:31:07[22m [34m[200][39m / [2m28ms[22m
-[2m23:31:10[22m [34m[200][39m /login [2m9ms[22m
-[2m23:31:28[22m [34m[200][39m /login [2m23ms[22m
-[2m23:31:29[22m [34m[200][39m /login [2m12ms[22m
-[2m23:31:44[22m [34m[200][39m /login [2m26ms[22m
-[2m23:32:46[22m [34m[watch][39m /src/components/AuthForm.jsx, /src/styles/global.css
-[2m23:32:46[22m [34m[watch][39m src/components/AuthForm.jsx
-[2m23:32:56[22m [34m[watch][39m /src/components/AuthForm.jsx, /src/styles/global.css
-[2m23:32:56[22m [34m[watch][39m src/components/AuthForm.jsx
-[2m23:33:04[22m [34m[watch][39m /src/components/AuthForm.jsx, /src/styles/global.css
-[2m23:33:04[22m [34m[watch][39m src/components/AuthForm.jsx
-[2m23:33:09[22m [34m[watch][39m /src/components/AuthForm.jsx, /src/styles/global.css
-[2m23:33:09[22m [34m[watch][39m src/components/AuthForm.jsx
-[2m23:33:18[22m [34m[watch][39m /src/components/AuthForm.jsx, /src/styles/global.css
-[2m23:33:18[22m [34m[watch][39m src/components/AuthForm.jsx
-[2m23:33:28[22m [34m[watch][39m /src/components/AuthForm.jsx, /src/styles/global.css
-[2m23:33:28[22m [34m[watch][39m src/components/AuthForm.jsx
-[2m23:34:03[22m [34m[200][39m [34mPOST[39m /api/auth/send-otp [2m3261ms[22m
-[2m23:34:13[22m [34m[200][39m [34mPOST[39m /api/auth/verify-otp [2m5ms[22m
-[2m23:34:14[22m [34m[200][39m /account [2m109ms[22m
-[2m23:34:24[22m [34m[200][39m / [2m8ms[22m
-[2m23:34:27[22m [34m[200][39m /login [2m40ms[22m
-[2m23:34:38[22m [34m[200][39m [34mPOST[39m /api/auth/send-otp [2m3407ms[22m
-[2m23:34:43[22m [34m[200][39m /login [2m31ms[22m
-[2m23:34:55[22m [34m[200][39m [34mPOST[39m /api/auth/send-otp [2m3564ms[22m
-[2m23:35:06[22m [34m[200][39m [34mPOST[39m /api/auth/verify-otp [2m7ms[22m
-[2m23:35:06[22m [34m[200][39m /account [2m24ms[22m
-[2m23:35:09[22m [34m[200][39m / [2m20ms[22m
-[2m23:35:11[22m [34m[200][39m /login [2m25ms[22m
-[2m23:35:23[22m [34m[200][39m [34mPOST[39m /api/auth/send-otp [2m3498ms[22m
-[2m23:35:34[22m [34m[200][39m [34mPOST[39m /api/auth/verify-otp [2m3ms[22m
-[2m23:35:34[22m [34m[200][39m /account [2m24ms[22m
-[2m23:36:30[22m [34m[200][39m /events [2m20ms[22m
-[2m23:44:17[22m [34m[200][39m /account [2m9ms[22m
-[2m23:44:20[22m [34m[200][39m /account [2m20ms[22m
-[2m23:44:22[22m [34m[200][39m / [2m11ms[22m
-[2m23:44:24[22m [34m[200][39m /login [2m17ms[22m
-[2m23:44:39[22m [34m[200][39m [34mPOST[39m /api/auth/send-otp [2m3509ms[22m
-[2m23:45:07[22m [34m[200][39m [34mPOST[39m /api/auth/verify-otp [2m4ms[22m
-[2m23:45:07[22m [34m[200][39m /account [2m19ms[22m
-[33m[1m23:48:56[22m [WARN][39m Unsupported file type [1mF:\Ulsaaham\webapp\web-app\apps\site\far-fusion\src\pages\api\send-ticket.js.tmp.6528.04590de1ecdb[22m found. Prefix filename with an underscore (`_`) to ignore.
-[2m23:49:04[22m [34m[watch][39m /src/components/RegistrationForm.jsx, /src/styles/global.css
-[2m23:49:04[22m [34m[watch][39m src/components/RegistrationForm.jsx
-[2m23:49:12[22m [34m[watch][39m /src/components/RegistrationForm.jsx, /src/styles/global.css
-[2m23:49:12[22m [34m[watch][39m src/components/RegistrationForm.jsx
-[2m23:49:18[22m [34m[watch][39m /src/components/RegistrationForm.jsx, /src/styles/global.css
-[2m23:49:18[22m [34m[watch][39m src/components/RegistrationForm.jsx
-[2m23:53:05[22m [34m[200][39m /events [2m114ms[22m
+[2m15:11:11[22m [34m[200][39m /events/detail [2m234ms[22m
+[2m15:11:14[22m [34m[200][39m / [2m10ms[22m
+[2m15:11:18[22m [34m[200][39m /events/detail [2m7ms[22m
