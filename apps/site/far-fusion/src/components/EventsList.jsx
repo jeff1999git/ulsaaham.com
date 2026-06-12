@@ -82,7 +82,7 @@ export default function EventsList() {
   return (
     <div>
       <Section title="Featured Events" params={{ featured: true }} limit={12} />
-      <Section title="Upcoming Events" params={{ upcoming: true }} limit={12} />
+      <Section title="Upcoming Events" params={{ upcoming: true }} limit={12} filter={(ev) => !ev.featured} />
       <Section
         title="Past Events"
         params={{ past: true }}

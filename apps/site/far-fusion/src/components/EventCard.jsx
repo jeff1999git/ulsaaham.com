@@ -18,26 +18,25 @@ export default function EventCard({ event, linkable = true }) {
         ) : (
           <div className="event-card__placeholder" />
         )}
-        {isUpcoming && (
-          event.isFree ? (
-            <span className="event-card__price free">FREE</span>
-          ) : event.isEarlyBird && event.earlyBirdAmount != null ? (
-            <span className="event-card__price paid" style={{ display: "flex", flexDirection: "column", alignItems: "flex-end", gap: "1px", lineHeight: 1.2 }}>
-              <span style={{ fontSize: "9px", fontWeight: 700, letterSpacing: "0.1em", textTransform: "uppercase", color: "#fecc01", opacity: 0.9 }}>Early Bird</span>
-              <span style={{ display: "flex", alignItems: "baseline", gap: "4px" }}>
-                <span style={{ textDecoration: "line-through", opacity: 0.5, fontSize: "0.75em" }}>₹{event.amount}</span>
-                <span>₹{event.earlyBirdAmount}</span>
-              </span>
-            </span>
-          ) : (
-            <span className="event-card__price paid">₹{event.amount}</span>
-          )
-        )}
         {event.isFull && <span className="event-card__full">FULL</span>}
-        {event.featured && <span className="event-card__featured">Featured</span>}
       </div>
       <div className="event-card__body">
+        {event.featured && <span className="event-card__featured">Featured</span>}
         <h3 className="event-card__title">{event.name}</h3>
+        {isUpcoming && (
+          event.isFree ? (
+            <p className="event-card__meta" style={{ color: "#fecc01", fontWeight: 700 }}>🎟 Free Entry</p>
+          ) : event.isEarlyBird && event.earlyBirdAmount != null ? (
+            <p className="event-card__meta" style={{ display: "flex", alignItems: "center", flexWrap: "wrap", gap: "5px" }}>
+              🎟
+              <span style={{ textDecoration: "line-through", opacity: 0.4 }}>₹{event.amount}</span>
+              <span style={{ color: "#fecc01", fontWeight: 700 }}>₹{event.earlyBirdAmount}</span>
+              <span style={{ background: "rgba(254,204,1,0.15)", color: "#fecc01", border: "1px solid rgba(254,204,1,0.35)", borderRadius: 3, fontSize: "9px", fontWeight: 700, letterSpacing: "0.1em", padding: "1px 5px", textTransform: "uppercase" }}>Early Bird</span>
+            </p>
+          ) : (
+            <p className="event-card__meta">🎟 ₹{event.amount} per person</p>
+          )
+        )}
         <p className="event-card__meta">📅 {date} · {event.startTime}</p>
         <p className="event-card__meta">
           📍 {!linkable && event.venueLink
