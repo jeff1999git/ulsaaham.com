@@ -1,7 +1,6 @@
-﻿---
+---
 export const prerender = true;
 import BaseLayout from "../layouts/BaseLayout.astro";
-import HeroScene from "../components/HeroScene.jsx";
 ---
 
 <BaseLayout title="About Us — Ulsaham Entertainments" description="Learn about Ulsaham Entertainments — a Thrissur-based team crafting extraordinary event experiences.">
@@ -57,59 +56,50 @@ import HeroScene from "../components/HeroScene.jsx";
       }
     </script>
 
-    <section class="relative bg-primary pt-16 sm:pt-24 pb-14 md:pb-24 text-light">
-      <div class="profile-scene">
-        <div class="hero-scene-wrapper">
-          <HeroScene client:only="react" />
-        </div>
+    <div class="mx-auto max-w-3xl px-4 sm:px-6 pt-16 sm:pt-24 pb-16 md:pb-24">
+      <h1 class="section-title text-3xl mb-2">About Us</h1>
+      <p class="section-subtitle mb-12">Ulsaham Entertainments — Thrissur, Kerala</p>
+
+      <div class="space-y-10 text-light/80 leading-relaxed">
+
+        <section class="space-y-4">
+          <h2 class="text-lg font-semibold uppercase tracking-[0.2em] text-accent">Who We Are</h2>
+          <p>Ulsaham Entertainments is a Thrissur-based venture created by a team of young, energetic minds who believe that events should feel extraordinary. We don't just plan events — we design experiences.</p>
+          <p>Today, many parties and functions feel routine, predictable, and stressful for the hosts. At Ulsaham, we change that. We bring creativity, technical precision, and high-energy entertainment to every occasion, making sure the event is not just organised — but felt.</p>
+          <p>From DJ nights, neon parties, theme-based celebrations, Halloween shows, college fests, corporate functions, and nightlife events, to premium collaborations with hospitality partners, we specialise in creating moments full of excitement, music, and unforgettable ambience.</p>
+        </section>
+
+        <section class="space-y-4">
+          <h2 class="text-lg font-semibold uppercase tracking-[0.2em] text-accent">Mission</h2>
+          <p>To provide expert and professional event coordination, where every client feels like a guest at their own event — enjoying every moment while we handle every detail.</p>
+        </section>
+
+        <section class="space-y-4">
+          <h2 class="text-lg font-semibold uppercase tracking-[0.2em] text-accent">Vision</h2>
+          <p>To craft extraordinary celebrations that go beyond expectations and create unforgettable experiences filled with joy, creativity, and lasting memories for every guest and client.</p>
+        </section>
+
+        <section class="space-y-4">
+          <h2 class="text-lg font-semibold uppercase tracking-[0.2em] text-accent">Contact</h2>
+          <p>For event enquiries and collaborations, reach us at:</p>
+          <p><a href="mailto:ulsaham1@gmail.com" class="text-accent hover:underline">ulsaham1@gmail.com</a></p>
+        </section>
+
       </div>
-      <div class="relative z-10 mx-auto max-w-6xl px-4 sm:px-6 pt-6 pb-8 sm:pb-12 lg:px-10">
-        <div class="relative flex flex-col gap-10 animate-fade-up lg:flex-row lg:items-start lg:gap-16">
-          <div class="flex-1 space-y-8 text-light/85">
-            <div class="space-y-5">
-              <img
-                src="https://res.cloudinary.com/dscbuwvgg/image/upload/v1762587370/Adobe_Express_-_file_1_fvilwg.png"
-                alt="Ulsaham Entertainments logo"
-                class="overview-logo"
-                loading="lazy"
-                decoding="async"
-              />
-              <p class="inline-flex items-center rounded-full border border-light/30 bg-light/10 px-4 py-1 text-sm font-semibold uppercase tracking-[0.3em] text-light/80">
-                Entertainments
-              </p>
-            </div>
-            <div class="space-y-4">
-              <h3 class="text-xl font-semibold uppercase tracking-[0.2em] text-accent">Mission</h3>
-              <p>To provide expert and professional event coordination, where every client feels like a guest at their own event, enjoying every moment while we handle every detail.</p>
-            </div>
-            <div class="space-y-4">
-              <h3 class="text-xl font-semibold uppercase tracking-[0.2em] text-accent">Vision</h3>
-              <p>To craft extraordinary celebrations that go beyond expectations and create unforgettable experiences filled with joy, creativity, and lasting memories for every guest and client.</p>
-            </div>
-          </div>
-          <div class="hidden h-full w-px self-stretch bg-light/20 mix-blend-screen lg:block"></div>
-          <div class="flex-1 space-y-4 text-base leading-relaxed text-light/90">
-            <h2 class="text-2xl font-semibold uppercase tracking-[0.25em] text-accent">About Us</h2>
-            <p>
-              Ulsaham Entertainments is a Thrissur-based venture created by a team of young, energetic minds who believe that events should feel extraordinary. We don't just plan events—we design experiences.
-            </p>
-            <p>
-              Today, many parties and functions feel routine, predictable, and stressful for the hosts. At Ulsaham, we change that. We bring creativity, technical precision, and high-energy entertainment to every occasion, making sure the event is not just organized—but felt.
-            </p>
-            <p>
-              From DJ nights, neon parties, theme-based celebrations, Halloween shows, college fests, corporate functions, and nightlife events, to premium collaborations with Hotel, we specialize in creating moments full of excitement, music, and unforgettable ambience.
-            </p>
-          </div>
-        </div>
-      </div>
-    </section>
+    </div>
 
     <footer class="bg-primary py-8 border-t border-light/10 text-center text-sm text-light/50">
-      <a href="/" class="hover:text-accent transition">← Back to Home</a>
+      <a href="/about" class="hover:text-accent transition">About Us</a>
       <span class="mx-4">·</span>
-      <a href="/events" class="hover:text-accent transition">Events</a>
+      <a href="/terms" class="hover:text-accent transition">Terms &amp; Conditions</a>
       <span class="mx-4">·</span>
       <a href="/privacy" class="hover:text-accent transition">Privacy Policy</a>
+      <span class="mx-4">·</span>
+      <a href="https://www.instagram.com/ulsaham_?igsh=MTFsdzF4d2J5YXdzdQ==" target="_blank" rel="noreferrer" class="hover:text-accent transition">Instagram</a>
+      <span class="mx-4">·</span>
+      <a href="mailto:ulsaham1@gmail.com" class="hover:text-accent transition">Email</a>
+      <span class="mx-4">·</span>
+      <a href="https://wa.me/9446266011" target="_blank" rel="noreferrer" class="hover:text-accent transition">WhatsApp</a>
     </footer>
 
   </div>
