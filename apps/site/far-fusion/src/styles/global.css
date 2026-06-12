@@ -580,15 +580,12 @@ a:hover {
 }
 
 .hero-sound-toggle {
-  position: absolute;
-  bottom: 1.25rem;
-  right: 1.25rem;
-  z-index: 10;
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 36px;
-  height: 36px;
+  flex-shrink: 0;
+  width: 30px;
+  height: 30px;
   border-radius: 50%;
   background: rgba(0, 0, 0, 0.35);
   border: 1px solid rgba(255, 255, 255, 0.2);
@@ -603,46 +600,45 @@ a:hover {
   color: #fecc01;
 }
 
-.scroll-indicator {
+.nav-scroll-hint {
   position: absolute;
   left: 50%;
-  bottom: clamp(1.5rem, 4vw, 2rem);
-  transform: translateX(-50%);
+  top: 50%;
+  transform: translate(-50%, -50%);
   display: inline-flex;
   align-items: center;
-  justify-content: center;
-  width: 24px;
-  height: 24px;
-  color: rgba(255, 255, 255, 0.85);
-  transition: transform 0.3s ease, color 0.3s ease;
-}
-
-.scroll-indicator span {
-  display: block;
-  width: 0;
-  height: 0;
-  border-left: 7px solid transparent;
-  border-right: 7px solid transparent;
-  border-top: 10px solid #fecc01;
-  animation: arrow-bounce 1.4s ease-in-out infinite;
-}
-
-.scroll-indicator:hover,
-.scroll-indicator:focus-visible {
-  transform: translateX(-50%) translateY(3px);
   color: #fecc01;
+  text-decoration: none;
 }
 
-.scroll-indicator:focus-visible {
-  outline: none;
+.nav-chevrons {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0px;
 }
 
-@keyframes arrow-bounce {
-  0%, 100% {
-    transform: translateY(-2px);
-  }
-  50% {
-    transform: translateY(4px);
+.nav-chevron {
+  display: block;
+  color: inherit;
+  opacity: 0.15;
+  animation: chevron-cascade 1.5s ease-in-out infinite;
+}
+.nav-chevron:nth-child(1) { animation-delay: 0s; }
+.nav-chevron:nth-child(2) { animation-delay: 0.18s; }
+.nav-chevron:nth-child(3) { animation-delay: 0.36s; }
+.nav-chevron:nth-child(4) { animation-delay: 0.54s; }
+
+@keyframes chevron-cascade {
+  0%, 100% { opacity: 0.2; }
+  35%       { opacity: 1; }
+  70%       { opacity: 0.2; }
+}
+
+@media (max-width: 640px) {
+  .nav-scroll-hint {
+    position: static;
+    transform: none;
   }
 }
 
