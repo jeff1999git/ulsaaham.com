@@ -407,7 +407,7 @@ a:hover {
 
 .client-carousel::before,
 .client-carousel::after {
-  content: "";
+  content: none;
   position: absolute;
   top: 0;
   bottom: 0;
@@ -849,17 +849,20 @@ a:hover {
 .event-card {
   display: flex;
   flex-direction: column;
-  background: rgba(255, 255, 255, 0.04);
-  border: 1px solid rgba(254, 204, 1, 0.15);
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.15);
   border-radius: 1.25rem;
   overflow: hidden;
   text-decoration: none;
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.25);
   transition: transform 0.35s ease, border-color 0.35s ease, box-shadow 0.35s ease;
 }
 .event-card:hover {
   transform: translateY(-5px);
-  border-color: rgba(254, 204, 1, 0.45);
-  box-shadow: 0 20px 48px rgba(2, 51, 1, 0.5);
+  border-color: rgba(254, 204, 1, 0.5);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.35);
   color: inherit;
 }
 .event-card__image {
