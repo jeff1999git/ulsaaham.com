@@ -81,8 +81,8 @@ export async function POST({ request }) {
       </table>
 
       <p style="color:rgba(255,255,255,.35);font-size:11px;line-height:1.7;margin:0;border-top:1px solid rgba(255,255,255,.08);padding-top:16px">
-        Screenshot or save this email — bring your QR code to the venue. You can also view your ticket at
-        <a href="https://www.ulsaaham.com/ticket" style="color:#fecc01">ulsaaham.com/ticket</a>.
+        Screenshot or save this email — bring your QR code to the venue. You can also view your tickets in your
+        <a href="https://www.ulsaaham.com/account" style="color:#fecc01">Ulsaham account</a>.
       </p>
     </div>`;
 
