@@ -216,8 +216,8 @@ export default function RegistrationForm({ event }) {
   if (event.status !== "PUBLISHED") {
     return (
       <div className="reg-closed">
-        <p className="font-serif text-2xl text-accent">Registration Closed</p>
-        <p className="text-light/50 mt-2 text-sm">This event is no longer accepting registrations.</p>
+        <p className="font-serif text-2xl text-accent">Booking Closed</p>
+        <p className="text-light/50 mt-2 text-sm">This event is no longer accepting bookings.</p>
       </div>
     );
   }

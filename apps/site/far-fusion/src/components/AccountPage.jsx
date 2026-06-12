@@ -271,7 +271,7 @@ export default function AccountPage() {
     const { ok, data } = await fetchMyTickets(codes);
     setTicketsLoading(false);
 
-    if (!ok) { setTicketsError("Could not load ticket details. Tap to retry."); return; }
+    if (!ok) { setTicketsError("Could not load booking details. Tap to retry."); return; }
     const fetched = data.data?.tickets || [];
     setLiveTickets(fetched);
     setTicketsError(null);
