@@ -909,7 +909,7 @@ a:hover {
   color: #ffffff;
   line-height: 1.35;
 }
-.event-card__meta { font-size: 0.8rem; color: rgba(255, 255, 255, 0.55); }
+.event-card__meta { font-size: 0.8rem; color: rgba(255, 255, 255, 0.85); }
 .event-card__cta {
   margin-top: auto;
   padding-top: 0.7rem;
