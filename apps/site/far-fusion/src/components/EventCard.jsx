@@ -1,4 +1,4 @@
-export default function EventCard({ event, linkable = true }) {
+export default function EventCard({ event, linkable = true, index = 0 }) {
   const date = new Intl.DateTimeFormat("en-IN", {
     day: "numeric", month: "short", year: "numeric",
   }).format(new Date(event.date));
@@ -14,7 +14,7 @@ export default function EventCard({ event, linkable = true }) {
     <Tag {...tagProps} className={`event-card${linkable ? " group" : " event-card--static"}`}>
       <div className="event-card__image">
         {event.bannerImageUrl ? (
-          <img src={event.bannerImageUrl} alt={event.name} loading="lazy" decoding="async" />
+          <img src={event.bannerImageUrl} alt={event.name} loading={index < 2 ? "eager" : "lazy"} fetchPriority={index < 2 ? "high" : "auto"} decoding="async" />
         ) : (
           <div className="event-card__placeholder" />
         )}
