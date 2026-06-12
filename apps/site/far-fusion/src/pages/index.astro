@@ -2,6 +2,7 @@
 export const prerender = true;
 import BaseLayout from "../layouts/BaseLayout.astro";
 import HomeEvents from "../components/HomeEvents.jsx";
+import PastEventsRunner from "../components/PastEventsRunner.jsx";
 
 const clientLogos = [
   {
@@ -130,6 +131,7 @@ const clientLogos = [
         </a>
       </div>
       <HomeEvents client:load />
+      <PastEventsRunner client:load />
     </div>
   </section>
 

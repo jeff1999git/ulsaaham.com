@@ -17,6 +17,9 @@ export default defineConfig({
     ],
   },
   vite: {
+    ssr: {
+      noExternal: ["qrcode"],
+    },
     server: {
       proxy: {
         "/api/public": {
