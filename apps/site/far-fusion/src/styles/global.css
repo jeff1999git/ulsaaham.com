@@ -519,7 +519,8 @@ a:hover {
   animation: scroll-past-horizontal 60s linear infinite;
 }
 
-.past-runner:hover .past-runner__track {
+.past-runner:hover .past-runner__track,
+.past-runner__track--paused {
   animation-play-state: paused;
 }
 
