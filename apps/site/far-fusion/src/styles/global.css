@@ -107,6 +107,11 @@ a:hover {
   object-fit: cover;
   z-index: 0;
 }
+.hero-video__media--mobile { display: none; }
+@media (max-width: 768px) {
+  .hero-video__media--desktop { display: none; }
+  .hero-video__media--mobile { display: block; }
+}
 
 .hero-video__overlay {
   display: none;

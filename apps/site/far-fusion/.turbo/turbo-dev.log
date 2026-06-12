@@ -1,41 +1,18 @@
 $ astro dev
 [baseline-browser-mapping] The data in this module is over two months old.  To ensure accurate Baseline data, please update: `npm i baseline-browser-mapping@latest -D`
-[2m15:56:30[22m [34m[types][39m Generated [2m1ms[22m
-[2m15:56:30[22m [34m[content][39m Syncing content
-[2m15:56:30[22m [34m[content][39m Synced content
+[2m18:52:33[22m [34m[types][39m Generated [2m1ms[22m
+[2m18:52:33[22m [34m[content][39m Syncing content
+[2m18:52:33[22m [34m[content][39m Synced content
 
-[42m[1m astro [22m[49m [32mv5.15.4[39m [2mready in[22m 685 [2mms[22m
+[42m[1m astro [22m[49m [32mv5.15.4[39m [2mready in[22m 968 [2mms[22m
 
 [2m┃[22m Local    [36mhttp://localhost:4321/[39m
 [2m┃[22m Network  [2muse --host to expose[22m
 
-[2m15:56:30[22m [32mwatching for file changes...[39m
+[2m18:52:33[22m [32mwatching for file changes...[39m
 Browserslist: browsers data (caniuse-lite) is 7 months old. Please run:
   npx update-browserslist-db@latest
   Why you should do it regularly: https://github.com/browserslist/update-db#readme
-[2m15:56:38[22m [34m[200][39m /events/detail [2m251ms[22m
-[2m15:56:43[22m [34m[200][39m / [2m9ms[22m
-[2m15:56:46[22m [34m[200][39m / [2m7ms[22m
-[2m15:56:46[22m [34m[200][39m / [2m5ms[22m
-[2m15:56:46[22m [34m[200][39m / [2m6ms[22m
-[2m15:56:52[22m [34m[200][39m /events/detail [2m7ms[22m
-[2m15:57:39[22m [34m[200][39m [34mPOST[39m /api/send-ticket [2m3517ms[22m
-[2m15:59:02[22m [34m[200][39m /events [2m7ms[22m
-[2m16:00:58[22m [34m[watch][39m /src/styles/global.css
-[2m16:00:59[22m [34m[200][39m /events [2m246ms[22m
-[2m16:01:16[22m [34m[200][39m /events [2m11ms[22m
-[2m16:01:26[22m [34m[200][39m / [2m9ms[22m
-[2m16:02:06[22m [34m[watch][39m /src/styles/global.css
-[2m16:02:08[22m [34m[200][39m / [2m297ms[22m
-[2m16:03:08[22m [34m[200][39m /events [2m8ms[22m
-[2m16:03:08[22m [34m[watch][39m /src/components/EventsList.jsx, /src/styles/global.css
-[2m16:03:08[22m [34m[watch][39m src/components/EventsList.jsx
-[2m16:03:13[22m [34m[watch][39m /src/components/EventsList.jsx, /src/styles/global.css
-[2m16:03:13[22m [34m[watch][39m src/components/EventsList.jsx
-[2m16:03:18[22m [34m[watch][39m /src/components/EventsList.jsx, /src/styles/global.css
-[2m16:03:18[22m [34m[watch][39m src/components/EventsList.jsx
-[2m16:04:27[22m [34m[200][39m / [2m62ms[22m
-[2m18:18:20[22m [34m[200][39m / [2m27ms[22m
-[2m18:20:09[22m [34m[200][39m /events/detail [2m7ms[22m
-[2m18:22:16[22m [34m[200][39m /events [2m11ms[22m
-[2m18:23:36[22m [34m[watch][39m /src/components/EventDetail.jsx, /src/styles/global.css
+[2m18:52:39[22m [34m[200][39m / [2m304ms[22m
+[2m18:54:25[22m [34m[watch][39m src/pages/index.astro
+[2m18:54:25[22m [34m[watch][39m src/pages/index.astro
