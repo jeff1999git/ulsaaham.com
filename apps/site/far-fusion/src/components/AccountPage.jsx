@@ -126,7 +126,7 @@ function RepayPanel({ ticket, user, onSuccess, onClose }) {
                 <div className="fee-breakdown__divider" />
                 <div className="fee-breakdown__total"><span>Total</span><span>₹{fees.total.toFixed(2)}</span></div>
               </div>
-              <button onClick={handlePay} className="reg-submit">Pay ₹{fees.total.toFixed(2)} & Register →</button>
+              <button onClick={handlePay} className="reg-submit">Pay ₹{fees.total.toFixed(2)} & Book →</button>
             </>
           );
         })()}
@@ -375,10 +375,10 @@ export default function AccountPage() {
           )}
         </div>
 
-        {/* ── My Tickets ── */}
+        {/* ── My Bookings ── */}
         <div className="account-section">
           <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: "1.5rem" }}>
-            <h3 className="text-base font-semibold uppercase tracking-[0.15em] text-accent">My Tickets</h3>
+            <h3 className="text-base font-semibold uppercase tracking-[0.15em] text-accent">My Bookings</h3>
             {!ticketsLoading && (
               <button onClick={loadTickets} className="text-light/30 text-xs uppercase tracking-widest hover:text-light/60 transition">
                 ↻ Refresh
@@ -397,7 +397,7 @@ export default function AccountPage() {
 
           {!ticketsLoading && !ticketsError && storedCount === 0 && (
             <div className="text-center py-16">
-              <p className="text-light/30 text-sm">No tickets yet.</p>
+              <p className="text-light/30 text-sm">No bookings yet.</p>
               <a href="/events" className="text-accent text-xs font-semibold uppercase tracking-widest mt-3 inline-block hover:underline">
                 Browse Events →
               </a>
@@ -421,7 +421,7 @@ export default function AccountPage() {
 
           {!ticketsLoading && !ticketsError && storedCount > 0 && liveTickets.length === 0 && (
             <div className="text-center py-8">
-              <p className="text-light/30 text-sm">Could not load live ticket details.</p>
+              <p className="text-light/30 text-sm">Could not load live booking details.</p>
               <button onClick={loadTickets} className="account-btn mt-3">Retry</button>
             </div>
           )}

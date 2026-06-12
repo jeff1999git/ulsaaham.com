@@ -108,7 +108,7 @@ function TicketSuccess({ ticket }) {
             {dlLoading ? "Generating…" : "Download Ticket"}
           </button>
           <a href="/account" className="text-accent text-xs font-semibold uppercase tracking-widest hover:underline">
-            View My Tickets →
+            View My Bookings →
           </a>
         </div>
       </div>
@@ -142,7 +142,7 @@ function CompleteProfileStep({ user, onComplete }) {
   return (
     <form onSubmit={submit} className="reg-form" noValidate>
       <h3 className="font-serif text-xl text-light mb-1">Complete Your Profile</h3>
-      <p className="text-light/40 text-sm mb-5">We need a few more details to register you for this event.</p>
+      <p className="text-light/40 text-sm mb-5">We need a few more details to book you for this event.</p>
       <div className="reg-field">
         <label>Full Name *</label>
         <input type="text" value={form.name} onChange={set("name")} placeholder="Rahul Menon" autoFocus required />
@@ -232,7 +232,7 @@ export default function RegistrationForm({ event }) {
       <div className="auth-gate">
         <p className="text-accent text-xs font-semibold uppercase tracking-widest mb-2">Login Required</p>
         <p className="text-light/60 text-sm mb-6">
-          Sign in to register for this event and access your tickets.
+          Sign in to book this event and access your bookings.
         </p>
         <a href={`/login?next=${next}`} className="reg-submit" style={{ display: "block", textAlign: "center", textDecoration: "none" }}>
           Login / Sign Up →
@@ -308,7 +308,7 @@ export default function RegistrationForm({ event }) {
     }
     setPhase("form");
     if (status === 400 && data.fieldErrors) { setFieldErrors(data.fieldErrors); return; }
-    if (status === 409) { setGlobalError("This phone number is already registered for this event, try with another phone number."); return; }
+    if (status === 409) { setGlobalError("This phone number is already booked for this event, try with another phone number."); return; }
     if (status === 410) { setGlobalError("This event is now full."); return; }
     setGlobalError(data?.error || "Something went wrong. Please try again.");
   };
@@ -483,7 +483,7 @@ export default function RegistrationForm({ event }) {
         </div>
 
         {couponError && <p className="text-red-400 text-xs mt-2">{couponError}</p>}
-        <p className="text-light/40 text-xs mb-4">Registered as: <strong className="text-light/70">{form.name}</strong> (+91 {form.phone})</p>
+        <p className="text-light/40 text-xs mb-4">Booking as: <strong className="text-light/70">{form.name}</strong> (+91 {form.phone})</p>
 
         <button onClick={handlePay} className="reg-submit">
           Pay ₹{bd.total.toFixed(2)} →
@@ -504,7 +504,7 @@ export default function RegistrationForm({ event }) {
 
   return (
     <form onSubmit={handleSubmit} className="reg-form" noValidate>
-      <h3 className="font-serif text-xl text-light mb-1">Register</h3>
+      <h3 className="font-serif text-xl text-light mb-1">Book</h3>
       <p className="text-light/40 text-sm mb-5" style={{ display: "flex", alignItems: "center", gap: "6px", flexWrap: "wrap" }}>
         {event.isFree ? (
           <span style={{ color: "#22c55e", fontWeight: 600 }}>Free</span>
@@ -619,8 +619,8 @@ export default function RegistrationForm({ event }) {
         {isSubmitting
           ? "Processing…"
           : event.isFree
-          ? "Register — Free"
-          : `Pay & Register — ₹${fees ? fees.total.toFixed(2) : "…"}`}
+          ? "Book — Free"
+          : `Pay & Book — ₹${fees ? fees.total.toFixed(2) : "…"}`}
       </button>
     </form>
   );
