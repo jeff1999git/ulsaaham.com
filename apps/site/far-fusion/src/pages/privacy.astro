@@ -7,7 +7,7 @@ import BaseLayout from "../layouts/BaseLayout.astro";
   <div class="min-h-screen bg-primary text-light">
 
     <header class="page-topbar">
-      <div class="mx-auto max-w-6xl px-6 flex items-center justify-between">
+      <div class="mx-auto max-w-6xl px-4 sm:px-6 flex items-center justify-between">
         <a href="/" class="page-topbar__brand"><img src="/brand_logo.avif" alt="Ulsaham" class="topbar-logo" /></a>
         <div class="flex items-center gap-5">
           <a href="/events" class="page-topbar__link">Events</a>
@@ -21,7 +21,7 @@ import BaseLayout from "../layouts/BaseLayout.astro";
       if (el && u) { el.href = "/account"; el.setAttribute("aria-label", "My Account"); el.innerHTML = `<span class="topbar-avatar__letter">${(u.name||"?")[0].toUpperCase()}</span>`; }
     </script>
 
-    <div class="mx-auto max-w-3xl px-6 pt-20 pb-24">
+    <div class="mx-auto max-w-3xl px-4 sm:px-6 pt-16 sm:pt-20 pb-16 md:pb-24">
       <h1 class="section-title text-3xl mb-2">Privacy Policy</h1>
       <p class="section-subtitle mb-12">Last updated: June 2025</p>
 

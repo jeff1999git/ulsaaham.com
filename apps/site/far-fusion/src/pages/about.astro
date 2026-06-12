@@ -8,7 +8,7 @@ import HeroScene from "../components/HeroScene.jsx";
   <div class="min-h-screen bg-primary text-light">
 
     <header class="page-topbar">
-      <div class="mx-auto max-w-6xl px-6 flex items-center justify-between">
+      <div class="mx-auto max-w-6xl px-4 sm:px-6 flex items-center justify-between">
         <a href="/" class="page-topbar__brand"><img src="/brand_logo.avif" alt="Ulsaham" class="topbar-logo" /></a>
         <div class="flex items-center gap-5">
           <a href="/events" class="page-topbar__link">Events</a>
@@ -22,13 +22,13 @@ import HeroScene from "../components/HeroScene.jsx";
       if (el && u) { el.href = "/account"; el.setAttribute("aria-label", "My Account"); el.innerHTML = `<span class="topbar-avatar__letter">${(u.name||"?")[0].toUpperCase()}</span>`; }
     </script>
 
-    <section class="relative bg-primary py-24 text-light">
+    <section class="relative bg-primary py-14 md:py-24 text-light">
       <div class="profile-scene">
         <div class="hero-scene-wrapper">
           <HeroScene client:only="react" />
         </div>
       </div>
-      <div class="relative z-10 mx-auto max-w-6xl px-6 pt-6 pb-12 lg:px-10">
+      <div class="relative z-10 mx-auto max-w-6xl px-4 sm:px-6 pt-6 pb-8 sm:pb-12 lg:px-10">
         <div class="relative flex flex-col gap-10 animate-fade-up lg:flex-row lg:items-start lg:gap-16">
           <div class="flex-1 space-y-8 text-light/85">
             <div class="space-y-5">

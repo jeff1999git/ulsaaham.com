@@ -8,7 +8,7 @@ import AccountPage from "../components/AccountPage.jsx";
   <div class="min-h-screen bg-primary text-light">
 
     <header class="page-topbar">
-      <div class="mx-auto max-w-6xl px-6 flex items-center justify-between">
+      <div class="mx-auto max-w-6xl px-4 sm:px-6 flex items-center justify-between">
         <a href="/" class="page-topbar__brand"><img src="/brand_logo.avif" alt="Ulsaham" class="topbar-logo" /></a>
         <div class="flex items-center gap-5">
           <a href="/events" class="page-topbar__link">Events</a>
@@ -22,7 +22,7 @@ import AccountPage from "../components/AccountPage.jsx";
       if (el && u) { el.innerHTML = `<span class="topbar-avatar__letter">${(u.name||"?")[0].toUpperCase()}</span>`; }
     </script>
 
-    <div class="mx-auto max-w-4xl px-6 pt-14 pb-24">
+    <div class="mx-auto max-w-4xl px-4 sm:px-6 pt-14 pb-14 md:pb-24">
       <AccountPage client:load />
     </div>
 

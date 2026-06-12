@@ -1,70 +1,116 @@
 $ astro dev
 [baseline-browser-mapping] The data in this module is over two months old.  To ensure accurate Baseline data, please update: `npm i baseline-browser-mapping@latest -D`
-[2m19:59:55[22m [34m[types][39m Generated [2m1ms[22m
-[2m19:59:55[22m [34m[content][39m Syncing content
-[2m19:59:55[22m [34m[content][39m Synced content
+[2m22:16:10[22m [34m[types][39m Generated [2m1ms[22m
+[2m22:16:10[22m [34m[content][39m Syncing content
+[2m22:16:10[22m [34m[content][39m Synced content
 
-[42m[1m astro [22m[49m [32mv5.15.4[39m [2mready in[22m 903 [2mms[22m
+[42m[1m astro [22m[49m [32mv5.15.4[39m [2mready in[22m 1139 [2mms[22m
 
 [2m┃[22m Local    [36mhttp://localhost:4321/[39m
 [2m┃[22m Network  [2muse --host to expose[22m
 
-[2m19:59:55[22m [32mwatching for file changes...[39m
+[2m22:16:10[22m [32mwatching for file changes...[39m
 Browserslist: browsers data (caniuse-lite) is 7 months old. Please run:
   npx update-browserslist-db@latest
   Why you should do it regularly: https://github.com/browserslist/update-db#readme
-[2m20:00:03[22m [34m[200][39m / [2m340ms[22m
-[2m20:00:07[22m [34m[200][39m / [2m10ms[22m
-[2m20:08:30[22m [34m[200][39m / [2m16ms[22m
-[2m20:10:05[22m [34m[watch][39m src/pages/index.astro
-[2m20:10:05[22m [34m[watch][39m src/pages/index.astro
-[2m20:10:06[22m [34m[200][39m / [2m115ms[22m
-[2m20:10:20[22m [34m[watch][39m src/pages/index.astro
-[2m20:10:20[22m [34m[watch][39m src/pages/index.astro
-[2m20:10:21[22m [34m[200][39m / [2m81ms[22m
-[2m20:10:21[22m [34m[watch][39m src/pages/index.astro
-[2m20:10:21[22m [34m[watch][39m src/pages/index.astro
-[2m20:11:15[22m [34m[200][39m /events/detail [2m142ms[22m
-[2m20:12:19[22m [34m[watch][39m /src/styles/global.css
-[2m20:12:20[22m [34m[200][39m / [2m266ms[22m
-[2m20:13:16[22m [34m[200][39m /about [2m6ms[22m
-[2m20:13:21[22m [34m[200][39m /privacy [2m6ms[22m
-[2m20:13:26[22m [34m[200][39m / [2m6ms[22m
-[2m20:16:42[22m [34m[watch][39m /src/styles/global.css
-[2m20:16:42[22m [34m[200][39m / [2m278ms[22m
-[33m[1m20:17:14[22m [WARN][39m Unsupported file type [1mF:\Ulsaaham\webapp\web-app\apps\site\far-fusion\src\pages\index.astro.tmp.10144.1173727c5bca[22m found. Prefix filename with an underscore (`_`) to ignore.
-[2m20:17:14[22m [34m[watch][39m src/pages/index.astro
-[2m20:17:14[22m [34m[watch][39m src/pages/index.astro
-[2m20:17:14[22m [34m[200][39m / [2m98ms[22m
-[2m20:18:29[22m [34m[watch][39m src/pages/index.astro
-[2m20:18:29[22m [34m[watch][39m src/pages/index.astro
-[2m20:18:29[22m [34m[200][39m / [2m69ms[22m
-[2m20:18:35[22m [34m[watch][39m src/pages/index.astro
-[2m20:18:35[22m [34m[watch][39m src/pages/index.astro
-[2m20:18:36[22m [34m[200][39m / [2m73ms[22m
-[2m20:18:44[22m [34m[watch][39m /src/styles/global.css
-[2m20:18:45[22m [34m[200][39m / [2m270ms[22m
-[33m[1m20:21:55[22m [WARN][39m Unsupported file type [1mF:\Ulsaaham\webapp\web-app\apps\site\far-fusion\src\pages\index.astro.tmp.10144.cd6e349b28df[22m found. Prefix filename with an underscore (`_`) to ignore.
-[2m20:21:55[22m [34m[watch][39m src/pages/index.astro
-[2m20:21:55[22m [34m[watch][39m src/pages/index.astro
-[2m20:21:55[22m [34m[200][39m / [2m128ms[22m
-[2m20:22:02[22m [34m[watch][39m src/pages/index.astro
-[2m20:22:02[22m [34m[watch][39m src/pages/index.astro
-[2m20:22:02[22m [34m[200][39m / [2m78ms[22m
-[2m20:22:17[22m [34m[watch][39m /src/styles/global.css
-[2m20:22:17[22m [34m[200][39m / [2m258ms[22m
-[2m20:25:18[22m [34m[watch][39m src/pages/index.astro
-[2m20:25:18[22m [34m[watch][39m src/pages/index.astro
-[2m20:25:18[22m [34m[200][39m / [2m124ms[22m
-[2m20:25:35[22m [34m[watch][39m /src/styles/global.css
-[2m20:25:36[22m [34m[200][39m / [2m269ms[22m
-[2m20:26:07[22m [34m[watch][39m src/pages/index.astro
-[2m20:26:07[22m [34m[watch][39m src/pages/index.astro
-[2m20:26:07[22m [34m[200][39m / [2m216ms[22m
-[2m20:26:15[22m [34m[watch][39m /src/styles/global.css
-[2m20:26:16[22m [34m[200][39m / [2m245ms[22m
-[2m20:26:22[22m [34m[watch][39m /src/styles/global.css
-[2m20:26:22[22m [34m[200][39m / [2m230ms[22m
-[2m20:27:15[22m [34m[watch][39m src/pages/index.astro
-[2m20:27:15[22m [34m[watch][39m src/pages/index.astro
-[2m20:27:15[22m [34m[200][39m / [2m126ms[22m
+[2m22:16:13[22m [34m[200][39m / [2m348ms[22m
+[2m22:16:29[22m [34m[200][39m /account [2m9ms[22m
+[2m22:16:45[22m [34m[200][39m /events [2m13ms[22m
+[2m22:16:51[22m [34m[200][39m /events/detail [2m13ms[22m
+[2m22:21:12[22m [34m[watch][39m /src/styles/global.css
+[2m22:21:13[22m [34m[200][39m /events/detail [2m232ms[22m
+[33m[1m22:21:13[22m [WARN][39m Unsupported file type [1mF:\Ulsaaham\webapp\web-app\apps\site\far-fusion\src\pages\index.astro.tmp.23060.9477b2d38dc8[22m found. Prefix filename with an underscore (`_`) to ignore.
+[2m22:21:13[22m [34m[watch][39m src/pages/index.astro
+[2m22:21:13[22m [34m[watch][39m src/pages/index.astro
+[2m22:21:14[22m [34m[200][39m /events/detail [2m109ms[22m
+[2m22:21:19[22m [34m[watch][39m /src/styles/global.css
+[2m22:21:19[22m [34m[200][39m /events/detail [2m231ms[22m
+[2m22:21:20[22m [34m[watch][39m src/pages/index.astro
+[2m22:21:20[22m [34m[watch][39m src/pages/index.astro
+[2m22:21:20[22m [34m[200][39m /events/detail [2m141ms[22m
+[2m22:21:24[22m [34m[watch][39m src/pages/index.astro
+[2m22:21:24[22m [34m[watch][39m src/pages/index.astro
+[2m22:21:25[22m [34m[200][39m /events/detail [2m76ms[22m
+[33m[1m22:21:25[22m [WARN][39m Unsupported file type [1mF:\Ulsaaham\webapp\web-app\apps\site\far-fusion\src\pages\about.astro.tmp.23060.fae15df1b7f0[22m found. Prefix filename with an underscore (`_`) to ignore.
+[2m22:21:26[22m [34m[watch][39m src/pages/about.astro
+[2m22:21:26[22m [34m[watch][39m src/pages/about.astro
+[2m22:21:26[22m [34m[200][39m /events/detail [2m83ms[22m
+[2m22:21:30[22m [34m[watch][39m src/pages/events/index.astro
+[2m22:21:30[22m [34m[watch][39m src/pages/events/index.astro
+[2m22:21:30[22m [34m[200][39m /events/detail [2m74ms[22m
+[2m22:21:40[22m [34m[watch][39m /src/styles/global.css
+[2m22:21:40[22m [34m[200][39m /events/detail [2m178ms[22m
+[2m22:21:44[22m [34m[watch][39m /src/styles/global.css
+[2m22:21:45[22m [34m[200][39m /events/detail [2m242ms[22m
+[2m22:21:50[22m [34m[watch][39m /src/styles/global.css
+[2m22:21:52[22m [34m[200][39m /events/detail [2m599ms[22m
+[2m22:21:55[22m [34m[watch][39m /src/styles/global.css
+[2m22:21:56[22m [34m[200][39m /events/detail [2m274ms[22m
+[2m22:22:01[22m [34m[watch][39m /src/components/EventsList.jsx, /src/styles/global.css
+[2m22:22:01[22m [34m[watch][39m src/components/EventsList.jsx
+[2m22:22:03[22m [34m[watch][39m /src/components/EventDetail.jsx, /src/styles/global.css
+[2m22:22:03[22m [34m[watch][39m src/components/EventDetail.jsx
+[2m22:22:08[22m [34m[watch][39m /src/components/RegistrationForm.jsx, /src/styles/global.css
+[2m22:22:08[22m [34m[watch][39m src/components/RegistrationForm.jsx
+[2m22:22:14[22m [34m[watch][39m src/pages/about.astro
+[2m22:22:14[22m [34m[watch][39m src/pages/about.astro
+[2m22:22:14[22m [34m[200][39m /events/detail [2m92ms[22m
+[2m22:22:20[22m [34m[watch][39m /src/styles/global.css
+[2m22:22:21[22m [34m[200][39m /events/detail [2m275ms[22m
+[2m22:22:29[22m [34m[watch][39m /src/styles/global.css
+[2m22:22:29[22m [34m[200][39m /events/detail [2m250ms[22m
+[2m22:22:36[22m [34m[watch][39m /src/styles/global.css
+[2m22:22:36[22m [34m[200][39m /events/detail [2m217ms[22m
+[2m22:22:42[22m [34m[watch][39m /src/styles/global.css
+[2m22:22:42[22m [34m[200][39m /events/detail [2m194ms[22m
+[2m22:22:48[22m [34m[watch][39m src/pages/index.astro
+[2m22:22:48[22m [34m[watch][39m src/pages/index.astro
+[2m22:22:48[22m [34m[200][39m /events/detail [2m110ms[22m
+[33m[1m22:22:56[22m [WARN][39m Unsupported file type [1mF:\Ulsaaham\webapp\web-app\apps\site\far-fusion\src\pages\index.astro.tmp.23060.c36413afde0d[22m found. Prefix filename with an underscore (`_`) to ignore.
+[2m22:22:56[22m [34m[watch][39m src/pages/index.astro
+[2m22:22:56[22m [34m[watch][39m src/pages/index.astro
+[2m22:22:56[22m [34m[200][39m /events/detail [2m99ms[22m
+[2m22:23:00[22m [34m[watch][39m src/pages/index.astro
+[2m22:23:00[22m [34m[watch][39m src/pages/index.astro
+[2m22:23:00[22m [34m[200][39m /events/detail [2m112ms[22m
+[2m22:23:07[22m [34m[watch][39m /src/styles/global.css
+[2m22:23:07[22m [34m[200][39m /events/detail [2m201ms[22m
+[2m22:23:12[22m [34m[watch][39m src/pages/about.astro
+[2m22:23:12[22m [34m[watch][39m src/pages/about.astro
+[2m22:23:12[22m [34m[200][39m /events/detail [2m54ms[22m
+[2m22:23:16[22m [34m[watch][39m src/pages/events/index.astro
+[2m22:23:16[22m [34m[watch][39m src/pages/events/index.astro
+[2m22:23:16[22m [34m[200][39m /events/detail [2m67ms[22m
+[2m22:23:20[22m [34m[watch][39m src/pages/events/detail.astro
+[2m22:23:20[22m [34m[watch][39m src/pages/events/detail.astro
+[2m22:23:20[22m [34m[200][39m /events/detail [2m67ms[22m
+[2m22:23:25[22m [34m[watch][39m src/pages/account.astro
+[2m22:23:25[22m [34m[watch][39m src/pages/account.astro
+[2m22:23:25[22m [34m[200][39m /events/detail [2m70ms[22m
+[2m22:23:30[22m [34m[watch][39m src/pages/account.astro
+[2m22:23:30[22m [34m[watch][39m src/pages/account.astro
+[2m22:23:30[22m [34m[200][39m /events/detail [2m54ms[22m
+[2m22:23:38[22m [34m[watch][39m src/pages/ticket.astro
+[2m22:23:38[22m [34m[watch][39m src/pages/ticket.astro
+[2m22:23:38[22m [34m[200][39m /events/detail [2m50ms[22m
+[2m22:23:42[22m [34m[watch][39m src/pages/ticket.astro
+[2m22:23:42[22m [34m[watch][39m src/pages/ticket.astro
+[2m22:23:43[22m [34m[200][39m /events/detail [2m66ms[22m
+[2m22:23:46[22m [34m[watch][39m src/pages/login.astro
+[2m22:23:46[22m [34m[watch][39m src/pages/login.astro
+[2m22:23:47[22m [34m[200][39m /events/detail [2m49ms[22m
+[2m22:23:51[22m [34m[watch][39m src/pages/login.astro
+[2m22:23:51[22m [34m[watch][39m src/pages/login.astro
+[2m22:23:51[22m [34m[200][39m /events/detail [2m51ms[22m
+[33m[1m22:24:00[22m [WARN][39m Unsupported file type [1mF:\Ulsaaham\webapp\web-app\apps\site\far-fusion\src\pages\privacy.astro.tmp.23060.b6b634892fbd[22m found. Prefix filename with an underscore (`_`) to ignore.
+[2m22:24:00[22m [34m[watch][39m src/pages/privacy.astro
+[2m22:24:00[22m [34m[watch][39m src/pages/privacy.astro
+[2m22:24:00[22m [34m[200][39m /events/detail [2m68ms[22m
+[2m22:24:04[22m [34m[watch][39m src/pages/privacy.astro
+[2m22:24:04[22m [34m[watch][39m src/pages/privacy.astro
+[2m22:24:04[22m [34m[200][39m /events/detail [2m62ms[22m
+[2m22:24:08[22m [34m[watch][39m src/pages/terms.astro
+[2m22:24:08[22m [34m[watch][39m src/pages/terms.astro
+[2m22:24:08[22m [34m[200][39m /events/detail [2m50ms[22m
+[2m22:24:13[22m [34m[watch][39m src/pages/terms.astro
+[2m22:24:13[22m [34m[watch][39m src/pages/terms.astro
