@@ -467,6 +467,117 @@ a:hover {
   }
 }
 
+/* ── Past Events Runner ─────────────────────────────────────────────────────── */
+
+.past-runner-wrap {
+  margin-top: 4rem;
+}
+
+.past-runner-heading {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.35);
+}
+
+.past-runner-heading__line {
+  flex: 1;
+  height: 1px;
+  background: rgba(254, 204, 1, 0.12);
+}
+
+.past-runner {
+  position: relative;
+  overflow: hidden;
+  padding: 0.25rem 0;
+}
+
+.past-runner::before,
+.past-runner::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 140px;
+  pointer-events: none;
+  z-index: 2;
+}
+
+.past-runner::before {
+  left: 0;
+  background: linear-gradient(90deg, rgb(2, 51, 1), transparent);
+}
+
+.past-runner::after {
+  right: 0;
+  background: linear-gradient(270deg, rgb(2, 51, 1), transparent);
+}
+
+.past-runner__track {
+  display: flex;
+  align-items: stretch;
+  gap: 16px;
+  width: max-content;
+  animation: scroll-past-horizontal 60s linear infinite;
+}
+
+.past-runner:hover .past-runner__track {
+  animation-play-state: paused;
+}
+
+.past-runner__item {
+  position: relative;
+  flex-shrink: 0;
+  width: clamp(140px, 14vw, 190px);
+  aspect-ratio: 4 / 5;
+  border-radius: 8px;
+  overflow: hidden;
+  border: 1px solid rgba(254, 204, 1, 0.1);
+}
+
+.past-runner__item img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.5s ease, opacity 0.4s ease;
+  opacity: 0.7;
+}
+
+.past-runner__item:hover img {
+  transform: scale(1.05);
+  opacity: 1;
+}
+
+.past-runner__label {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: flex-end;
+  padding: 10px 12px;
+  background: linear-gradient(to top, rgba(2, 51, 1, 0.85) 0%, transparent 55%);
+  color: #fff;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  pointer-events: none;
+}
+
+.past-runner__item:hover .past-runner__label {
+  opacity: 1;
+}
+
+@keyframes scroll-past-horizontal {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+
 .hero-quote {
   position: absolute;
   inset: 0;
