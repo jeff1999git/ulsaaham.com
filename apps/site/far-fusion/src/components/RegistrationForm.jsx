@@ -2,6 +2,7 @@
 import QRCode from "react-qr-code";
 import { registerForEvent, createPaymentOrder, verifyPayment, applyCoupon } from "../lib/api.js";
 import { getUser, setUser as persistUser, addTicket } from "../lib/auth.js";
+import { optimizeCloudinary } from "../lib/image.js";
 
 function sendTicketEmail(email, ticketData) {
   if (!email) return;
@@ -76,7 +77,15 @@ function TicketSuccess({ ticket }) {
   return (
     <div className="my-ticket">
       {ticket.bannerImageUrl && (
-        <img src={ticket.bannerImageUrl} alt={ticket.eventName} style={{ width: "100%", aspectRatio: "4 / 5", objectFit: "cover", display: "block" }} />
+        <img
+          src={optimizeCloudinary(ticket.bannerImageUrl, 600)}
+          alt={ticket.eventName}
+          loading="lazy"
+          decoding="async"
+          width="480"
+          height="600"
+          style={{ width: "100%", aspectRatio: "4 / 5", objectFit: "cover", display: "block" }}
+        />
       )}
       <div className="my-ticket__info">
         <div style={{ marginBottom: 6 }}><span style={confirmedBadge}>Confirmed ✓</span></div>

@@ -3,6 +3,7 @@ import QRCode from "react-qr-code";
 import { getUser, setUser, clearUser, addTicket } from "../lib/auth.js";
 import { fetchMyTickets, getTicketCodesByIdentifier, getEvent, createPaymentOrder, verifyPayment } from "../lib/api.js";
 import { generateTicketCanvas, downloadCanvasAsPng } from "../lib/generate-ticket.js";
+import { optimizeCloudinary } from "../lib/image.js";
 
 function loadRazorpay() {
   return new Promise((resolve) => {
@@ -179,7 +180,15 @@ function TicketCard({ ticket, onRepay }) {
   return (
     <div className="my-ticket">
       {banner && (
-        <img src={banner} alt={name} style={{ width: "100%", aspectRatio: "4 / 5", objectFit: "cover", display: "block" }} />
+        <img
+          src={optimizeCloudinary(banner, 600)}
+          alt={name}
+          loading="lazy"
+          decoding="async"
+          width="480"
+          height="600"
+          style={{ width: "100%", aspectRatio: "4 / 5", objectFit: "cover", display: "block" }}
+        />
       )}
       <div className="my-ticket__info">
         <div style={{ marginBottom: 6 }}><StatusBadge ticket={ticket} /></div>

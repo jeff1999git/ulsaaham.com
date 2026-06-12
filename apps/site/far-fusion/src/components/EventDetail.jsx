@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { getEvent } from "../lib/api.js";
 import RegistrationForm from "./RegistrationForm.jsx";
+import { optimizeCloudinary } from "../lib/image.js";
 
 function PosterViewer({ src, alt }) {
   const [open, setOpen] = useState(false);
@@ -24,7 +25,15 @@ function PosterViewer({ src, alt }) {
         style={{ cursor: "zoom-in" }}
         onClick={() => setOpen(true)}
       >
-        <img src={src} alt={alt} loading="eager" decoding="async" />
+        <img
+          src={optimizeCloudinary(src, 900)}
+          alt={alt}
+          loading="eager"
+          decoding="async"
+          fetchPriority="high"
+          width="900"
+          height="1125"
+        />
       </div>
 
       {open && (
@@ -42,7 +51,7 @@ function PosterViewer({ src, alt }) {
           onClick={() => setOpen(false)}
         >
           <img
-            src={src}
+            src={optimizeCloudinary(src, 1400)}
             alt={alt}
             style={{
               maxWidth: "min(100%, 560px)",

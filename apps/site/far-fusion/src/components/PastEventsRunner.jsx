@@ -1,12 +1,6 @@
 import { useState, useEffect, useRef } from "react";
 import { getEvents } from "../lib/api.js";
-
-function optimizeCloudinary(url) {
-  if (!url || !url.includes("res.cloudinary.com/")) return url;
-  // Avoid double-inserting
-  if (url.includes("f_auto") || url.includes("w_400")) return url;
-  return url.replace("/upload/", "/upload/f_auto,q_auto,w_400/");
-}
+import { optimizeCloudinary } from "../lib/image.js";
 
 export default function PastEventsRunner() {
   const [posters, setPosters] = useState([]);
@@ -61,11 +55,11 @@ export default function PastEventsRunner() {
                 aria-hidden={!isOriginal ? "true" : "false"}
               >
                 <img
-                  src={optimizeCloudinary(ev.bannerImageUrl)}
+                  src={optimizeCloudinary(ev.bannerImageUrl, 400)}
                   alt={ev.name}
-                  loading={isOriginal ? "eager" : "lazy"}
+                  loading="lazy"
                   decoding="async"
-                  fetchPriority={i < 5 ? "high" : "auto"}
+                  fetchPriority="auto"
                   width="200"
                   height="267"
                   onLoad={isOriginal ? handleLoad : undefined}
