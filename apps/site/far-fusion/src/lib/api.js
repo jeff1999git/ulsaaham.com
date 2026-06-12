@@ -1,12 +1,16 @@
 const BASE = "/api/public";
 
 async function apiFetch(path, init) {
-  const res = await fetch(`${BASE}${path}`, init);
-  if (res.status === 429) {
-    return { ok: false, status: 429, data: { success: false, error: "Too many requests. Please try again in a moment." } };
+  try {
+    const res = await fetch(`${BASE}${path}`, init);
+    if (res.status === 429) {
+      return { ok: false, status: 429, data: { success: false, error: "Too many requests. Please try again in a moment." } };
+    }
+    const data = await res.json();
+    return { ok: res.ok, status: res.status, data };
+  } catch {
+    return { ok: false, status: 0, data: { success: false, error: "Network error. Please try again." } };
   }
-  const data = await res.json();
-  return { ok: res.ok, status: res.status, data };
 }
 
 export function getEvents({ page = 1, limit = 12, featured, upcoming, past } = {}) {
@@ -22,15 +26,19 @@ export function getEvent(slug) {
 }
 
 export async function registerForEvent(slug, body) {
-  const res = await fetch(`${BASE}/events/${encodeURIComponent(slug)}/register`, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(body),
-  });
-  if (res.status === 429) {
-    return { ok: false, status: 429, data: { success: false, error: "Too many requests. Please try again later." } };
+  try {
+    const res = await fetch(`${BASE}/events/${encodeURIComponent(slug)}/register`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(body),
+    });
+    if (res.status === 429) {
+      return { ok: false, status: 429, data: { success: false, error: "Too many requests. Please try again later." } };
+    }
+    return { ok: res.ok, status: res.status, data: await res.json() };
+  } catch {
+    return { ok: false, status: 0, data: { success: false, error: "Network error. Please try again." } };
   }
-  return { ok: res.ok, status: res.status, data: await res.json() };
 }
 
 export async function checkTicket(ticketCode) {
@@ -42,27 +50,35 @@ export async function checkTicket(ticketCode) {
 }
 
 export async function createPaymentOrder(slug, body) {
-  const res = await fetch(`${BASE}/events/${encodeURIComponent(slug)}/payment/order`, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(body),
-  });
-  if (res.status === 429) {
-    return { ok: false, status: 429, data: { success: false, error: "Too many attempts. Please wait before trying again." } };
+  try {
+    const res = await fetch(`${BASE}/events/${encodeURIComponent(slug)}/payment/order`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(body),
+    });
+    if (res.status === 429) {
+      return { ok: false, status: 429, data: { success: false, error: "Too many attempts. Please wait before trying again." } };
+    }
+    return { ok: res.ok, status: res.status, data: await res.json() };
+  } catch {
+    return { ok: false, status: 0, data: { success: false, error: "Network error. Please try again." } };
   }
-  return { ok: res.ok, status: res.status, data: await res.json() };
 }
 
 export async function verifyPayment(slug, body) {
-  const res = await fetch(`${BASE}/events/${encodeURIComponent(slug)}/payment/verify`, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(body),
-  });
-  if (res.status === 429) {
-    return { ok: false, status: 429, data: { success: false, error: "Too many attempts. Please wait before trying again." } };
+  try {
+    const res = await fetch(`${BASE}/events/${encodeURIComponent(slug)}/payment/verify`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(body),
+    });
+    if (res.status === 429) {
+      return { ok: false, status: 429, data: { success: false, error: "Too many attempts. Please wait before trying again." } };
+    }
+    return { ok: res.ok, status: res.status, data: await res.json() };
+  } catch {
+    return { ok: false, status: 0, data: { success: false, error: "Network error. Please try again." } };
   }
-  return { ok: res.ok, status: res.status, data: await res.json() };
 }
 
 export async function applyCoupon(slug, couponCode) {
@@ -79,15 +95,19 @@ export async function applyCoupon(slug, couponCode) {
 }
 
 export async function fetchMyTickets(ticketCodes) {
-  const res = await fetch(`${BASE}/participants/my-tickets`, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ ticketCodes }),
-  });
-  if (res.status === 429) {
-    return { ok: false, status: 429, data: { success: false, error: "Too many requests. Please try again later." } };
+  try {
+    const res = await fetch(`${BASE}/participants/my-tickets`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ ticketCodes }),
+    });
+    if (res.status === 429) {
+      return { ok: false, status: 429, data: { success: false, error: "Too many requests. Please try again later." } };
+    }
+    return { ok: res.ok, status: res.status, data: await res.json() };
+  } catch {
+    return { ok: false, status: 0, data: { success: false, error: "Network error. Please try again." } };
   }
-  return { ok: res.ok, status: res.status, data: await res.json() };
 }
 
 // Looks up ticket codes by phone (10-digit string) or email after re-login
