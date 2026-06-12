@@ -42,12 +42,14 @@ function loadRazorpay() {
   });
 }
 
+const confirmedBadge = { padding: "2px 9px", borderRadius: 4, fontSize: 11, fontWeight: 700, letterSpacing: "0.06em", display: "inline-block", background: "#064e3b", color: "#6ee7b7" };
+
 function TicketSuccess({ ticket }) {
   const qrRef = useRef(null);
   const [dlLoading, setDlLoading] = useState(false);
 
-  const date = new Intl.DateTimeFormat("en-IN", { dateStyle: "full" }).format(new Date(ticket.eventDate));
   const eventDateShort = new Intl.DateTimeFormat("en-IN", { day: "numeric", month: "short", year: "numeric" }).format(new Date(ticket.eventDate));
+  const eventDateFull = new Intl.DateTimeFormat("en-IN", { dateStyle: "full" }).format(new Date(ticket.eventDate));
 
   const handleDownload = async () => {
     const svgEl = qrRef.current?.querySelector("svg");
@@ -72,40 +74,43 @@ function TicketSuccess({ ticket }) {
   };
 
   return (
-    <div className="ticket-success">
-      <div className="ticket-success__header">
-        <span className="text-accent text-xs font-semibold uppercase tracking-widest">Registration Confirmed ✓</span>
-        <h3 className="font-serif text-xl text-light mt-1">{ticket.eventName}</h3>
+    <div className="my-ticket">
+      {ticket.bannerImageUrl && (
+        <img src={ticket.bannerImageUrl} alt={ticket.eventName} style={{ width: "100%", aspectRatio: "4 / 5", objectFit: "cover", display: "block" }} />
+      )}
+      <div className="my-ticket__info">
+        <div style={{ marginBottom: 6 }}><span style={confirmedBadge}>Confirmed ✓</span></div>
+        <p className="text-light font-semibold text-sm leading-snug mt-1">{ticket.eventName}</p>
+        <p className="text-light/50 text-xs mt-1">{eventDateFull}{ticket.eventVenue ? ` · ${ticket.eventVenue}` : ""}</p>
+        <p className="text-light/40 text-xs mt-1">
+          {ticket.participantName} · {ticket.numberOfParticipants} participant{ticket.numberOfParticipants !== 1 ? "s" : ""}
+        </p>
       </div>
-      <div className="ticket-success__body">
-        {/* Hidden QR SVG — used only by canvas generator */}
-        <div ref={qrRef} style={{ position: "absolute", visibility: "hidden", pointerEvents: "none", width: 0, height: 0, overflow: "hidden" }}>
-          <QRCode value={ticket.ticketCode} size={260} />
-        </div>
-        {ticket.qrCodeUrl && (
-          <img src={ticket.qrCodeUrl} alt="QR ticket" className="ticket-qr" />
+
+      {/* Hidden QR SVG — used only by canvas generator */}
+      <div ref={qrRef} style={{ position: "fixed", left: -9999, top: -9999, pointerEvents: "none" }}>
+        <QRCode value={ticket.ticketCode} size={260} />
+      </div>
+
+      <div style={{ padding: "12px 16px", borderTop: "1px solid rgba(255,255,255,0.06)" }}>
+        {ticket.qrCodeUrl ? (
+          <img src={ticket.qrCodeUrl} alt="QR code" style={{ width: "100%", maxWidth: 150, display: "block", margin: "0 auto 8px" }} />
+        ) : (
+          <div style={{ background: "#fff", padding: 8, width: "fit-content", margin: "0 auto 8px", borderRadius: 6 }}>
+            <QRCode value={ticket.ticketCode} size={130} />
+          </div>
         )}
-        <div className="flex-1 min-w-0">
-          <p className="ticket-code">{ticket.ticketCode}</p>
-          <dl className="ticket-dl">
-            <dt>Name</dt><dd>{ticket.participantName}</dd>
-            <dt>Date</dt><dd>{date}</dd>
-            <dt>Venue</dt><dd>{ticket.eventVenue}</dd>
-            <dt>Participants</dt><dd>{ticket.numberOfParticipants}</dd>
-            {ticket.paymentId && <><dt>Payment</dt><dd className="text-xs opacity-60">{ticket.paymentId}</dd></>}
-          </dl>
+        <p style={{ fontFamily: "monospace", fontSize: "0.8rem", textAlign: "center", letterSpacing: "0.12em", color: "rgba(255,255,255,0.5)", marginBottom: 10 }}>
+          {ticket.ticketCode}
+        </p>
+        <div style={{ display: "flex", justifyContent: "center", alignItems: "center", gap: 12, flexWrap: "wrap" }}>
+          <button onClick={handleDownload} disabled={dlLoading} className="account-btn" style={{ fontSize: 11, padding: "5px 12px" }}>
+            {dlLoading ? "Generating…" : "Download Ticket"}
+          </button>
+          <a href="/account" className="text-accent text-xs font-semibold uppercase tracking-widest hover:underline">
+            View My Tickets →
+          </a>
         </div>
-      </div>
-      <p className="text-light/40 text-xs mt-5 text-center">
-        Screenshot this ticket — show the QR code at the venue. It's also saved in your account.
-      </p>
-      <div className="mt-4 flex items-center justify-center gap-4 flex-wrap">
-        <button onClick={handleDownload} disabled={dlLoading} className="account-btn" style={{ fontSize: 12, padding: "6px 16px" }}>
-          {dlLoading ? "Generating…" : "Download Ticket"}
-        </button>
-        <a href="/account" className="text-accent text-xs font-semibold uppercase tracking-widest hover:underline">
-          View My Tickets →
-        </a>
       </div>
     </div>
   );

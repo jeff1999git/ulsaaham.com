@@ -1,5 +1,7 @@
+import { createRequire } from "module";
 import nodemailer from "nodemailer";
-import QRCode from "qrcode";
+const _require = createRequire(import.meta.url);
+const QRCode = _require("qrcode");
 import { jsonErr, jsonOk } from "../../lib/otp.js";
 
 function makeTransporter() {
