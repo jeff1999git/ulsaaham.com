@@ -414,7 +414,8 @@ export default function RegistrationForm({ event }) {
 
   const count = Number(form.numberOfParticipants) || 1;
   const appliedDiscount = couponApplied?.discount ?? 0;
-  const fees = !event.isFree ? calcFees(event.amount, count, appliedDiscount) : null;
+  const effectivePrice = event.effectiveAmount ?? event.amount;
+  const fees = !event.isFree ? calcFees(effectivePrice, count, appliedDiscount) : null;
   const spotsLeft = event.capacity ? event.capacity - event.registeredCount : null;
 
   // ── Paying / Verifying spinner ───────────────────────────────────────────────
@@ -441,7 +442,12 @@ export default function RegistrationForm({ event }) {
 
         <div className="fee-breakdown">
           <div className="fee-breakdown__row">
-            <span>₹{event.amount} × {count} person{count !== 1 ? "s" : ""}</span>
+            <span>
+              {count} × ₹{effectivePrice}
+              {event.isEarlyBird && event.earlyBirdAmount != null && (
+                <span style={{ color: "#fecc01", fontSize: "11px", marginLeft: "4px" }}>early bird</span>
+              )}
+            </span>
             <span>₹{bd.base.toFixed(2)}</span>
           </div>
           {bd.discount > 0 && (
@@ -494,9 +500,20 @@ export default function RegistrationForm({ event }) {
   return (
     <form onSubmit={handleSubmit} className="reg-form" noValidate>
       <h3 className="font-serif text-xl text-light mb-1">Register</h3>
-      <p className="text-light/40 text-sm mb-5">
-        {event.isFree ? "Free entry" : `₹${event.amount} per person (+ 18% GST + 2% platform fee)`}
-        {spotsLeft != null && !event.isFull ? ` · ${spotsLeft} spot${spotsLeft !== 1 ? "s" : ""} left` : ""}
+      <p className="text-light/40 text-sm mb-5" style={{ display: "flex", alignItems: "center", gap: "6px", flexWrap: "wrap" }}>
+        {event.isFree ? (
+          <span style={{ color: "#22c55e", fontWeight: 600 }}>Free</span>
+        ) : event.isEarlyBird && event.earlyBirdAmount != null ? (
+          <>
+            <span style={{ textDecoration: "line-through", opacity: 0.45 }}>₹{event.amount}</span>
+            <span style={{ color: "#fecc01", fontWeight: 600 }}>₹{event.earlyBirdAmount}</span>
+            <span style={{ background: "rgba(254,204,1,0.15)", color: "#fecc01", fontSize: "10px", fontWeight: 700, letterSpacing: "0.08em", textTransform: "uppercase", padding: "2px 6px", borderRadius: "4px", border: "1px solid rgba(254,204,1,0.3)" }}>Early Bird</span>
+            <span style={{ opacity: 0.45 }}>per person (+ GST + 2% fee)</span>
+          </>
+        ) : (
+          <span>₹{event.amount} per person (+ 18% GST + 2% platform fee)</span>
+        )}
+        {spotsLeft != null && !event.isFull ? <span> · {spotsLeft} spot{spotsLeft !== 1 ? "s" : ""} left</span> : ""}
       </p>
 
       {globalError && <div className="reg-error">{globalError}</div>}
@@ -585,7 +602,11 @@ export default function RegistrationForm({ event }) {
 
       {fees && (
         <p className="text-light/40 text-xs">
-          Estimated total: <strong className="text-accent">₹{fees.total.toFixed(2)}</strong> (breakdown shown before payment)
+          Estimated total: <strong className="text-accent">₹{fees.total.toFixed(2)}</strong>
+          {event.isEarlyBird && event.earlyBirdAmount != null && (
+            <span style={{ color: "#fecc01", marginLeft: "6px" }}>🎟 early bird price</span>
+          )}
+          {" "}(breakdown shown before payment)
         </p>
       )}
 
