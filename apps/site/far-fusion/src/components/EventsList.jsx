@@ -12,7 +12,7 @@ function Skeletons({ count = 6 }) {
   );
 }
 
-function Section({ title, params, limit = 12, filter, cardProps, paginate = true }) {
+function Section({ title, params, limit = 12, filter, cardProps, paginate = true, gridClass = "grid gap-6 md:grid-cols-2 lg:grid-cols-3" }) {
   const [events, setEvents] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -50,7 +50,7 @@ function Section({ title, params, limit = 12, filter, cardProps, paginate = true
       )}
 
       {!loading && !error && (
-        <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+        <div className={gridClass}>
           {displayed.map((ev) => <EventCard key={ev.id} event={ev} {...(cardProps || {})} />)}
         </div>
       )}
@@ -86,9 +86,10 @@ export default function EventsList() {
       <Section
         title="Past Events"
         params={{ past: true }}
-        limit={6}
+        limit={8}
         cardProps={{ linkable: false }}
         paginate={true}
+        gridClass="grid gap-4 grid-cols-2 md:grid-cols-3 lg:grid-cols-4"
       />
     </div>
   );

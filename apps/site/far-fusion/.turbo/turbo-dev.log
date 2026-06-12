@@ -25,3 +25,17 @@ Browserslist: browsers data (caniuse-lite) is 7 months old. Please run:
 [2m16:00:59[22m [34m[200][39m /events [2m246ms[22m
 [2m16:01:16[22m [34m[200][39m /events [2m11ms[22m
 [2m16:01:26[22m [34m[200][39m / [2m9ms[22m
+[2m16:02:06[22m [34m[watch][39m /src/styles/global.css
+[2m16:02:08[22m [34m[200][39m / [2m297ms[22m
+[2m16:03:08[22m [34m[200][39m /events [2m8ms[22m
+[2m16:03:08[22m [34m[watch][39m /src/components/EventsList.jsx, /src/styles/global.css
+[2m16:03:08[22m [34m[watch][39m src/components/EventsList.jsx
+[2m16:03:13[22m [34m[watch][39m /src/components/EventsList.jsx, /src/styles/global.css
+[2m16:03:13[22m [34m[watch][39m src/components/EventsList.jsx
+[2m16:03:18[22m [34m[watch][39m /src/components/EventsList.jsx, /src/styles/global.css
+[2m16:03:18[22m [34m[watch][39m src/components/EventsList.jsx
+[2m16:04:27[22m [34m[200][39m / [2m62ms[22m
+[2m18:18:20[22m [34m[200][39m / [2m27ms[22m
+[2m18:20:09[22m [34m[200][39m /events/detail [2m7ms[22m
+[2m18:22:16[22m [34m[200][39m /events [2m11ms[22m
+[2m18:23:36[22m [34m[watch][39m /src/components/EventDetail.jsx, /src/styles/global.css
