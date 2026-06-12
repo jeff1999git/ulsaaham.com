@@ -164,8 +164,8 @@ const clientLogos = [
         </a>
       </div>
       <HomeEvents client:load />
-      <PastEventsRunner client:load />
     </div>
+    <PastEventsRunner client:load />
   </section>
 
   <section class="py-24 text-light relative z-10 border-t border-white/10" id="testimonials">
@@ -174,20 +174,20 @@ const clientLogos = [
         <p class="text-xs font-semibold uppercase tracking-[0.35em] text-accent mb-3">Trusted By</p>
         <h2 class="section-title">Our Partners</h2>
         <p class="section-subtitle">
-          Brands and collaborators who trusted us to bring their vision to life.
+          Brands  who partnered with us.
         </p>
       </div>
-      <div class="client-carousel">
-        <div class="client-carousel__track">
-          {[...clientLogos, ...clientLogos].map((logo, index) => (
-            <div
-              class="client-carousel__item"
-              aria-hidden={index >= clientLogos.length ? "true" : "false"}
-            >
-              <img src={logo.src} alt={logo.alt} loading="lazy" decoding="async" />
-            </div>
-          ))}
-        </div>
+    </div>
+    <div class="client-carousel">
+      <div class="client-carousel__track">
+        {[...clientLogos, ...clientLogos].map((logo, index) => (
+          <div
+            class="client-carousel__item"
+            aria-hidden={index >= clientLogos.length ? "true" : "false"}
+          >
+            <img src={logo.src} alt={logo.alt} loading="lazy" decoding="async" />
+          </div>
+        ))}
       </div>
     </div>
   </section>

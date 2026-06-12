@@ -22,3 +22,67 @@ Browserslist: browsers data (caniuse-lite) is 7 months old. Please run:
 [2m19:22:41[22m [34m[200][39m / [2m63ms[22m
 [2m19:22:44[22m [34m[watch][39m src/pages/index.astro
 [2m19:22:44[22m [34m[watch][39m src/pages/index.astro
+[2m19:22:45[22m [34m[200][39m / [2m58ms[22m
+[2m19:22:48[22m [34m[watch][39m src/pages/index.astro
+[2m19:22:48[22m [34m[watch][39m src/pages/index.astro
+[2m19:22:49[22m [34m[200][39m / [2m54ms[22m
+[2m19:22:53[22m [34m[watch][39m src/pages/index.astro
+[2m19:22:53[22m [34m[watch][39m src/pages/index.astro
+[2m19:22:53[22m [34m[200][39m / [2m64ms[22m
+[33m[1m19:25:53[22m [WARN][39m Unsupported file type [1mF:\Ulsaaham\webapp\web-app\apps\site\far-fusion\src\pages\index.astro.tmp.10144.b9d35cb89ac5[22m found. Prefix filename with an underscore (`_`) to ignore.
+[2m19:25:53[22m [34m[watch][39m src/pages/index.astro
+[2m19:25:53[22m [34m[watch][39m src/pages/index.astro
+[2m19:25:53[22m [34m[200][39m / [2m116ms[22m
+[2m19:25:58[22m [34m[watch][39m src/pages/index.astro
+[2m19:25:58[22m [34m[watch][39m src/pages/index.astro
+[2m19:25:58[22m [34m[200][39m / [2m68ms[22m
+[33m[1m19:26:02[22m [WARN][39m Unsupported file type [1mF:\Ulsaaham\webapp\web-app\apps\site\far-fusion\src\pages\index.astro.tmp.10144.8a3584917418[22m found. Prefix filename with an underscore (`_`) to ignore.
+[2m19:26:02[22m [34m[watch][39m src/pages/index.astro
+[2m19:26:02[22m [34m[watch][39m src/pages/index.astro
+[2m19:26:02[22m [34m[200][39m / [2m88ms[22m
+[2m19:27:56[22m [34m[watch][39m /src/styles/global.css
+[2m19:27:57[22m [34m[200][39m / [2m207ms[22m
+[2m19:28:06[22m [34m[watch][39m /src/styles/global.css
+[2m19:28:06[22m [34m[200][39m / [2m243ms[22m
+[2m19:29:23[22m [34m[watch][39m src/pages/index.astro
+[2m19:29:23[22m [34m[watch][39m src/pages/index.astro
+[2m19:29:23[22m [34m[200][39m / [2m85ms[22m
+[2m19:29:27[22m [34m[watch][39m src/pages/index.astro
+[2m19:29:27[22m [34m[watch][39m src/pages/index.astro
+[2m19:29:27[22m [34m[200][39m / [2m64ms[22m
+[2m19:29:31[22m [34m[watch][39m src/pages/index.astro
+[2m19:29:31[22m [34m[watch][39m src/pages/index.astro
+[2m19:29:31[22m [34m[200][39m / [2m50ms[22m
+[2m19:30:48[22m [34m[watch][39m /src/styles/global.css
+[2m19:30:49[22m [34m[200][39m / [2m298ms[22m
+[2m19:32:29[22m [34m[watch][39m /src/styles/global.css
+[2m19:32:30[22m [34m[200][39m / [2m233ms[22m
+[2m19:36:56[22m [34m[watch][39m src/pages/index.astro
+[2m19:36:56[22m [34m[watch][39m src/pages/index.astro
+[2m19:36:57[22m [34m[200][39m / [2m65ms[22m
+[2m19:38:03[22m [34m[watch][39m /src/styles/global.css
+[2m19:38:03[22m [34m[200][39m / [2m206ms[22m
+[2m19:38:54[22m [34m[watch][39m src/pages/index.astro
+[2m19:38:54[22m [34m[watch][39m src/pages/index.astro
+[2m19:38:54[22m [34m[200][39m / [2m96ms[22m
+[2m19:38:57[22m [34m[watch][39m src/pages/index.astro
+[2m19:38:57[22m [34m[watch][39m src/pages/index.astro
+[2m19:38:58[22m [34m[200][39m / [2m49ms[22m
+[2m19:38:59[22m [34m[watch][39m src/pages/index.astro
+[2m19:38:59[22m [34m[watch][39m src/pages/index.astro
+[2m19:38:59[22m [34m[200][39m / [2m64ms[22m
+[2m19:39:00[22m [34m[watch][39m src/pages/index.astro
+[2m19:39:00[22m [34m[watch][39m src/pages/index.astro
+[2m19:39:01[22m [34m[200][39m / [2m48ms[22m
+[2m19:39:02[22m [34m[watch][39m src/pages/index.astro
+[2m19:39:02[22m [34m[watch][39m src/pages/index.astro
+[2m19:39:03[22m [34m[200][39m / [2m52ms[22m
+[2m19:39:04[22m [34m[watch][39m src/pages/index.astro
+[2m19:39:04[22m [34m[watch][39m src/pages/index.astro
+[2m19:39:04[22m [34m[200][39m / [2m48ms[22m
+[2m19:39:05[22m [34m[watch][39m src/pages/index.astro
+[2m19:39:05[22m [34m[watch][39m src/pages/index.astro
+[2m19:39:06[22m [34m[200][39m / [2m49ms[22m
+[2m19:39:09[22m [34m[watch][39m src/pages/index.astro
+[2m19:39:09[22m [34m[watch][39m src/pages/index.astro
+[2m19:39:09[22m [34m[200][39m / [2m77ms[22m

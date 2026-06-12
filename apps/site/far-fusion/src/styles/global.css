@@ -503,7 +503,7 @@ a:hover {
 
 .past-runner::before,
 .past-runner::after {
-  content: "";
+  content: none;
   position: absolute;
   top: 0;
   bottom: 0;
@@ -548,8 +548,8 @@ a:hover {
   width: 100%;
   height: 100%;
   object-fit: cover;
-  transition: transform 0.5s ease, opacity 0.4s ease;
-  opacity: 0.7;
+  transition: transform 0.5s ease;
+  opacity: 1;
 }
 
 .past-runner__item:hover img {
