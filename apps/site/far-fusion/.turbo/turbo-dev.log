@@ -86,3 +86,30 @@ Browserslist: browsers data (caniuse-lite) is 7 months old. Please run:
 [2m19:39:09[22m [34m[watch][39m src/pages/index.astro
 [2m19:39:09[22m [34m[watch][39m src/pages/index.astro
 [2m19:39:09[22m [34m[200][39m / [2m77ms[22m
+[2m19:39:14[22m [34m[watch][39m src/pages/index.astro
+[2m19:39:14[22m [34m[watch][39m src/pages/index.astro
+[2m19:39:14[22m [34m[200][39m / [2m54ms[22m
+[2m19:39:14[22m [34m[watch][39m src/pages/index.astro
+[2m19:39:14[22m [34m[watch][39m src/pages/index.astro
+[2m19:39:15[22m [34m[watch][39m src/pages/index.astro
+[2m19:39:15[22m [34m[watch][39m src/pages/index.astro
+[2m19:39:15[22m [34m[200][39m / [2m57ms[22m
+[2m19:41:11[22m [34m[watch][39m /src/styles/global.css
+[2m19:41:12[22m [34m[200][39m / [2m194ms[22m
+[2m19:44:34[22m [34m[watch][39m /src/styles/global.css
+[2m19:44:35[22m [34m[200][39m / [2m237ms[22m
+[2m19:45:43[22m [34m[watch][39m /src/styles/global.css
+[2m19:45:44[22m [34m[200][39m / [2m351ms[22m
+[2m19:45:48[22m [34m[watch][39m /src/styles/global.css
+[2m19:45:48[22m [34m[200][39m / [2m268ms[22m
+[2m19:46:30[22m [34m[watch][39m src/pages/index.astro
+[2m19:46:30[22m [34m[watch][39m src/pages/index.astro
+[2m19:46:31[22m [34m[200][39m / [2m110ms[22m
+[2m19:47:40[22m [34m[watch][39m src/pages/index.astro
+[2m19:47:40[22m [34m[watch][39m src/pages/index.astro
+[2m19:47:40[22m [34m[200][39m / [2m49ms[22m
+[2m19:47:41[22m [34m[watch][39m src/pages/index.astro
+[2m19:47:41[22m [34m[watch][39m src/pages/index.astro
+[2m19:47:41[22m [34m[200][39m / [2m50ms[22m
+[2m19:47:43[22m [34m[watch][39m src/pages/index.astro
+[2m19:47:43[22m [34m[watch][39m src/pages/index.astro
