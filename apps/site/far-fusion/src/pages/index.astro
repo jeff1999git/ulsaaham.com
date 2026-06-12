@@ -33,17 +33,8 @@ const clientLogos = [
 ---
 
 <BaseLayout title="Ulsaham Entertainments | Immersive Events Crafted to Perfection">
-  <section class="hero-video">
-    <video
-      class="hero-video__media"
-      src="/assets/bg_video.mp4"
-      autoplay
-      muted
-      loop
-      playsinline
-    ></video>
-    <div class="hero-video__overlay"></div>
-    <nav class="hero-video__menu">
+  <nav class="hero-video__menu">
+    <div style="display:flex;align-items:center;gap:0.75rem;">
       <a href="/" class="hero-logo-link" aria-label="Ulsaham Home">
         <img src="/brand_logo.avif" alt="Ulsaham" class="topbar-logo" />
         <div class="hero-logo-link__brand">
@@ -51,70 +42,119 @@ const clientLogos = [
           <span class="hero-logo-link__sub">Entertainments</span>
         </div>
       </a>
-      <div class="hero-video__menu-links">
-        <a class="hero-video__menu-link" href="#gallery">Events</a>
-        <a class="hero-video__menu-link" href="#testimonials">Partners</a>
-        <a class="hero-video__menu-link" href="#connect">Connect</a>
-        <div class="profile-menu-wrap" id="profile-menu-wrap">
-          <a id="hero-auth" class="topbar-avatar" href="/login" aria-label="Login" aria-expanded="false"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg></a>
-          <div class="mobile-nav-dropdown" id="mobile-nav-dropdown" role="menu">
-            <a href="#gallery" class="mobile-nav-dropdown__link" role="menuitem">Events</a>
-            <a href="#testimonials" class="mobile-nav-dropdown__link" role="menuitem">Partners</a>
-            <a href="#connect" class="mobile-nav-dropdown__link" role="menuitem">Connect</a>
-            <div class="mobile-nav-dropdown__divider"></div>
-            <a id="mobile-account-link" href="/login" class="mobile-nav-dropdown__link mobile-nav-dropdown__link--account" role="menuitem">
-              <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg>
-              <span id="mobile-account-label">Account</span>
-            </a>
-          </div>
+      <button id="hero-sound-toggle" class="hero-sound-toggle" aria-label="Unmute video">
+        <svg id="hero-sound-off" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><line x1="23" y1="9" x2="17" y2="15"/><line x1="17" y1="9" x2="23" y2="15"/></svg>
+        <svg id="hero-sound-on" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:none"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14"/><path d="M15.54 8.46a5 5 0 0 1 0 7.07"/></svg>
+      </button>
+    </div>
+    <div class="hero-video__menu-links">
+      <a class="hero-video__menu-link" href="#gallery">Events</a>
+      <a class="hero-video__menu-link" href="#testimonials">Partners</a>
+      <a class="hero-video__menu-link" href="#connect">Connect</a>
+      <a href="#gallery" class="nav-scroll-hint" aria-label="Scroll to events">
+        <span class="nav-chevrons" aria-hidden="true">
+          <svg class="nav-chevron" xmlns="http://www.w3.org/2000/svg" width="18" height="11" viewBox="0 0 24 14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="2 2 12 12 22 2"/></svg>
+          <svg class="nav-chevron" xmlns="http://www.w3.org/2000/svg" width="18" height="11" viewBox="0 0 24 14" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="2 2 12 12 22 2"/></svg>
+          <svg class="nav-chevron" xmlns="http://www.w3.org/2000/svg" width="18" height="11" viewBox="0 0 24 14" fill="none" stroke="currentColor" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"><polyline points="2 2 12 12 22 2"/></svg>
+          <svg class="nav-chevron" xmlns="http://www.w3.org/2000/svg" width="18" height="11" viewBox="0 0 24 14" fill="none" stroke="currentColor" stroke-width="5.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="2 2 12 12 22 2"/></svg>
+        </span>
+      </a>
+      <div class="profile-menu-wrap" id="profile-menu-wrap">
+        <a id="hero-auth" class="topbar-avatar" href="/login" aria-label="Login" aria-expanded="false"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg></a>
+        <div class="mobile-nav-dropdown" id="mobile-nav-dropdown" role="menu">
+          <a href="#gallery" class="mobile-nav-dropdown__link" role="menuitem">Events</a>
+          <a href="#testimonials" class="mobile-nav-dropdown__link" role="menuitem">Partners</a>
+          <a href="#connect" class="mobile-nav-dropdown__link" role="menuitem">Connect</a>
+          <div class="mobile-nav-dropdown__divider"></div>
+          <a id="mobile-account-link" href="/login" class="mobile-nav-dropdown__link mobile-nav-dropdown__link--account" role="menuitem">
+            <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg>
+            <span id="mobile-account-label">Account</span>
+          </a>
         </div>
       </div>
-    </nav>
-    <script>
-      const u = JSON.parse(localStorage.getItem("ulsaham_user") || "null");
-      const el = document.getElementById("hero-auth");
-      const mobileLink = document.getElementById("mobile-account-link");
-      const mobileLabel = document.getElementById("mobile-account-label");
+    </div>
+  </nav>
+  <script>
+    const u = JSON.parse(localStorage.getItem("ulsaham_user") || "null");
+    const el = document.getElementById("hero-auth");
+    const mobileLink = document.getElementById("mobile-account-link");
+    const mobileLabel = document.getElementById("mobile-account-label");
 
-      if (el && u) {
-        el.href = "/account";
-        el.setAttribute("aria-label", "My Account");
-        el.innerHTML = `<span class="topbar-avatar__letter">${(u.name||"?")[0].toUpperCase()}</span>`;
-      }
-      if (mobileLink && u) { mobileLink.href = "/account"; }
-      if (mobileLabel && u) { mobileLabel.textContent = `Hi, ${(u.name||"?").split(" ")[0]}`; }
+    if (el && u) {
+      el.href = "/account";
+      el.setAttribute("aria-label", "My Account");
+      el.innerHTML = `<span class="topbar-avatar__letter">${(u.name||"?")[0].toUpperCase()}</span>`;
+    }
+    if (mobileLink && u) { mobileLink.href = "/account"; }
+    if (mobileLabel && u) { mobileLabel.textContent = `Hi, ${(u.name||"?").split(" ")[0]}`; }
 
-      const wrap = document.getElementById("profile-menu-wrap");
-      const dropdown = document.getElementById("mobile-nav-dropdown");
-      if (el && wrap && dropdown) {
-        el.addEventListener("click", function(e) {
-          if (window.innerWidth <= 640) {
-            e.preventDefault();
-            const open = dropdown.classList.toggle("is-open");
-            el.setAttribute("aria-expanded", open ? "true" : "false");
-          }
+    const wrap = document.getElementById("profile-menu-wrap");
+    const dropdown = document.getElementById("mobile-nav-dropdown");
+    if (el && wrap && dropdown) {
+      el.addEventListener("click", function(e) {
+        if (window.innerWidth <= 640) {
+          e.preventDefault();
+          const open = dropdown.classList.toggle("is-open");
+          el.setAttribute("aria-expanded", open ? "true" : "false");
+        }
+      });
+      dropdown.querySelectorAll(".mobile-nav-dropdown__link").forEach(function(link) {
+        link.addEventListener("click", function() {
+          dropdown.classList.remove("is-open");
+          el.setAttribute("aria-expanded", "false");
         });
-        dropdown.querySelectorAll(".mobile-nav-dropdown__link").forEach(function(link) {
-          link.addEventListener("click", function() {
-            dropdown.classList.remove("is-open");
-            el.setAttribute("aria-expanded", "false");
-          });
-        });
-        document.addEventListener("click", function(e) {
-          if (!wrap.contains(e.target)) {
-            dropdown.classList.remove("is-open");
-            el.setAttribute("aria-expanded", "false");
-          }
-        });
-      }
-    </script>
+      });
+      document.addEventListener("click", function(e) {
+        if (!wrap.contains(e.target)) {
+          dropdown.classList.remove("is-open");
+          el.setAttribute("aria-expanded", "false");
+        }
+      });
+    }
+  </script>
+
+  <section class="hero-video">
+    <video
+      class="hero-video__media hero-video__media--desktop"
+      src="https://res.cloudinary.com/dk26ldwpu/video/upload/q_auto/f_auto/v1781270617/landscape_takqtx.webm"
+      autoplay
+      muted
+      loop
+      playsinline
+    ></video>
+    <video
+      class="hero-video__media hero-video__media--mobile"
+      src="https://res.cloudinary.com/dk26ldwpu/video/upload/q_auto/f_auto/v1781270145/Potrait_llbmbc.webm"
+      autoplay
+      muted
+      loop
+      playsinline
+    ></video>
     <div class="hero-quote">
       <p class="hero-quote__text">"Entertainment is Pure Experience"</p>
     </div>
-    <a class="scroll-indicator" href="#gallery" aria-label="Scroll to events"><span aria-hidden="true"></span></a>
+    <script is:inline>
+      document.addEventListener("DOMContentLoaded", function () {
+        var btn = document.getElementById("hero-sound-toggle");
+        var iconOff = document.getElementById("hero-sound-off");
+        var iconOn = document.getElementById("hero-sound-on");
+        var videos = Array.from(document.querySelectorAll(".hero-video__media"));
+        if (!btn || !videos.length) return;
+        btn.addEventListener("click", function () {
+          var wasMuted = videos[0].muted;
+          videos.forEach(function (v) {
+            v.muted = !wasMuted;
+            if (wasMuted) { v.play(); }
+          });
+          iconOff.style.display = wasMuted ? "none" : "";
+          iconOn.style.display = wasMuted ? "" : "none";
+          btn.setAttribute("aria-label", wasMuted ? "Mute video" : "Unmute video");
+        });
+      });
+    </script>
   </section>
 
-  <section class="bg-primary py-24 text-light" id="gallery">
+  <section class="py-24 text-light relative isolate z-10" id="gallery">
     <div class="mx-auto max-w-6xl px-6">
       <div class="flex flex-col gap-8 md:flex-row md:items-end md:justify-between">
         <div>
@@ -125,85 +165,71 @@ const clientLogos = [
         </div>
         <a
           href="/events"
-          class="inline-flex items-center rounded-full border border-light/40 px-6 py-3 text-sm font-semibold uppercase tracking-[0.3em] text-light/80 transition hover:border-light hover:text-light"
+          class="inline-flex items-center rounded-full px-6 py-3 text-sm font-semibold uppercase tracking-[0.3em] text-light/80 transition hover:text-light hover:border-white/30"
+          style="background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.18); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);"
         >
           View All Events
         </a>
       </div>
       <HomeEvents client:load />
-      <PastEventsRunner client:load />
     </div>
+    <PastEventsRunner client:load />
   </section>
 
-  <section class="bg-primary py-24 text-light" id="testimonials">
+  <section class="py-24 text-light relative isolate z-10 border-t border-white/10" id="testimonials">
     <div class="mx-auto max-w-6xl px-6">
       <div class="mx-auto max-w-2xl text-center">
-        <p class="text-xs font-semibold uppercase tracking-[0.35em] text-accent mb-3">Trusted By</p>
         <h2 class="section-title">Our Partners</h2>
         <p class="section-subtitle">
-          Brands and collaborators who trusted us to bring their vision to life.
+          Brands  who partnered with us.
         </p>
       </div>
-      <div class="client-carousel">
-        <div class="client-carousel__track">
-          {[...clientLogos, ...clientLogos].map((logo, index) => (
-            <div
-              class="client-carousel__item"
-              aria-hidden={index >= clientLogos.length ? "true" : "false"}
-            >
-              <img src={logo.src} alt={logo.alt} loading="lazy" decoding="async" />
-            </div>
-          ))}
-        </div>
+    </div>
+    <div class="client-carousel">
+      <div class="client-carousel__track">
+        {[...clientLogos, ...clientLogos].map((logo, index) => (
+          <div
+            class="client-carousel__item"
+            aria-hidden={index >= clientLogos.length ? "true" : "false"}
+          >
+            <img src={logo.src} alt={logo.alt} loading="lazy" decoding="async" />
+          </div>
+        ))}
       </div>
     </div>
   </section>
 
-  <section class="relative isolate overflow-hidden bg-primary py-24 text-light" id="connect">
+  <section class="relative isolate overflow-hidden py-24 text-light z-10 border-t border-white/10" id="connect">
     <div class="absolute inset-0">
-      <div class="absolute inset-0 bg-[radial-gradient(circle_at_top,_rgba(254,204,1,0.12),_transparent)] opacity-70 animate-gradient-x"></div>
-      <div class="absolute inset-x-0 bottom-0 h-72 bg-gradient-to-t from-primary via-primary/90 to-transparent"></div>
-      <div class="absolute right-10 top-10 h-48 w-48 rounded-full bg-accent/35 blur-3xl"></div>
+      <div class="absolute inset-0 bg-[radial-gradient(circle_at_top,_rgba(254,204,1,0.10),_transparent)]"></div>
+      <div class="absolute right-10 top-10 h-48 w-48 rounded-full bg-accent/20 blur-3xl"></div>
     </div>
     <div class="relative mx-auto max-w-5xl px-6 text-center">
-      <p class="animate-fade-up text-sm uppercase tracking-[0.4em] text-light/70">Connect With Us</p>
-      <h2 class="section-title animate-fade-up animation-delay-200 mt-4">
-        Ready to choreograph a celebration<br />that feels like a cinematic experience?
-      </h2>
-      <p class="section-subtitle animate-fade-up animation-delay-300">
-        We guide you from inspiration to applause. Share your vision, and our creative producers will craft a bespoke blueprint within 72 hours.
-      </p>
-      <div class="mt-10 flex flex-col items-center justify-center gap-4 sm:flex-row sm:gap-6">
+      <p class="animate-fade-up text-sm font-bold uppercase tracking-[0.4em] text-light/90">Connect With Us</p>
+      <div class="mt-8 flex flex-col items-center justify-center gap-4 sm:flex-row sm:gap-6">
         <a
           href="mailto:ulsaham1@gmail.com"
-          class="inline-flex items-center justify-center rounded-full bg-accent px-8 py-3 text-base font-semibold text-primary shadow-lg transition-transform duration-300 hover:-translate-y-1 hover:scale-[1.04] hover:bg-accent/80"
+          class="inline-flex items-center justify-center rounded-full px-8 py-3 text-base font-semibold text-accent transition-transform duration-300 hover:-translate-y-1 hover:scale-[1.04]"
+          style="background: rgba(254,204,1,0.12); border: 1px solid rgba(254,204,1,0.4); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);"
         >
           ulsaham1@gmail.com
         </a>
         <a
           href="https://wa.me/9446266011"
-          class="inline-flex items-center justify-center rounded-full border border-light/40 px-8 py-3 text-base font-semibold text-light/85 transition-transform duration-300 hover:-translate-y-1 hover:border-light hover:text-light"
+          class="inline-flex items-center justify-center rounded-full px-8 py-3 text-base font-semibold transition-transform duration-300 hover:-translate-y-1 hover:scale-[1.04]"
+          style="background: rgba(37,211,102,0.12); border: 1px solid rgba(37,211,102,0.4); color: rgb(37,211,102); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);"
         >
-          Schedule a WhatsApp consult →
+          WhatsApp →
         </a>
       </div>
     </div>
   </section>
 
-  <footer class="bg-primary py-12 text-light">
-    <div class="mx-auto flex max-w-6xl flex-col gap-8 px-6 sm:flex-row sm:items-center sm:justify-between">
-      <div>
-        <p class="text-sm uppercase tracking-[0.4em] text-light/60">Ulsaham Entertainments</p>
-        <p class="mt-2 text-sm text-light/70">"You celebrate. We create."</p>
-      </div>
-      <div class="flex flex-wrap gap-6 text-sm text-light/70">
-        <a href="/events" class="transition hover:text-accent">Events</a>
-        <a href="#testimonials" class="transition hover:text-accent">Partners</a>
+  <footer class="py-12 text-light relative isolate z-10 border-t border-white/10">
+    <div class="mx-auto flex max-w-6xl justify-center px-6">
+      <div class="flex flex-wrap justify-center gap-6 text-sm text-light/70">
         <a href="/about" class="transition hover:text-accent">About Us</a>
-        <a href="/ticket" class="transition hover:text-accent">Check Ticket</a>
         <a href="https://www.instagram.com/ulsaham_?igsh=MTFsdzF4d2J5YXdzdQ==" target="_blank" rel="noreferrer" class="transition hover:text-accent">Instagram</a>
-        <a href="https://wa.me/9446266011" target="_blank" rel="noreferrer" class="transition hover:text-accent">WhatsApp</a>
-        <a href="mailto:ulsaham1@gmail.com" class="transition hover:text-accent">Email</a>
         <a href="/privacy" class="transition hover:text-accent">Privacy Policy</a>
         <a href="/terms" class="transition hover:text-accent">Terms &amp; Conditions</a>
       </div>

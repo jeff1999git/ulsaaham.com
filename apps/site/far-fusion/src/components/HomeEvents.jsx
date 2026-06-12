@@ -12,7 +12,7 @@ export default function HomeEvents() {
     getEvents({ upcoming: true, limit: 8 }).then(({ ok, data }) => {
       if (cancelled) return;
       if (!ok) { setError(data?.error || "Failed to load events."); setLoading(false); return; }
-      setEvents(data.data.events);
+      setEvents(data?.data?.events ?? []);
       setLoading(false);
     }).catch(() => {
       if (!cancelled) { setError("Could not load events."); setLoading(false); }
@@ -40,8 +40,8 @@ export default function HomeEvents() {
 
   return (
     <div className="mt-12 grid gap-6 md:grid-cols-2 lg:grid-cols-4">
-      {events.map((ev) => (
-        <EventCard key={ev.id} event={ev} />
+      {events.map((ev, i) => (
+        <EventCard key={ev.id} event={ev} index={i} />
       ))}
     </div>
   );

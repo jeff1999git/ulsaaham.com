@@ -143,7 +143,21 @@ export default function EventDetail() {
               ? <a href={event.venueLink} target="_blank" rel="noopener noreferrer" style={{ color: "inherit", textDecoration: "underline", textUnderlineOffset: "3px", opacity: 0.85 }}>{event.venue}</a>
               : event.venue}
             </p>
-            {!isPast && <p>{event.isFree ? "🎟 Free Entry" : `🎟 ₹${event.amount} per person`}</p>}
+            {!isPast && (
+              event.isFree ? (
+                <p>🎟 Free Entry</p>
+              ) : event.isEarlyBird && event.earlyBirdAmount != null ? (
+                <p style={{ display: "flex", alignItems: "center", flexWrap: "wrap", gap: "6px" }}>
+                  🎟
+                  <span style={{ textDecoration: "line-through", opacity: 0.45, fontSize: "0.9em" }}>₹{event.amount}</span>
+                  <span style={{ color: "#fecc01", fontWeight: 700 }}>₹{event.earlyBirdAmount}</span>
+                  <span style={{ background: "rgba(254,204,1,0.15)", color: "#fecc01", border: "1px solid rgba(254,204,1,0.35)", borderRadius: 4, fontSize: "10px", fontWeight: 700, letterSpacing: "0.08em", padding: "1px 7px", textTransform: "uppercase" }}>Early Bird</span>
+                  <span style={{ opacity: 0.55 }}>per person</span>
+                </p>
+              ) : (
+                <p>🎟 ₹{event.amount} per person</p>
+              )
+            )}
             {event.capacity != null && (
               <p className={event.isFull || spotsLeft <= 20 ? "text-red-400" : "text-light/50"}>
                 🔢 {event.isFull

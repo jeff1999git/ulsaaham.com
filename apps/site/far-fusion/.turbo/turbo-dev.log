@@ -1,18 +1,70 @@
 $ astro dev
 [baseline-browser-mapping] The data in this module is over two months old.  To ensure accurate Baseline data, please update: `npm i baseline-browser-mapping@latest -D`
-[2m15:11:07[22m [34m[types][39m Generated [2m1ms[22m
-[2m15:11:07[22m [34m[content][39m Syncing content
-[2m15:11:07[22m [34m[content][39m Synced content
+[2m19:59:55[22m [34m[types][39m Generated [2m1ms[22m
+[2m19:59:55[22m [34m[content][39m Syncing content
+[2m19:59:55[22m [34m[content][39m Synced content
 
-[42m[1m astro [22m[49m [32mv5.15.4[39m [2mready in[22m 784 [2mms[22m
+[42m[1m astro [22m[49m [32mv5.15.4[39m [2mready in[22m 903 [2mms[22m
 
 [2m┃[22m Local    [36mhttp://localhost:4321/[39m
 [2m┃[22m Network  [2muse --host to expose[22m
 
-[2m15:11:07[22m [32mwatching for file changes...[39m
+[2m19:59:55[22m [32mwatching for file changes...[39m
 Browserslist: browsers data (caniuse-lite) is 7 months old. Please run:
   npx update-browserslist-db@latest
   Why you should do it regularly: https://github.com/browserslist/update-db#readme
-[2m15:11:11[22m [34m[200][39m /events/detail [2m234ms[22m
-[2m15:11:14[22m [34m[200][39m / [2m10ms[22m
-[2m15:11:18[22m [34m[200][39m /events/detail [2m7ms[22m
+[2m20:00:03[22m [34m[200][39m / [2m340ms[22m
+[2m20:00:07[22m [34m[200][39m / [2m10ms[22m
+[2m20:08:30[22m [34m[200][39m / [2m16ms[22m
+[2m20:10:05[22m [34m[watch][39m src/pages/index.astro
+[2m20:10:05[22m [34m[watch][39m src/pages/index.astro
+[2m20:10:06[22m [34m[200][39m / [2m115ms[22m
+[2m20:10:20[22m [34m[watch][39m src/pages/index.astro
+[2m20:10:20[22m [34m[watch][39m src/pages/index.astro
+[2m20:10:21[22m [34m[200][39m / [2m81ms[22m
+[2m20:10:21[22m [34m[watch][39m src/pages/index.astro
+[2m20:10:21[22m [34m[watch][39m src/pages/index.astro
+[2m20:11:15[22m [34m[200][39m /events/detail [2m142ms[22m
+[2m20:12:19[22m [34m[watch][39m /src/styles/global.css
+[2m20:12:20[22m [34m[200][39m / [2m266ms[22m
+[2m20:13:16[22m [34m[200][39m /about [2m6ms[22m
+[2m20:13:21[22m [34m[200][39m /privacy [2m6ms[22m
+[2m20:13:26[22m [34m[200][39m / [2m6ms[22m
+[2m20:16:42[22m [34m[watch][39m /src/styles/global.css
+[2m20:16:42[22m [34m[200][39m / [2m278ms[22m
+[33m[1m20:17:14[22m [WARN][39m Unsupported file type [1mF:\Ulsaaham\webapp\web-app\apps\site\far-fusion\src\pages\index.astro.tmp.10144.1173727c5bca[22m found. Prefix filename with an underscore (`_`) to ignore.
+[2m20:17:14[22m [34m[watch][39m src/pages/index.astro
+[2m20:17:14[22m [34m[watch][39m src/pages/index.astro
+[2m20:17:14[22m [34m[200][39m / [2m98ms[22m
+[2m20:18:29[22m [34m[watch][39m src/pages/index.astro
+[2m20:18:29[22m [34m[watch][39m src/pages/index.astro
+[2m20:18:29[22m [34m[200][39m / [2m69ms[22m
+[2m20:18:35[22m [34m[watch][39m src/pages/index.astro
+[2m20:18:35[22m [34m[watch][39m src/pages/index.astro
+[2m20:18:36[22m [34m[200][39m / [2m73ms[22m
+[2m20:18:44[22m [34m[watch][39m /src/styles/global.css
+[2m20:18:45[22m [34m[200][39m / [2m270ms[22m
+[33m[1m20:21:55[22m [WARN][39m Unsupported file type [1mF:\Ulsaaham\webapp\web-app\apps\site\far-fusion\src\pages\index.astro.tmp.10144.cd6e349b28df[22m found. Prefix filename with an underscore (`_`) to ignore.
+[2m20:21:55[22m [34m[watch][39m src/pages/index.astro
+[2m20:21:55[22m [34m[watch][39m src/pages/index.astro
+[2m20:21:55[22m [34m[200][39m / [2m128ms[22m
+[2m20:22:02[22m [34m[watch][39m src/pages/index.astro
+[2m20:22:02[22m [34m[watch][39m src/pages/index.astro
+[2m20:22:02[22m [34m[200][39m / [2m78ms[22m
+[2m20:22:17[22m [34m[watch][39m /src/styles/global.css
+[2m20:22:17[22m [34m[200][39m / [2m258ms[22m
+[2m20:25:18[22m [34m[watch][39m src/pages/index.astro
+[2m20:25:18[22m [34m[watch][39m src/pages/index.astro
+[2m20:25:18[22m [34m[200][39m / [2m124ms[22m
+[2m20:25:35[22m [34m[watch][39m /src/styles/global.css
+[2m20:25:36[22m [34m[200][39m / [2m269ms[22m
+[2m20:26:07[22m [34m[watch][39m src/pages/index.astro
+[2m20:26:07[22m [34m[watch][39m src/pages/index.astro
+[2m20:26:07[22m [34m[200][39m / [2m216ms[22m
+[2m20:26:15[22m [34m[watch][39m /src/styles/global.css
+[2m20:26:16[22m [34m[200][39m / [2m245ms[22m
+[2m20:26:22[22m [34m[watch][39m /src/styles/global.css
+[2m20:26:22[22m [34m[200][39m / [2m230ms[22m
+[2m20:27:15[22m [34m[watch][39m src/pages/index.astro
+[2m20:27:15[22m [34m[watch][39m src/pages/index.astro
+[2m20:27:15[22m [34m[200][39m / [2m126ms[22m
