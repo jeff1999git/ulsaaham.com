@@ -59,6 +59,7 @@ import BrandPartners from "../components/BrandPartners.jsx";
       el.setAttribute("aria-label", "My Account");
       el.innerHTML = `<span class="topbar-avatar__letter">${(u.name||"?")[0].toUpperCase()}</span>`;
     }
+    
     if (mobileLink && u) { mobileLink.href = "/account"; }
     if (mobileLabel && u) { mobileLabel.textContent = `Hi, ${(u.name||"?").split(" ")[0]}`; }
 
