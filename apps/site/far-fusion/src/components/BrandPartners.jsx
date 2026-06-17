@@ -3,17 +3,15 @@ import { getBrandPartners } from "../lib/api.js";
 import { optimizeCloudinary } from "../lib/image.js";
 
 export default function BrandPartners() {
-  const [partners, setPartners] = useState([]);
-  const [ready, setReady] = useState(false);
+  const [partners, setPartners] = useState(null);
 
   useEffect(() => {
     getBrandPartners().then(({ ok, data }) => {
-      if (ok) setPartners(data?.data?.partners ?? []);
-      setReady(true);
+      setPartners(ok ? (data?.data?.partners ?? []) : []);
     });
   }, []);
 
-  if (!ready || partners.length === 0) return null;
+  if (!partners || partners.length === 0) return null;
 
   const items = [...partners, ...partners];
 
@@ -34,14 +32,14 @@ export default function BrandPartners() {
               aria-hidden={index >= partners.length ? "true" : "false"}
             >
               <img
-                src={optimizeCloudinary(partner.logoUrl, 160)}
+                src={optimizeCloudinary(partner.logoUrl, 192)}
                 alt={partner.name}
                 loading="lazy"
                 decoding="async"
-                width="80"
-                height="80"
-                style={{ objectFit: "contain" }}
+                width="96"
+                height="96"
               />
+              <span className="client-carousel__label">{partner.name}</span>
             </div>
           ))}
         </div>
