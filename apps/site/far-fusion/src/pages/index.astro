@@ -3,33 +3,7 @@ export const prerender = true;
 import BaseLayout from "../layouts/BaseLayout.astro";
 import HomeEvents from "../components/HomeEvents.jsx";
 import PastEventsRunner from "../components/PastEventsRunner.jsx";
-
-const clientLogos = [
-  {
-    src: "https://res.cloudinary.com/dscbuwvgg/image/upload/f_auto,q_auto,w_240/v1762623295/shakespeares_feast_dh3aqb.png",
-    alt: "Shakespeare's Feast logo"
-  },
-  {
-    src: "https://res.cloudinary.com/dscbuwvgg/image/upload/f_auto,q_auto,w_240/v1762622819/casino_logo_g8bajh.png",
-    alt: "Casino event collaborators logo"
-  },
-  {
-    src: "https://res.cloudinary.com/dscbuwvgg/image/upload/f_auto,q_auto,w_240/v1762622817/Picsart_25-10-20_19-24-05-046_e4pgxi.png",
-    alt: "Neon nights entertainment logo"
-  },
-  {
-    src: "https://res.cloudinary.com/dscbuwvgg/image/upload/f_auto,q_auto,w_240/v1762622817/binin_logo_white_d5vs0r.png",
-    alt: "Binin hospitality partners logo"
-  },
-  {
-    src: "https://res.cloudinary.com/dscbuwvgg/image/upload/f_auto,q_auto,w_240/v1762654440/dj_shine_logo_a9lpvq.png",
-    alt: "DJ Shine entertainment logo"
-  },
-  {
-    src: "https://res.cloudinary.com/dscbuwvgg/image/upload/f_auto,q_auto,w_240/v1762654440/bloomtales_by_christina_ina2n6.png",
-    alt: "Bloomtales by Christina logo"
-  }
-];
+import BrandPartners from "../components/BrandPartners.jsx";
 ---
 
 <BaseLayout title="Ulsaham Entertainments | Immersive Events Crafted to Perfection">
@@ -176,28 +150,7 @@ const clientLogos = [
     <PastEventsRunner client:load />
   </section>
 
-  <section class="py-14 md:py-24 text-light relative isolate z-10 border-t border-white/10" id="testimonials">
-    <div class="mx-auto max-w-6xl px-6">
-      <div class="mx-auto max-w-2xl px-4 sm:px-6 text-center">
-        <h2 class="section-title">Our Partners</h2>
-        <p class="section-subtitle">
-          Brands  who partnered with us.
-        </p>
-      </div>
-    </div>
-    <div class="client-carousel">
-      <div class="client-carousel__track">
-        {[...clientLogos, ...clientLogos].map((logo, index) => (
-          <div
-            class="client-carousel__item"
-            aria-hidden={index >= clientLogos.length ? "true" : "false"}
-          >
-            <img src={logo.src} alt={logo.alt} loading="lazy" decoding="async" />
-          </div>
-        ))}
-      </div>
-    </div>
-  </section>
+  <BrandPartners client:load />
 
   <section class="relative isolate overflow-hidden py-14 md:py-24 text-light z-10 border-t border-white/10" id="connect">
     <div class="absolute inset-0">

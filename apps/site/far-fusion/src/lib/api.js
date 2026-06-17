@@ -25,6 +25,10 @@ export function getEvent(slug) {
   return apiFetch(`/events/${encodeURIComponent(slug)}`);
 }
 
+export function getBrandPartners() {
+  return apiFetch("/brand-partners");
+}
+
 export async function registerForEvent(slug, body) {
   try {
     const res = await fetch(`${BASE}/events/${encodeURIComponent(slug)}/register`, {
