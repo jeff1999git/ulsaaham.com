@@ -98,7 +98,34 @@ import BrandPartners from "../components/BrandPartners.jsx";
     ></video>
     <div class="hero-quote">
       <p class="hero-quote__text">"Entertainment is Pure Experience"</p>
+      <a href="#gallery" id="hero-explore-btn" class="hero-explore-btn">
+        <span id="hero-explore-btn__label" class="hero-explore-btn__label">Explore Events</span>
+        <svg class="hero-explore-btn__icon" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 6 15 12 9 18"/></svg>
+      </a>
     </div>
+
+    <script is:inline>
+      document.addEventListener("DOMContentLoaded", function () {
+        var items = [
+          { label: "Explore Events", href: "#gallery" },
+          { label: "Explore Partners", href: "#testimonials" },
+          { label: "Connect With Us", href: "#connect" },
+        ];
+        var link = document.getElementById("hero-explore-btn");
+        var label = document.getElementById("hero-explore-btn__label");
+        if (!link || !label) return;
+        var i = 0;
+        setInterval(function () {
+          i = (i + 1) % items.length;
+          label.style.opacity = "0";
+          setTimeout(function () {
+            label.textContent = items[i].label;
+            link.setAttribute("href", items[i].href);
+            label.style.opacity = "1";
+          }, 250);
+        }, 3000);
+      });
+    </script>
 
     <a href="#gallery" class="hero-scroll-hint" aria-label="Scroll to events">
       <span class="nav-chevrons" aria-hidden="true">

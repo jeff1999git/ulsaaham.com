@@ -380,8 +380,10 @@ a:hover {
   position: absolute;
   inset: 0;
   display: flex;
+  flex-direction: column;
   align-items: center;
   justify-content: center;
+  gap: clamp(1.5rem, 4vh, 2.5rem);
   pointer-events: none;
   z-index: 2;
 }
@@ -397,6 +399,45 @@ a:hover {
   animation: fade-up 1.2s ease forwards;
   opacity: 0;
   padding: 0 1.5rem;
+}
+
+.hero-explore-btn {
+  pointer-events: auto;
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 14px 26px;
+  border-radius: 999px;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  background: rgba(0, 0, 0, 0.35);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  color: #ffffff;
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-weight: 700;
+  font-size: clamp(0.85rem, 1.6vw, 1rem);
+  text-decoration: none;
+  animation: fade-up 1.2s ease 0.2s forwards;
+  opacity: 0;
+  transition: background 0.25s ease, border-color 0.25s ease, transform 0.25s ease;
+}
+.hero-explore-btn:hover {
+  background: rgba(254, 204, 1, 0.15);
+  border-color: rgba(254, 204, 1, 0.5);
+  color: #fecc01;
+  transform: translateY(-2px);
+}
+.hero-explore-btn__label {
+  display: inline-block;
+  white-space: nowrap;
+  transition: opacity 0.25s ease;
+}
+.hero-explore-btn__icon {
+  flex-shrink: 0;
+  transition: transform 0.25s ease;
+}
+.hero-explore-btn:hover .hero-explore-btn__icon {
+  transform: translateX(3px);
 }
 
 .hero-sound-toggle {
