@@ -420,9 +420,10 @@ a:hover {
   animation-play-state: paused;
 }
 .past-runner--static .past-runner__track {
-  width: 100%;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, clamp(100px, 14vw, 190px));
   justify-content: center;
-  flex-wrap: wrap;
+  width: 100%;
 }
 
 .past-runner__item {
