@@ -23,13 +23,17 @@ function sendTicketEmail(email, ticketData) {
 }
 import { generateTicketCanvas, downloadCanvasAsPng } from "../lib/generate-ticket.js";
 
-function calcFees(amount, count, discount = 0) {
-  const base = amount * count;
-  const discountedBase = Math.max(0, base - discount);
-  const gst = Math.round(discountedBase * 0.18 * 100) / 100;
-  const platformFee = Math.round(discountedBase * 0.02 * 100) / 100;
+const GST_RATE = 0.18;
+const PLATFORM_FEE_RATE = 0.02;
+
+function calcFees(baseAmountPerPerson, quantity, couponDiscount = 0, gstEnabled = false, platformFeeEnabled = true) {
+  const base = baseAmountPerPerson * quantity;
+  const discountApplied = Math.min(couponDiscount, base);
+  const discountedBase = Math.max(0, base - discountApplied);
+  const gst = gstEnabled ? Math.round(discountedBase * GST_RATE * 100) / 100 : 0;
+  const platformFee = platformFeeEnabled ? Math.round(discountedBase * PLATFORM_FEE_RATE * 100) / 100 : 0;
   const total = Math.round((discountedBase + gst + platformFee) * 100) / 100;
-  return { base, discount, discountedBase, gst, platformFee, total };
+  return { base, discount: discountApplied, discountedBase, gst, platformFee, total };
 }
 
 function loadRazorpay() {
@@ -275,8 +279,12 @@ export default function RegistrationForm({ event }) {
   const count = Number(form.numberOfParticipants) || 1;
   const appliedDiscount = appliedCode?.type === "coupon" ? (appliedCode.discount ?? 0) : 0;
   const effectivePrice = event.effectiveAmount ?? event.amount;
-  const fees = !isFreeEntry ? calcFees(effectivePrice, count, appliedDiscount) : null;
+  const fees = !isFreeEntry ? calcFees(effectivePrice, count, appliedDiscount, event.gstEnabled, event.platformFeeEnabled) : null;
   const spotsLeft = event.capacity ? event.capacity - event.registeredCount : null;
+  const feeNoteParts = [];
+  if (event.gstEnabled) feeNoteParts.push("18% GST");
+  if (event.platformFeeEnabled) feeNoteParts.push("2% platform fee");
+  const feeNote = feeNoteParts.length ? ` (+ ${feeNoteParts.join(" + ")})` : "";
 
   // ── Field setter with inline participants validation ─────────────────────────
   const set = (field) => (e) => {
@@ -500,14 +508,18 @@ export default function RegistrationForm({ event }) {
               </div>
             </>
           )}
-          <div className="fee-breakdown__row">
-            <span>GST (18%)</span>
-            <span>₹{bd.gst.toFixed(2)}</span>
-          </div>
-          <div className="fee-breakdown__row">
-            <span>Platform fee (2%)</span>
-            <span>₹{bd.platformFee.toFixed(2)}</span>
-          </div>
+          {bd.gst > 0 && (
+            <div className="fee-breakdown__row">
+              <span>GST (18%)</span>
+              <span>₹{bd.gst.toFixed(2)}</span>
+            </div>
+          )}
+          {bd.platformFee > 0 && (
+            <div className="fee-breakdown__row">
+              <span>Platform fee (2%)</span>
+              <span>₹{bd.platformFee.toFixed(2)}</span>
+            </div>
+          )}
           <div className="fee-breakdown__divider" />
           <div className="fee-breakdown__total">
             <span>Total</span>
@@ -546,10 +558,10 @@ export default function RegistrationForm({ event }) {
             <span style={{ textDecoration: "line-through", color: "rgba(255,255,255,0.5)", textDecorationColor: "rgba(255,255,255,0.6)" }}>₹{event.amount}</span>
             <span style={{ color: "#9bca3b", fontWeight: 600 }}>₹{event.earlyBirdAmount}</span>
             <span style={{ background: "rgba(155,202,59,0.15)", color: "#9bca3b", fontSize: "10px", fontWeight: 700, letterSpacing: "0.08em", textTransform: "uppercase", padding: "2px 6px", borderRadius: "4px", border: "1px solid rgba(155,202,59,0.3)" }}>Early Bird</span>
-            <span style={{ opacity: 0.45 }}>per person (+ GST + 2% fee)</span>
+            <span style={{ opacity: 0.45 }}>per person{feeNote}</span>
           </>
         ) : (
-          <span>₹{event.amount} per person (+ 18% GST + 2% platform fee)</span>
+          <span>₹{event.amount} per person{feeNote}</span>
         )}
         {spotsLeft != null && !event.isFull ? <span> · {spotsLeft} spot{spotsLeft !== 1 ? "s" : ""} left</span> : ""}
       </p>
