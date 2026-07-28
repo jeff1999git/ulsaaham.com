@@ -244,6 +244,20 @@ a:hover {
 }
 
 
+.partners-section {
+  background: #050505;
+}
+.partners-section::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background:
+    radial-gradient(ellipse 55% 50% at 88% 15%, rgba(155, 202, 59, 0.16), transparent 60%),
+    radial-gradient(ellipse 50% 45% at 8% 85%, rgba(37, 145, 208, 0.12), transparent 65%);
+  pointer-events: none;
+}
+
 .client-carousel {
   position: relative;
   overflow: hidden;

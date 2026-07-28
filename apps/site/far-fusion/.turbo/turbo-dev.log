@@ -196,3 +196,11 @@ Error: ENOENT: no such file or directory, stat 'F:\Projects\ulsaaham.com\web-app
 [2m13:13:23[22m [34m[200][39m /events [2m13ms[22m
 [2m13:13:23[22m [34m[200][39m /login [2m12ms[22m
 [2m13:13:23[22m [34m[200][39m /account [2m18ms[22m
+[2m13:13:38[22m [34m[200][39m /privacy [2m14ms[22m
+[2m13:19:26[22m [34m[watch][39m /src/components/BrandPartners.jsx, /src/styles/global.css
+[2m13:19:26[22m [34m[watch][39m src/components/BrandPartners.jsx
+[2m13:19:38[22m [34m[watch][39m /src/styles/global.css
+[2m13:19:39[22m [34m[200][39m / [2m433ms[22m
+[2m13:19:39[22m [34m[200][39m / [2m30ms[22m
+[2m13:19:50[22m [34m[200][39m / [2m6ms[22m
+[2m13:19:50[22m [34m[200][39m / [2m7ms[22m
