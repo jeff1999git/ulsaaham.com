@@ -15,40 +15,35 @@ body {
   color: #ffffff;
 }
 
-/* ─── Home page: paginated full-screen slides (desktop only) ─── */
-@media (min-width: 900px) {
-  .fp-viewport {
-    height: 100vh;
-    height: 100dvh;
-    overflow: hidden;
-  }
-  .fp-wrap {
-    height: 400%;
-    transition: transform 0.8s cubic-bezier(0.65, 0, 0.35, 1);
-    will-change: transform;
-  }
-  .fp-section {
-    height: 25%;
-    overflow: hidden;
-    display: grid;
-  }
-  .fp-section > * {
-    min-height: 0;
-  }
+/* ─── Home page: paginated full-screen slides (all viewport sizes) ─── */
+.fp-viewport {
+  height: 100vh;
+  height: 100dvh;
+  overflow: hidden;
+}
+.fp-wrap {
+  height: 400%;
+  transition: transform 0.8s cubic-bezier(0.65, 0, 0.35, 1);
+  will-change: transform;
+}
+.fp-section {
+  height: 25%;
+  overflow: hidden;
+  display: grid;
+}
+.fp-section > * {
+  min-height: 0;
 }
 
 .fp-dots {
   position: fixed;
-  right: clamp(1rem, 2.5vw, 2rem);
+  right: clamp(0.6rem, 2.5vw, 2rem);
   top: 50%;
   transform: translateY(-50%);
   z-index: 90;
-  display: none;
+  display: flex;
   flex-direction: column;
   gap: 14px;
-}
-@media (min-width: 900px) {
-  .fp-dots { display: flex; }
 }
 .fp-dot {
   width: 9px;
@@ -329,6 +324,11 @@ a:hover {
 .client-carousel__track--paused {
   animation-play-state: paused;
 }
+.client-carousel--static .client-carousel__track {
+  width: 100%;
+  justify-content: center;
+  flex-wrap: wrap;
+}
 
 .client-carousel__skeleton {
   width: clamp(72px, 10vw, 96px);
@@ -417,6 +417,11 @@ a:hover {
 .past-runner:hover .past-runner__track,
 .past-runner__track--paused {
   animation-play-state: paused;
+}
+.past-runner--static .past-runner__track {
+  width: 100%;
+  justify-content: center;
+  flex-wrap: wrap;
 }
 
 .past-runner__item {

@@ -4,6 +4,7 @@ import { optimizeCloudinary } from "../lib/image.js";
 
 export default function BrandPartners() {
   const [partners, setPartners] = useState(null);
+  const [isMobile, setIsMobile] = useState(false);
 
   useEffect(() => {
     getBrandPartners().then(({ ok, data }) => {
@@ -11,9 +12,23 @@ export default function BrandPartners() {
     });
   }, []);
 
+  useEffect(() => {
+    const mq = window.matchMedia("(max-width: 899px)");
+    setIsMobile(mq.matches);
+    const handler = (e) => setIsMobile(e.matches);
+    mq.addEventListener("change", handler);
+    return () => mq.removeEventListener("change", handler);
+  }, []);
+
   if (partners && partners.length === 0) return null;
 
-  const items = partners ? [...partners, ...partners] : [];
+  // The marquee works by duplicating the list and scrolling exactly half its
+  // width — with only a handful of partners that just makes the repeat obvious
+  // (and on mobile the wide item gaps leave long empty stretches as it scrolls),
+  // so below this count, or on mobile, show a single static, centered row instead.
+  const MIN_FOR_MARQUEE = 6;
+  const scrollable = !!partners && partners.length >= MIN_FOR_MARQUEE && !isMobile;
+  const items = partners ? (scrollable ? [...partners, ...partners] : partners) : [];
 
   return (
     <section className="partners-section py-14 md:py-24 text-light relative isolate z-10 border-t border-white/10" id="testimonials">
@@ -23,14 +38,14 @@ export default function BrandPartners() {
           <p className="section-subtitle">Brands who trusted us.</p>
         </div>
       </div>
-      <div className="client-carousel">
-        <div className={`client-carousel__track${partners ? "" : " client-carousel__track--paused"}`}>
+      <div className={`client-carousel${scrollable ? "" : " client-carousel--static"}`}>
+        <div className={`client-carousel__track${scrollable ? "" : " client-carousel__track--paused"}`}>
           {partners ? (
             items.map((partner, index) => (
               <div
                 key={`${partner.id}-${index}`}
                 className="client-carousel__item"
-                aria-hidden={index >= partners.length ? "true" : "false"}
+                aria-hidden={scrollable && index >= partners.length ? "true" : "false"}
               >
                 <img
                   src={optimizeCloudinary(partner.logoUrl, 192)}
