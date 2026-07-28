@@ -420,11 +420,12 @@ a:hover {
   color: #fecc01;
 }
 
-.nav-scroll-hint {
+.hero-scroll-hint {
   position: absolute;
   left: 50%;
-  top: 50%;
-  transform: translate(-50%, -50%);
+  bottom: clamp(1.25rem, 4vh, 2.5rem);
+  transform: translateX(-50%);
+  z-index: 2;
   display: inline-flex;
   align-items: center;
   color: #fecc01;
@@ -453,13 +454,6 @@ a:hover {
   0%, 100% { opacity: 0.2; }
   35%       { opacity: 1; }
   70%       { opacity: 0.2; }
-}
-
-@media (max-width: 640px) {
-  .nav-scroll-hint {
-    position: static;
-    transform: none;
-  }
 }
 
 .overview-logo {
