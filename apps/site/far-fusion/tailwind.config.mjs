@@ -11,11 +11,12 @@ export default {
       },
       colors: {
         primary: "#023301",
-        accent: "#fecc01",
+        accent: "#9bca3b",
+        info: "#2591d0",
         light: "#ffffff"
       },
       boxShadow: {
-        glow: "0 0 60px rgba(254, 204, 1, 0.28)"
+        glow: "0 0 60px rgba(155, 202, 59, 0.28)"
       },
       keyframes: {
         float: {

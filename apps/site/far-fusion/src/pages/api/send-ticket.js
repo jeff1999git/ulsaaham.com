@@ -37,19 +37,19 @@ export async function POST({ request }) {
   const qrBuffer = await QRCode.toBuffer(ticketCode, {
     width: 220,
     margin: 2,
-    color: { dark: "#fecc01", light: "#023301" },
+    color: { dark: "#9bca3b", light: "#023301" },
   });
 
   const html = `
     <div style="font-family:Arial,sans-serif;max-width:520px;margin:0 auto;padding:32px;background:#023301;border-radius:12px;color:#fff">
-      <p style="font-size:11px;font-weight:700;letter-spacing:.22em;text-transform:uppercase;color:#fecc01;margin:0 0 6px">Ulsaham Entertainments</p>
+      <p style="font-size:11px;font-weight:700;letter-spacing:.22em;text-transform:uppercase;color:#9bca3b;margin:0 0 6px">Ulsaham Entertainments</p>
       <h2 style="font-size:22px;margin:0 0 4px;color:#fff">You're booked!</h2>
       <p style="color:rgba(255,255,255,.5);font-size:13px;margin:0 0 24px">${eventName}</p>
 
-      <div style="background:rgba(254,204,1,.08);border:1px solid rgba(254,204,1,.3);border-radius:10px;padding:20px 24px;margin-bottom:24px;text-align:center">
+      <div style="background:rgba(155,202,59,.08);border:1px solid rgba(155,202,59,.3);border-radius:10px;padding:20px 24px;margin-bottom:24px;text-align:center">
         <img src="cid:ticket-qr" width="160" height="160" alt="QR Code" style="display:block;margin:0 auto 16px;border-radius:8px" />
-        <p style="font-size:11px;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:rgba(254,204,1,.7);margin:0 0 6px">Ticket Code</p>
-        <p style="font-size:28px;font-weight:700;letter-spacing:.2em;color:#fecc01;margin:0;font-family:monospace">${ticketCode}</p>
+        <p style="font-size:11px;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:rgba(155,202,59,.7);margin:0 0 6px">Ticket Code</p>
+        <p style="font-size:28px;font-weight:700;letter-spacing:.2em;color:#9bca3b;margin:0;font-family:monospace">${ticketCode}</p>
         <p style="font-size:11px;color:rgba(255,255,255,.3);margin:10px 0 0">Scan the QR code or show the ticket code at the venue</p>
       </div>
 
@@ -82,7 +82,7 @@ export async function POST({ request }) {
 
       <p style="color:rgba(255,255,255,.35);font-size:11px;line-height:1.7;margin:0;border-top:1px solid rgba(255,255,255,.08);padding-top:16px">
         Screenshot or save this email — bring your QR code to the venue. You can also view your bookings in your
-        <a href="https://www.ulsaaham.com/account" style="color:#fecc01">Ulsaham account</a>.
+        <a href="https://www.ulsaaham.com/account" style="color:#9bca3b">Ulsaham account</a>.
       </p>
     </div>`;
 

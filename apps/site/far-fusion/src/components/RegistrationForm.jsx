@@ -483,7 +483,7 @@ export default function RegistrationForm({ event }) {
             <span>
               {count} × ₹{effectivePrice}
               {event.isEarlyBird && event.earlyBirdAmount != null && (
-                <span style={{ color: "#fecc01", fontSize: "11px", marginLeft: "4px" }}>early bird</span>
+                <span style={{ color: "#9bca3b", fontSize: "11px", marginLeft: "4px" }}>early bird</span>
               )}
             </span>
             <span>₹{bd.base.toFixed(2)}</span>
@@ -544,8 +544,8 @@ export default function RegistrationForm({ event }) {
         ) : event.isEarlyBird && event.earlyBirdAmount != null ? (
           <>
             <span style={{ textDecoration: "line-through", color: "rgba(255,255,255,0.5)", textDecorationColor: "rgba(255,255,255,0.6)" }}>₹{event.amount}</span>
-            <span style={{ color: "#fecc01", fontWeight: 600 }}>₹{event.earlyBirdAmount}</span>
-            <span style={{ background: "rgba(254,204,1,0.15)", color: "#fecc01", fontSize: "10px", fontWeight: 700, letterSpacing: "0.08em", textTransform: "uppercase", padding: "2px 6px", borderRadius: "4px", border: "1px solid rgba(254,204,1,0.3)" }}>Early Bird</span>
+            <span style={{ color: "#9bca3b", fontWeight: 600 }}>₹{event.earlyBirdAmount}</span>
+            <span style={{ background: "rgba(155,202,59,0.15)", color: "#9bca3b", fontSize: "10px", fontWeight: 700, letterSpacing: "0.08em", textTransform: "uppercase", padding: "2px 6px", borderRadius: "4px", border: "1px solid rgba(155,202,59,0.3)" }}>Early Bird</span>
             <span style={{ opacity: 0.45 }}>per person (+ GST + 2% fee)</span>
           </>
         ) : (
@@ -652,7 +652,7 @@ export default function RegistrationForm({ event }) {
         <p className="text-light/40 text-xs">
           Estimated total: <strong className="text-accent">₹{fees.total.toFixed(2)}</strong>
           {event.isEarlyBird && event.earlyBirdAmount != null && (
-            <span style={{ color: "#fecc01", marginLeft: "6px" }}>🎟 early bird price</span>
+            <span style={{ color: "#9bca3b", marginLeft: "6px" }}>🎟 early bird price</span>
           )}
           {" "}(breakdown shown before payment)
         </p>

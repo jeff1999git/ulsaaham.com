@@ -159,8 +159,8 @@ export default function EventDetail() {
                 <p style={{ display: "flex", alignItems: "center", flexWrap: "wrap", gap: "6px" }}>
                   🎟
                   <span style={{ textDecoration: "line-through", color: "rgba(255,255,255,0.5)", textDecorationColor: "rgba(255,255,255,0.6)", fontSize: "0.9em" }}>₹{event.amount}</span>
-                  <span style={{ color: "#fecc01", fontWeight: 700 }}>₹{event.earlyBirdAmount}</span>
-                  <span style={{ background: "rgba(254,204,1,0.15)", color: "#fecc01", border: "1px solid rgba(254,204,1,0.35)", borderRadius: 4, fontSize: "10px", fontWeight: 700, letterSpacing: "0.08em", padding: "1px 7px", textTransform: "uppercase" }}>Early Bird</span>
+                  <span style={{ color: "#9bca3b", fontWeight: 700 }}>₹{event.earlyBirdAmount}</span>
+                  <span style={{ background: "rgba(155,202,59,0.15)", color: "#9bca3b", border: "1px solid rgba(155,202,59,0.35)", borderRadius: 4, fontSize: "10px", fontWeight: 700, letterSpacing: "0.08em", padding: "1px 7px", textTransform: "uppercase" }}>Early Bird</span>
                   <span style={{ opacity: 0.55 }}>per person</span>
                 </p>
               ) : (

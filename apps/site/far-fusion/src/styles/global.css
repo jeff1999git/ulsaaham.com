@@ -16,7 +16,7 @@ body {
 }
 
 a {
-  color: #fecc01;
+  color: #9bca3b;
   transition: color 0.3s ease;
 }
 a:hover {
@@ -80,7 +80,7 @@ a:hover {
   content: "";
   position: absolute;
   inset: 0;
-  background: radial-gradient(circle at top, rgba(254, 204, 1, 0.16), transparent 65%);
+  background: radial-gradient(circle at top, rgba(155, 202, 59, 0.16), transparent 65%);
   mix-blend-mode: screen;
   pointer-events: none;
 }
@@ -151,12 +151,12 @@ a:hover {
 
 .hero-video__menu-link:hover,
 .hero-video__menu-link:focus-visible {
-  color: #fecc01;
+  color: #9bca3b;
   transform: translateY(3px);
 }
 
 .hero-video__menu-link:focus-visible {
-  outline: 2px solid #fecc01;
+  outline: 2px solid #9bca3b;
   outline-offset: 6px;
   border-radius: 999px;
 }
@@ -233,7 +233,7 @@ a:hover {
   width: 72px;
   height: 3px;
   border-radius: 999px;
-  background: linear-gradient(90deg, rgba(254, 204, 1, 0.9), rgba(254, 204, 1, 0));
+  background: linear-gradient(90deg, rgba(155, 202, 59, 0.9), rgba(155, 202, 59, 0));
 }
 
 .section-subtitle {
@@ -249,8 +249,8 @@ a:hover {
   overflow: hidden;
   margin-top: 3rem;
   padding: clamp(1.8rem, 3vw, 2.5rem) 0;
-  border-top: 1px solid rgba(254, 204, 1, 0.12);
-  border-bottom: 1px solid rgba(254, 204, 1, 0.12);
+  border-top: 1px solid rgba(155, 202, 59, 0.12);
+  border-bottom: 1px solid rgba(155, 202, 59, 0.12);
 }
 
 .client-carousel__track {
@@ -313,13 +313,13 @@ a:hover {
   font-weight: 600;
   letter-spacing: 0.2em;
   text-transform: uppercase;
-  color: #fecc01;
+  color: #9bca3b;
 }
 
 .past-runner-heading__line {
   flex: 1;
   height: 1px;
-  background: rgba(254, 204, 1, 0.12);
+  background: rgba(155, 202, 59, 0.12);
 }
 
 .past-runner {
@@ -351,7 +351,7 @@ a:hover {
   aspect-ratio: 4 / 5;
   border-radius: 8px;
   overflow: hidden;
-  border: 1px solid rgba(254, 204, 1, 0.1);
+  border: 1px solid rgba(155, 202, 59, 0.1);
   text-decoration: none;
   transition: transform 0.35s ease, box-shadow 0.35s ease, border-color 0.35s ease;
 }
@@ -365,7 +365,7 @@ a:hover {
 .past-runner__item:hover {
   transform: scale(1.3);
   box-shadow: 0 16px 48px rgba(0, 0, 0, 0.6);
-  border-color: rgba(254, 204, 1, 0.5);
+  border-color: rgba(155, 202, 59, 0.5);
   z-index: 2;
 }
 
@@ -424,9 +424,9 @@ a:hover {
   transition: background 0.25s ease, border-color 0.25s ease, transform 0.25s ease;
 }
 .hero-explore-btn:hover {
-  background: rgba(254, 204, 1, 0.15);
-  border-color: rgba(254, 204, 1, 0.5);
-  color: #fecc01;
+  background: rgba(155, 202, 59, 0.15);
+  border-color: rgba(155, 202, 59, 0.5);
+  color: #9bca3b;
   transform: translateY(-2px);
 }
 .hero-explore-btn__label {
@@ -458,9 +458,9 @@ a:hover {
   transition: background 0.2s, border-color 0.2s;
 }
 .hero-sound-toggle:hover {
-  background: rgba(254, 204, 1, 0.2);
-  border-color: rgba(254, 204, 1, 0.5);
-  color: #fecc01;
+  background: rgba(155, 202, 59, 0.2);
+  border-color: rgba(155, 202, 59, 0.5);
+  color: #9bca3b;
 }
 
 .hero-scroll-hint {
@@ -471,7 +471,7 @@ a:hover {
   z-index: 2;
   display: inline-flex;
   align-items: center;
-  color: #fecc01;
+  color: #9bca3b;
   text-decoration: none;
 }
 
@@ -505,8 +505,8 @@ a:hover {
   height: auto;
   filter: drop-shadow(0 18px 42px rgba(2, 51, 1, 0.45));
   border-radius: 14px;
-  border: 1px solid rgba(254, 204, 1, 0.28);
-  background: radial-gradient(circle at center, rgba(254, 204, 1, 0.15), rgba(2, 51, 1, 0.6));
+  border: 1px solid rgba(155, 202, 59, 0.28);
+  background: radial-gradient(circle at center, rgba(155, 202, 59, 0.15), rgba(2, 51, 1, 0.6));
   padding: clamp(0.6rem, 1.5vw, 0.85rem);
 }
 
@@ -516,7 +516,7 @@ a:hover {
   top: 0;
   z-index: 50;
   background: rgba(2, 51, 1, 0.92);
-  border-bottom: 1px solid rgba(254, 204, 1, 0.12);
+  border-bottom: 1px solid rgba(155, 202, 59, 0.12);
   backdrop-filter: blur(12px);
   height: 56px;
   display: flex;
@@ -556,7 +556,7 @@ a:hover {
   font-size: 0.78rem;
   font-weight: 500;
   letter-spacing: 0.15em;
-  color: #fecc01;
+  color: #9bca3b;
   text-transform: none;
   margin-top: 3px;
 }
@@ -575,7 +575,7 @@ a:hover {
   text-decoration: none;
   transition: color 0.2s;
 }
-.page-topbar__link:hover { color: #fecc01; }
+.page-topbar__link:hover { color: #9bca3b; }
 @media (max-width: 360px) {
   .page-topbar__link { display: none; }
 }
@@ -587,23 +587,23 @@ a:hover {
   width: 34px;
   height: 34px;
   border-radius: 50%;
-  border: 1.5px solid rgba(254, 204, 1, 0.35);
-  background: rgba(254, 204, 1, 0.06);
+  border: 1.5px solid rgba(155, 202, 59, 0.35);
+  background: rgba(155, 202, 59, 0.06);
   color: rgba(255, 255, 255, 0.5);
   text-decoration: none;
   flex-shrink: 0;
   transition: border-color 0.2s, background 0.2s, color 0.2s;
 }
 .topbar-avatar:hover {
-  border-color: #fecc01;
-  background: rgba(254, 204, 1, 0.14);
-  color: #fecc01;
+  border-color: #9bca3b;
+  background: rgba(155, 202, 59, 0.14);
+  color: #9bca3b;
 }
 .topbar-avatar svg { display: block; }
 .topbar-avatar__letter {
   font-size: 13px;
   font-weight: 700;
-  color: #fecc01;
+  color: #9bca3b;
   line-height: 1;
   text-transform: uppercase;
   font-family: 'Plus Jakarta Sans', sans-serif;
@@ -661,8 +661,8 @@ a:hover {
 
 .mobile-nav-dropdown__link:hover,
 .mobile-nav-dropdown__link:focus-visible {
-  color: #fecc01;
-  background: rgba(254, 204, 1, 0.07);
+  color: #9bca3b;
+  background: rgba(155, 202, 59, 0.07);
 }
 
 .mobile-nav-dropdown__link--account {
@@ -691,7 +691,7 @@ a:hover {
 }
 .event-card:hover {
   transform: translateY(-5px);
-  border-color: rgba(254, 204, 1, 0.5);
+  border-color: rgba(155, 202, 59, 0.5);
   box-shadow: 0 8px 32px rgba(0, 0, 0, 0.35);
   color: inherit;
 }
@@ -714,7 +714,7 @@ a:hover {
 .event-card__placeholder {
   width: 100%;
   height: 100%;
-  background: linear-gradient(135deg, rgba(254, 204, 1, 0.08), rgba(0, 0, 0, 0.6));
+  background: linear-gradient(135deg, rgba(155, 202, 59, 0.08), rgba(0, 0, 0, 0.6));
 }
 .event-card__price {
   position: absolute;
@@ -727,8 +727,8 @@ a:hover {
   letter-spacing: 0.08em;
   text-transform: uppercase;
 }
-.event-card__price.free { background: #fecc01; color: #023301; }
-.event-card__price.paid { background: rgba(2, 51, 1, 0.9); color: #fecc01; border: 1px solid rgba(254, 204, 1, 0.4); }
+.event-card__price.free { background: #9bca3b; color: #023301; }
+.event-card__price.paid { background: rgba(2, 51, 1, 0.9); color: #9bca3b; border: 1px solid rgba(155, 202, 59, 0.4); }
 .event-card__full {
   position: absolute;
   top: 0.65rem;
@@ -745,9 +745,9 @@ a:hover {
 .event-card__featured {
   display: inline-block;
   margin-bottom: 0.45rem;
-  background: rgba(254, 204, 1, 0.18);
-  border: 1px solid rgba(254, 204, 1, 0.45);
-  color: #fecc01;
+  background: rgba(155, 202, 59, 0.18);
+  border: 1px solid rgba(155, 202, 59, 0.45);
+  color: #9bca3b;
   font-size: 0.65rem;
   font-weight: 700;
   letter-spacing: 0.08em;
@@ -776,7 +776,7 @@ a:hover {
   font-weight: 700;
   letter-spacing: 0.14em;
   text-transform: uppercase;
-  color: #fecc01;
+  color: #9bca3b;
 }
 .event-card-skeleton {
   border-radius: 1.25rem;
@@ -831,13 +831,13 @@ a:hover {
   text-decoration: none;
   transition: color 0.2s;
 }
-.back-link:hover { color: #fecc01; }
+.back-link:hover { color: #9bca3b; }
 .badge-featured {
   display: inline-block;
   margin-top: 0.6rem;
-  background: rgba(254, 204, 1, 0.12);
-  border: 1px solid rgba(254, 204, 1, 0.35);
-  color: #fecc01;
+  background: rgba(155, 202, 59, 0.12);
+  border: 1px solid rgba(155, 202, 59, 0.35);
+  color: #9bca3b;
   font-size: 0.65rem;
   font-weight: 700;
   letter-spacing: 0.1em;
@@ -865,8 +865,8 @@ a:hover {
 .spinner {
   width: 34px;
   height: 34px;
-  border: 3px solid rgba(254, 204, 1, 0.2);
-  border-top-color: #fecc01;
+  border: 3px solid rgba(155, 202, 59, 0.2);
+  border-top-color: #9bca3b;
   border-radius: 50%;
   animation: spin 0.7s linear infinite;
 }
@@ -875,7 +875,7 @@ a:hover {
 /* ─── Registration form ─── */
 .reg-form {
   background: rgba(255, 255, 255, 0.04);
-  border: 1px solid rgba(254, 204, 1, 0.15);
+  border: 1px solid rgba(155, 202, 59, 0.15);
   border-radius: 1.5rem;
   padding: 1.25rem;
   display: flex;
@@ -904,7 +904,7 @@ a:hover {
 .reg-field-hint { font-weight: 400; text-transform: none; letter-spacing: 0; color: rgba(255, 255, 255, 0.3); }
 .reg-field input {
   background: rgba(255, 255, 255, 0.07);
-  border: 1px solid rgba(254, 204, 1, 0.18);
+  border: 1px solid rgba(155, 202, 59, 0.18);
   border-radius: 0.65rem;
   padding: 0.6rem 0.9rem;
   color: #fff;
@@ -913,7 +913,7 @@ a:hover {
   transition: border-color 0.2s;
   width: 100%;
 }
-.reg-field input:focus { border-color: rgba(254, 204, 1, 0.55); }
+.reg-field input:focus { border-color: rgba(155, 202, 59, 0.55); }
 .reg-field input::placeholder { color: rgba(255, 255, 255, 0.2); }
 .reg-field-error { font-size: 0.75rem; color: #fca5a5; }
 .reg-row { display: grid; grid-template-columns: 1fr 1fr; gap: 0.9rem; }
@@ -923,7 +923,7 @@ a:hover {
 .reg-submit {
   width: 100%;
   padding: 0.75rem 1.5rem;
-  background: #fecc01;
+  background: #9bca3b;
   color: #023301;
   font-weight: 700;
   font-size: 0.85rem;
@@ -939,7 +939,7 @@ a:hover {
 .reg-submit:disabled { opacity: 0.45; cursor: not-allowed; }
 .reg-closed {
   background: rgba(255, 255, 255, 0.04);
-  border: 1px solid rgba(254, 204, 1, 0.15);
+  border: 1px solid rgba(155, 202, 59, 0.15);
   border-radius: 1.5rem;
   padding: 1.5rem;
   text-align: center;
@@ -952,7 +952,7 @@ a:hover {
 /* ─── Auth gate (shown in RegistrationForm when guest) ─── */
 .auth-gate {
   background: rgba(255, 255, 255, 0.04);
-  border: 1px solid rgba(254, 204, 1, 0.15);
+  border: 1px solid rgba(155, 202, 59, 0.15);
   border-radius: 1.5rem;
   padding: 2rem;
   text-align: center;
@@ -978,7 +978,7 @@ a:hover {
   transition: color 0.2s;
   margin-top: 0.25rem;
 }
-.auth-form__back:hover { color: #fecc01; }
+.auth-form__back:hover { color: #9bca3b; }
 
 /* ─── Google OAuth button ─── */
 .auth-google-btn {
@@ -1023,7 +1023,7 @@ a:hover {
 /* ─── Fee breakdown (paid events) ─── */
 .fee-breakdown {
   background: rgba(255, 255, 255, 0.04);
-  border: 1px solid rgba(254, 204, 1, 0.15);
+  border: 1px solid rgba(155, 202, 59, 0.15);
   border-radius: 1rem;
   padding: 1.25rem;
   display: flex;
@@ -1038,7 +1038,7 @@ a:hover {
   color: rgba(255, 255, 255, 0.55);
 }
 .fee-breakdown__divider {
-  border-top: 1px solid rgba(254, 204, 1, 0.15);
+  border-top: 1px solid rgba(155, 202, 59, 0.15);
   margin: 0.25rem 0;
 }
 .fee-breakdown__total {
@@ -1046,7 +1046,7 @@ a:hover {
   justify-content: space-between;
   font-size: 1rem;
   font-weight: 700;
-  color: #fecc01;
+  color: #9bca3b;
 }
 
 /* ─── Coupon code section ─── */
@@ -1056,7 +1056,7 @@ a:hover {
 .coupon-toggle {
   background: none;
   border: none;
-  color: rgba(254, 204, 1, 0.75);
+  color: rgba(155, 202, 59, 0.75);
   font-size: 0.75rem;
   font-weight: 600;
   letter-spacing: 0.04em;
@@ -1065,7 +1065,7 @@ a:hover {
   text-transform: uppercase;
   transition: color 0.15s;
 }
-.coupon-toggle:hover { color: #fecc01; }
+.coupon-toggle:hover { color: #9bca3b; }
 .coupon-input-row {
   display: flex;
   gap: 0.5rem;
@@ -1074,7 +1074,7 @@ a:hover {
 .coupon-input {
   flex: 1;
   background: rgba(255,255,255,0.06);
-  border: 1px solid rgba(254,204,1,0.25);
+  border: 1px solid rgba(155,202,59,0.25);
   border-radius: 8px;
   color: #fff;
   font-family: 'Courier New', Courier, monospace;
@@ -1085,13 +1085,13 @@ a:hover {
   outline: none;
   transition: border-color 0.15s;
 }
-.coupon-input:focus { border-color: #fecc01; }
+.coupon-input:focus { border-color: #9bca3b; }
 .coupon-input::placeholder { color: rgba(255,255,255,0.2); letter-spacing: 0.05em; }
 .coupon-apply-btn {
-  background: rgba(254,204,1,0.12);
-  border: 1px solid rgba(254,204,1,0.35);
+  background: rgba(155,202,59,0.12);
+  border: 1px solid rgba(155,202,59,0.35);
   border-radius: 8px;
-  color: #fecc01;
+  color: #9bca3b;
   cursor: pointer;
   font-size: 0.75rem;
   font-weight: 700;
@@ -1100,7 +1100,7 @@ a:hover {
   text-transform: uppercase;
   transition: background 0.15s, border-color 0.15s;
 }
-.coupon-apply-btn:hover:not(:disabled) { background: rgba(254,204,1,0.22); border-color: #fecc01; }
+.coupon-apply-btn:hover:not(:disabled) { background: rgba(155,202,59,0.22); border-color: #9bca3b; }
 .coupon-apply-btn:disabled { opacity: 0.4; cursor: not-allowed; }
 .coupon-error {
   color: #f87171;
@@ -1142,7 +1142,7 @@ a:hover {
 }
 .account-section {
   background: rgba(255, 255, 255, 0.04);
-  border: 1px solid rgba(254, 204, 1, 0.12);
+  border: 1px solid rgba(155, 202, 59, 0.12);
   border-radius: 1.5rem;
   padding: 1.25rem;
 }
@@ -1164,14 +1164,14 @@ a:hover {
 .account-edit-form {
   margin-top: 1.5rem;
   padding-top: 1.5rem;
-  border-top: 1px solid rgba(254, 204, 1, 0.1);
+  border-top: 1px solid rgba(155, 202, 59, 0.1);
   display: flex;
   flex-direction: column;
   gap: 0.9rem;
 }
 .account-btn {
   padding: 0.45rem 1.1rem;
-  border: 1px solid rgba(254, 204, 1, 0.25);
+  border: 1px solid rgba(155, 202, 59, 0.25);
   border-radius: 999px;
   background: transparent;
   color: rgba(255, 255, 255, 0.55);
@@ -1183,7 +1183,7 @@ a:hover {
   transition: border-color 0.2s, color 0.2s;
   white-space: nowrap;
 }
-.account-btn:hover { border-color: #fecc01; color: #fecc01; }
+.account-btn:hover { border-color: #9bca3b; color: #9bca3b; }
 .account-btn--danger { border-color: rgba(220, 38, 38, 0.3); color: rgba(252, 165, 165, 0.6); }
 .account-btn--danger:hover { border-color: rgba(220, 38, 38, 0.7); color: #fca5a5; }
 
@@ -1203,7 +1203,7 @@ a:hover {
   display: flex;
   flex-direction: column;
   background: rgba(255, 255, 255, 0.04);
-  border: 1px solid rgba(254, 204, 1, 0.12);
+  border: 1px solid rgba(155, 202, 59, 0.12);
   border-radius: 1rem;
   overflow: hidden;
 }

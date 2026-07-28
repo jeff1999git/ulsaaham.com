@@ -18,3 +18,181 @@ Browserslist: browsers data (caniuse-lite) is 8 months old. Please run:
   npx update-browserslist-db@latest
   Why you should do it regularly: https://github.com/browserslist/update-db#readme
 [2m12:21:32[22m [34m[200][39m / [2m360ms[22m
+[2m12:21:32[22m [34m[200][39m /events [2m15ms[22m
+[2m12:21:32[22m [34m[200][39m /about [2m5ms[22m
+[2m12:21:44[22m [34m[200][39m / [2m46ms[22m
+[2m12:27:00[22m [34m[200][39m / [2m24ms[22m
+[2m12:31:35[22m [34m[200][39m / [2m14ms[22m
+[2m12:31:41[22m [34m[200][39m / [2m11ms[22m
+[2m12:31:41[22m [34m[200][39m /about [2m9ms[22m
+[2m12:31:42[22m [34m[200][39m /events [2m12ms[22m
+[2m12:31:42[22m [34m[200][39m /login [2m15ms[22m
+[2m12:31:42[22m [34m[200][39m /privacy [2m9ms[22m
+[2m12:31:42[22m [34m[200][39m /terms [2m10ms[22m
+[2m12:40:44[22m [34m[watch][39m /src/styles/global.css
+[2m12:40:45[22m [34m[200][39m / [2m341ms[22m
+[2m12:40:45[22m [34m[200][39m / [2m34ms[22m
+[2m12:40:53[22m [34m[watch][39m /src/styles/global.css
+[2m12:40:54[22m [34m[200][39m / [2m278ms[22m
+[2m12:40:54[22m [34m[200][39m / [2m15ms[22m
+[2m12:41:06[22m [34m[200][39m / [2m12ms[22m
+[2m12:41:13[22m [34m[200][39m / [2m25ms[22m
+[2m12:41:13[22m [34m[200][39m / [2m17ms[22m
+[2m12:41:34[22m [34m[200][39m / [2m15ms[22m
+[2m12:41:35[22m [34m[200][39m /about [2m15ms[22m
+[2m12:41:35[22m [34m[200][39m /events [2m28ms[22m
+[2m12:41:35[22m [34m[200][39m /login [2m23ms[22m
+[2m12:41:35[22m [34m[200][39m /privacy [2m6ms[22m
+[2m12:41:35[22m [34m[200][39m /terms [2m5ms[22m
+[2m12:44:53[22m [34m[watch][39m /src/styles/global.css
+[2m12:44:55[22m [34m[200][39m / [2m439ms[22m
+[2m12:44:55[22m [34m[200][39m / [2m14ms[22m
+[2m12:45:02[22m [34m[200][39m / [2m7ms[22m
+[2m12:47:40[22m [34m[200][39m /about [2m18ms[22m
+[33m[1m12:47:41[22m [WARN][39m Unsupported file type [1mF:\Projects\ulsaaham.com\web-app\apps\site\far-fusion\src\pages\index.astro.tmp.26260.755da3b9f421[22m found. Prefix filename with an underscore (`_`) to ignore.
+[2m12:47:41[22m [34m[watch][39m src/pages/index.astro
+[2m12:47:41[22m [34m[watch][39m src/pages/index.astro
+[2m12:47:42[22m [34m[200][39m /about [2m160ms[22m
+[2m12:47:42[22m [34m[200][39m / [2m15ms[22m
+[33m[1m12:47:50[22m [WARN][39m Unsupported file type [1mF:\Projects\ulsaaham.com\web-app\apps\site\far-fusion\src\pages\index.astro.tmp.26260.6248b2a02407[22m found. Prefix filename with an underscore (`_`) to ignore.
+[2m12:47:50[22m [34m[watch][39m src/pages/index.astro
+[2m12:47:50[22m [34m[watch][39m src/pages/index.astro
+[2m12:47:50[22m [34m[200][39m /about [2m78ms[22m
+[2m12:47:50[22m [34m[200][39m / [2m12ms[22m
+[2m12:47:55[22m [34m[watch][39m /src/styles/global.css
+[2m12:47:56[22m [34m[200][39m /about [2m291ms[22m
+[2m12:47:56[22m [34m[200][39m / [2m13ms[22m
+[2m12:48:05[22m [34m[watch][39m /src/styles/global.css
+[2m12:48:06[22m [34m[200][39m /about [2m275ms[22m
+[2m12:48:06[22m [34m[200][39m / [2m284ms[22m
+[2m12:48:12[22m [34m[200][39m / [2m6ms[22m
+[2m12:48:12[22m [34m[200][39m / [2m8ms[22m
+[2m12:49:03[22m [34m[200][39m / [2m17ms[22m
+[2m12:52:17[22m [34m[watch][39m src/pages/index.astro
+[2m12:52:17[22m [34m[watch][39m src/pages/index.astro
+[2m12:52:19[22m [34m[200][39m / [2m167ms[22m
+[2m12:52:19[22m [34m[200][39m / [2m9ms[22m
+[2m12:52:35[22m [34m[watch][39m /src/styles/global.css
+[2m12:52:36[22m [34m[200][39m / [2m269ms[22m
+[2m12:52:36[22m [34m[200][39m / [2m8ms[22m
+[2m12:53:08[22m [34m[200][39m / [2m20ms[22m
+[2m12:53:08[22m [34m[200][39m / [2m20ms[22m
+[2m12:56:09[22m [34m[watch][39m /src/components/HomeEvents.jsx, /src/styles/global.css
+[2m12:56:09[22m [34m[watch][39m src/components/HomeEvents.jsx
+[33m[1m12:56:20[22m [WARN][39m Unsupported file type [1mF:\Projects\ulsaaham.com\web-app\apps\site\far-fusion\src\pages\index.astro.tmp.26260.b9e4f197a1dd[22m found. Prefix filename with an underscore (`_`) to ignore.
+[2m12:56:20[22m [34m[watch][39m src/pages/index.astro
+[2m12:56:20[22m [34m[watch][39m src/pages/index.astro
+[2m12:56:21[22m [34m[200][39m / [2m98ms[22m
+[2m12:56:21[22m [34m[200][39m / [2m45ms[22m
+[2m12:56:38[22m [34m[200][39m /events/detail [2m27ms[22m
+[2m12:56:43[22m [34m[200][39m / [2m6ms[22m
+[2m12:56:43[22m [34m[200][39m / [2m5ms[22m
+[2m12:57:27[22m [34m[200][39m /events/detail [2m27ms[22m
+[2m13:00:01[22m [34m[watch][39m /src/components/HomeEvents.jsx, /src/styles/global.css
+[2m13:00:01[22m [34m[watch][39m src/components/HomeEvents.jsx
+[33m[1m13:00:09[22m [WARN][39m Unsupported file type [1mF:\Projects\ulsaaham.com\web-app\apps\site\far-fusion\src\pages\index.astro.tmp.26260.c3e2045b0e0a[22m found. Prefix filename with an underscore (`_`) to ignore.
+[2m13:00:09[22m [34m[watch][39m src/pages/index.astro
+[2m13:00:09[22m [34m[watch][39m src/pages/index.astro
+[2m13:00:09[22m [34m[200][39m / [2m125ms[22m
+[2m13:00:10[22m [34m[200][39m / [2m12ms[22m
+[2m13:00:19[22m [34m[200][39m / [2m8ms[22m
+[2m13:00:19[22m [34m[200][39m / [2m10ms[22m
+[2m13:02:24[22m [34m[watch][39m /src/components/PastEventsRunner.jsx, /src/styles/global.css
+[2m13:02:24[22m [34m[watch][39m src/components/PastEventsRunner.jsx
+[2m13:02:31[22m [34m[watch][39m /src/styles/global.css
+[2m13:02:31[22m [34m[200][39m / [2m263ms[22m
+[2m13:02:31[22m [34m[200][39m / [2m15ms[22m
+[2m13:02:36[22m [34m[200][39m /events/detail [2m24ms[22m
+[2m13:02:44[22m [34m[200][39m /events/detail [2m6ms[22m
+[2m13:02:48[22m [34m[200][39m / [2m14ms[22m
+[2m13:02:49[22m [34m[200][39m / [2m18ms[22m
+[2m13:02:55[22m [34m[200][39m / [2m25ms[22m
+[2m13:11:21[22m [34m[watch][39m tailwind.config.mjs
+[2m13:11:21[22m [34m[watch][39m tailwind.config.mjs
+[2m13:11:23[22m [34m[200][39m / [2m260ms[22m
+[2m13:11:23[22m [34m[200][39m / [2m9ms[22m
+[2m13:11:26[22m [34m[watch][39m /src/styles/global.css
+[2m13:11:27[22m [34m[200][39m / [2m252ms[22m
+[2m13:11:27[22m [34m[200][39m / [2m7ms[22m
+[2m13:11:30[22m [34m[watch][39m /src/styles/global.css
+[2m13:11:31[22m [34m[200][39m / [2m259ms[22m
+[2m13:11:31[22m [34m[200][39m / [2m34ms[22m
+[2m13:11:35[22m [34m[watch][39m /src/styles/global.css
+[2m13:11:35[22m [34m[200][39m / [2m239ms[22m
+[2m13:11:35[22m [34m[200][39m / [2m8ms[22m
+[2m13:11:39[22m [34m[watch][39m src/components/HeroScene.jsx
+[2m13:11:39[22m [34m[watch][39m src/components/HeroScene.jsx
+[2m13:11:39[22m [34m[200][39m / [2m123ms[22m
+[2m13:11:40[22m [34m[200][39m / [2m29ms[22m
+[2m13:11:44[22m [34m[watch][39m /src/components/EventCard.jsx, /src/styles/global.css
+[2m13:11:44[22m [34m[watch][39m src/components/EventCard.jsx
+[2m13:11:48[22m [34m[watch][39m /src/components/EventCard.jsx, /src/styles/global.css
+[2m13:11:48[22m [34m[watch][39m src/components/EventCard.jsx
+[2m13:11:51[22m [34m[200][39m /events/detail [2m149ms[22m
+[2m13:11:53[22m [34m[watch][39m /src/components/RegistrationForm.jsx, /src/styles/global.css
+[2m13:11:53[22m [34m[watch][39m src/components/RegistrationForm.jsx
+[2m13:11:58[22m [34m[watch][39m /src/components/RegistrationForm.jsx, /src/styles/global.css
+[2m13:11:58[22m [34m[watch][39m src/components/RegistrationForm.jsx
+[2m13:12:02[22m [34m[watch][39m /src/components/EventDetail.jsx, /src/styles/global.css
+[2m13:12:02[22m [34m[watch][39m src/components/EventDetail.jsx
+[2m13:12:06[22m [34m[watch][39m /src/components/EventDetail.jsx, /src/styles/global.css
+[2m13:12:06[22m [34m[watch][39m src/components/EventDetail.jsx
+[2m13:12:10[22m [34m[watch][39m src/components/AccountPage.jsx
+[2m13:12:10[22m [34m[watch][39m src/components/AccountPage.jsx
+[2m13:12:10[22m [34m[200][39m / [2m110ms[22m
+[2m13:12:11[22m [34m[200][39m / [2m21ms[22m
+[2m13:12:16[22m [34m[watch][39m src/pages/auth/complete.astro
+[2m13:12:16[22m [34m[watch][39m src/pages/auth/complete.astro
+[2m13:12:17[22m [34m[200][39m / [2m111ms[22m
+[2m13:12:17[22m [34m[200][39m / [2m17ms[22m
+[2m13:12:21[22m [34m[watch][39m src/pages/auth/complete.astro
+[2m13:12:21[22m [34m[watch][39m src/pages/auth/complete.astro
+[2m13:12:22[22m [34m[200][39m / [2m111ms[22m
+[2m13:12:22[22m [34m[200][39m / [2m16ms[22m
+[2m13:12:24[22m [34m[watch][39m src/pages/api/send-ticket.js
+[2m13:12:24[22m [34m[watch][39m src/pages/api/send-ticket.js
+[2m13:12:26[22m [34m[200][39m / [2m108ms[22m
+[2m13:12:26[22m [34m[200][39m / [2m13ms[22m
+[33m[1m13:12:28[22m [WARN][39m Unsupported file type [1mF:\Projects\ulsaaham.com\web-app\apps\site\far-fusion\src\pages\api\send-ticket.js.tmp.26260.af48e5ccb1cf[22m found. Prefix filename with an underscore (`_`) to ignore.
+[2m13:12:28[22m [34m[watch][39m src/pages/api/send-ticket.js
+[2m13:12:28[22m [34m[watch][39m src/pages/api/send-ticket.js
+[2m13:12:29[22m [34m[200][39m / [2m93ms[22m
+[2m13:12:30[22m [34m[200][39m / [2m15ms[22m
+[33m[1m13:12:33[22m [WARN][39m Unsupported file type [1mF:\Projects\ulsaaham.com\web-app\apps\site\far-fusion\src\pages\api\auth\send-otp.js.tmp.26260.386bd5bda738[22m found. Prefix filename with an underscore (`_`) to ignore.
+[2m13:12:33[22m [34m[watch][39m src/pages/api/auth/send-otp.js
+[2m13:12:33[22m [34m[watch][39m src/pages/api/auth/send-otp.js
+[2m13:12:33[22m [34m[200][39m / [2m76ms[22m
+[2m13:12:33[22m [34m[200][39m / [2m16ms[22m
+[33m[1m13:12:37[22m [WARN][39m Unsupported file type [1mF:\Projects\ulsaaham.com\web-app\apps\site\far-fusion\src\pages\api\auth\send-otp.js.tmp.26260.796c268dfaf8[22m found. Prefix filename with an underscore (`_`) to ignore.
+[2m13:12:37[22m [34m[watch][39m src/pages/api/auth/send-otp.js
+[2m13:12:37[22m [34m[watch][39m src/pages/api/auth/send-otp.js
+[2m13:12:37[22m [34m[200][39m / [2m253ms[22m
+[2m13:12:37[22m [34m[200][39m / [2m39ms[22m
+[31m[1m13:12:42[22m [ERROR][39m [31m[UnhandledRejection][39m Astro detected an unhandled rejection. Here's the stack trace:
+Error: ENOENT: no such file or directory, stat 'F:\Projects\ulsaaham.com\web-app\apps\site\far-fusion\src\pages\index.astro.tmp.26260.7a8c8162ecb6'
+    at Object.statSync (node:fs:1668:25)
+    at walk (file:///F:/Projects/ulsaaham.com/web-app/node_modules/astro/dist/core/routing/manifest/create.js:78:24)
+    at createFileBasedRoutes (file:///F:/Projects/ulsaaham.com/web-app/node_modules/astro/dist/core/routing/manifest/create.js:174:5)
+    at createRoutesList (file:///F:/Projects/ulsaaham.com/web-app/node_modules/astro/dist/core/routing/manifest/create.js:308:27)
+    at rebuildManifest (file:///F:/Projects/ulsaaham.com/web-app/node_modules/astro/dist/vite-plugin-astro-server/plugin.js:73:30)
+    at FSWatcher.emit (node:events:530:35)
+    at FSWatcher.emitWithAll (file:///F:/Projects/ulsaaham.com/web-app/node_modules/vite/dist/node/chunks/dep-D4NMHUTW.js:23789:8)
+    at FSWatcher._emit (file:///F:/Projects/ulsaaham.com/web-app/node_modules/vite/dist/node/chunks/dep-D4NMHUTW.js:23881:8)
+    at NodeFsHandler._handleFile (file:///F:/Projects/ulsaaham.com/web-app/node_modules/vite/dist/node/chunks/dep-D4NMHUTW.js:22466:14)
+    at NodeFsHandler._addToNodeFs (file:///F:/Projects/ulsaaham.com/web-app/node_modules/vite/dist/node/chunks/dep-D4NMHUTW.js:22703:21)
+  [1mHint:[22m
+[33m    Make sure your promises all have an `await` or a `.catch()` handler.[39m
+  [1mError reference:[22m
+    [36m[4mhttps://docs.astro.build/en/reference/errors/unhandled-rejection/[24m[39m
+  [1mStack trace:[22m
+[2m    at Object.statSync (node:fs:1668:25)
+    [...] See full stack trace in the browser, or rerun with --verbose.[22m
+[2m13:12:42[22m [34m[watch][39m src/pages/index.astro
+[2m13:12:42[22m [34m[watch][39m src/pages/index.astro
+[2m13:12:42[22m [34m[200][39m / [2m74ms[22m
+[2m13:12:42[22m [34m[200][39m / [2m21ms[22m
+[2m13:13:23[22m [34m[200][39m / [2m11ms[22m
+[2m13:13:23[22m [34m[200][39m /about [2m6ms[22m
+[2m13:13:23[22m [34m[200][39m /events [2m13ms[22m
+[2m13:13:23[22m [34m[200][39m /login [2m12ms[22m
+[2m13:13:23[22m [34m[200][39m /account [2m18ms[22m
