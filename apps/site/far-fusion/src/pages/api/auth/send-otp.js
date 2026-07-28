@@ -27,10 +27,10 @@ async function sendOtpEmail(to, otp) {
     text: `Your one-time verification code is: ${otp}\n\nThis code expires in 10 minutes. Do not share it with anyone.\n\nIf you did not request this, ignore this email.`,
     html: `
       <div style="font-family:Arial,sans-serif;max-width:480px;margin:0 auto;padding:32px;background:#023301;border-radius:12px;color:#fff">
-        <p style="font-size:11px;font-weight:700;letter-spacing:.22em;text-transform:uppercase;color:#fecc01;margin:0 0 6px">Ulsaham Entertainments</p>
+        <p style="font-size:11px;font-weight:700;letter-spacing:.22em;text-transform:uppercase;color:#9bca3b;margin:0 0 6px">Ulsaham Entertainments</p>
         <h2 style="font-size:22px;margin:0 0 24px;color:#fff">Your verification code</h2>
-        <div style="background:rgba(254,204,1,.1);border:1px solid rgba(254,204,1,.35);border-radius:10px;padding:28px;text-align:center;margin-bottom:24px">
-          <p style="font-size:44px;font-weight:700;letter-spacing:.35em;color:#fecc01;margin:0;font-family:monospace">${otp}</p>
+        <div style="background:rgba(155,202,59,.1);border:1px solid rgba(155,202,59,.35);border-radius:10px;padding:28px;text-align:center;margin-bottom:24px">
+          <p style="font-size:44px;font-weight:700;letter-spacing:.35em;color:#9bca3b;margin:0;font-family:monospace">${otp}</p>
         </div>
         <p style="color:rgba(255,255,255,.55);font-size:13px;line-height:1.7;margin:0 0 8px">
           This code expires in <strong style="color:#fff">10 minutes</strong>. Do not share it with anyone.

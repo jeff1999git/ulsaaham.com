@@ -17,7 +17,7 @@ import {
   SRGBColorSpace
 } from "three";
 
-const DOT_PRIMARY = new Color("#fecc01");
+const DOT_PRIMARY = new Color("#9bca3b");
 const DOT_SECONDARY = new Color("#0aa35c");
 
 function createDotTexture() {

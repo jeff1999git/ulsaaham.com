@@ -1,6 +1,6 @@
 import { optimizeCloudinary } from "../lib/image.js";
 
-export default function EventCard({ event, linkable = true, index = 0 }) {
+export default function EventCard({ event, linkable = true, index = 0, layout = "vertical" }) {
   const date = new Intl.DateTimeFormat("en-IN", {
     day: "numeric", month: "short", year: "numeric",
   }).format(new Date(event.date));
@@ -13,7 +13,7 @@ export default function EventCard({ event, linkable = true, index = 0 }) {
     : { style: { cursor: "default" } };
 
   return (
-    <Tag {...tagProps} className={`event-card${linkable ? " group" : " event-card--static"}`}>
+    <Tag {...tagProps} className={`event-card${layout === "horizontal" ? " event-card--horizontal" : ""}${linkable ? " group" : " event-card--static"}`}>
       <div className="event-card__image">
         {event.bannerImageUrl ? (
           <img
@@ -35,13 +35,13 @@ export default function EventCard({ event, linkable = true, index = 0 }) {
         <h3 className="event-card__title">{event.name}</h3>
         {isUpcoming && (
           event.isFree ? (
-            <p className="event-card__meta" style={{ color: "#fecc01", fontWeight: 700 }}>🎟 Free Entry</p>
+            <p className="event-card__meta" style={{ color: "#9bca3b", fontWeight: 700 }}>🎟 Free Entry</p>
           ) : event.isEarlyBird && event.earlyBirdAmount != null ? (
             <p className="event-card__meta" style={{ display: "flex", alignItems: "center", flexWrap: "wrap", gap: "5px" }}>
               🎟
               <span style={{ textDecoration: "line-through", color: "rgba(255,255,255,0.5)", textDecorationColor: "rgba(255,255,255,0.6)" }}>₹{event.amount}</span>
-              <span style={{ color: "#fecc01", fontWeight: 700 }}>₹{event.earlyBirdAmount}</span>
-              <span style={{ background: "rgba(254,204,1,0.15)", color: "#fecc01", border: "1px solid rgba(254,204,1,0.35)", borderRadius: 3, fontSize: "9px", fontWeight: 700, letterSpacing: "0.1em", padding: "1px 5px", textTransform: "uppercase" }}>Early Bird</span>
+              <span style={{ color: "#9bca3b", fontWeight: 700 }}>₹{event.earlyBirdAmount}</span>
+              <span style={{ background: "rgba(155,202,59,0.15)", color: "#9bca3b", border: "1px solid rgba(155,202,59,0.35)", borderRadius: 3, fontSize: "9px", fontWeight: 700, letterSpacing: "0.1em", padding: "1px 5px", textTransform: "uppercase" }}>Early Bird</span>
             </p>
           ) : (
             <p className="event-card__meta">🎟 ₹{event.amount} per person</p>

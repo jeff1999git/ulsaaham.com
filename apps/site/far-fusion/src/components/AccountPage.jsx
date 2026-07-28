@@ -104,7 +104,7 @@ function RepayPanel({ ticket, user, onSuccess, onClose }) {
 
   return (
     <div style={{ position: "fixed", inset: 0, background: "rgba(0,0,0,0.75)", zIndex: 60, display: "flex", alignItems: "center", justifyContent: "center", padding: 16 }}>
-      <div style={{ background: "#011a01", border: "1px solid rgba(254,204,1,0.2)", borderRadius: 12, padding: "28px 24px", maxWidth: 420, width: "100%" }}>
+      <div style={{ background: "#011a01", border: "1px solid rgba(155,202,59,0.2)", borderRadius: 12, padding: "28px 24px", maxWidth: 420, width: "100%" }}>
         <button onClick={onClose} style={{ float: "right", background: "none", border: "none", color: "rgba(255,255,255,0.35)", cursor: "pointer", fontSize: 20, lineHeight: 1 }}>✕</button>
         <h3 className="font-serif text-xl text-light mb-1">Complete Payment</h3>
 
