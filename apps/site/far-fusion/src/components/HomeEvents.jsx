@@ -48,9 +48,9 @@ export default function HomeEvents() {
       ) : error ? (
         <p className="mt-12 text-center text-light/40 py-16">{error}</p>
       ) : (
-        <div className="mt-12 grid gap-6 md:grid-cols-2 lg:grid-cols-4">
+        <div className="home-events-grid grid gap-6 grid-cols-[repeat(auto-fit,minmax(300px,1fr))]">
           {events.map((ev, i) => (
-            <EventCard key={ev.id} event={ev} index={i} />
+            <EventCard key={ev.id} event={ev} index={i} layout="horizontal" />
           ))}
         </div>
       )}

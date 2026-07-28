@@ -432,12 +432,6 @@ a:hover {
 .past-runner__track--paused {
   animation-play-state: paused;
 }
-.past-runner--static .past-runner__track {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, clamp(100px, 14vw, 190px));
-  justify-content: center;
-  width: 100%;
-}
 
 .past-runner__item {
   position: relative;
@@ -808,6 +802,140 @@ a:hover {
 .event-card:hover .event-card__image img { transform: scale(1.05); }
 .event-card--static:hover { transform: none; }
 .event-card--static:hover .event-card__image img { transform: none; }
+.event-card--horizontal {
+  flex-direction: row;
+  align-items: stretch;
+  max-width: 420px;
+}
+.event-card--horizontal .event-card__image {
+  aspect-ratio: auto;
+  width: clamp(110px, 30vw, 160px);
+  flex-shrink: 0;
+}
+.event-card--horizontal .event-card__body {
+  padding: 0.9rem 1.1rem;
+  gap: 0.3rem;
+  justify-content: center;
+}
+.event-card--horizontal .event-card__cta {
+  margin-top: 0.3rem;
+}
+.event-card--horizontal .event-card__title {
+  font-size: 1rem;
+}
+.home-events-grid {
+  margin-top: 3rem;
+}
+
+/* The #gallery slide (Our Events + Past Events) is a fixed 100dvh pagination
+   section with no scroll — on shorter windows its combined content can run
+   past the fold, so vertical spacing scales down as height shrinks. */
+@media (max-height: 900px) {
+  #gallery {
+    padding-top: 4.5rem;
+    padding-bottom: 1rem;
+  }
+  .home-events-grid {
+    margin-top: 1.75rem;
+  }
+  .past-runner-wrap {
+    margin-top: 1rem;
+  }
+  .past-runner {
+    padding: 1rem 0;
+  }
+  .past-runner__item {
+    width: clamp(90px, 12vw, 150px);
+  }
+}
+
+@media (max-height: 650px) {
+  #gallery {
+    padding-top: 4rem;
+    padding-bottom: 0.5rem;
+  }
+  .home-events-grid {
+    margin-top: 1rem;
+  }
+  .past-runner-wrap {
+    margin-top: 0.5rem;
+  }
+  .past-runner-heading {
+    margin-bottom: 0.75rem;
+  }
+  .past-runner {
+    padding: 0.5rem 0;
+  }
+  .past-runner__item {
+    width: clamp(70px, 10vw, 110px);
+  }
+  .event-card--horizontal {
+    max-width: 340px;
+  }
+  .event-card--horizontal .event-card__image {
+    width: clamp(80px, 22vw, 120px);
+  }
+  .event-card--horizontal .event-card__body {
+    padding: 0.6rem 0.8rem;
+    gap: 0.15rem;
+  }
+  .event-card--horizontal .event-card__title {
+    font-size: 0.85rem;
+  }
+  .event-card--horizontal .event-card__meta {
+    font-size: 0.7rem;
+  }
+}
+
+@media (max-height: 460px) {
+  #gallery {
+    padding-top: 4.5rem;
+    padding-bottom: 0.25rem;
+  }
+  #gallery .section-title {
+    font-size: 1.25rem;
+    padding-bottom: 0.35rem;
+  }
+  #gallery .section-subtitle {
+    margin-top: 0.35rem;
+    line-height: 1.3;
+  }
+  .home-events-grid {
+    margin-top: 0.2rem;
+  }
+  .past-runner-wrap {
+    margin-top: 0.15rem;
+  }
+  .past-runner-heading {
+    margin-bottom: 0.15rem;
+  }
+  .past-runner {
+    padding: 0.1rem 0;
+  }
+  .past-runner__item {
+    width: clamp(50px, 8vw, 75px);
+  }
+  .event-card--horizontal {
+    max-width: 280px;
+  }
+  .event-card--horizontal .event-card__image {
+    width: clamp(60px, 18vw, 90px);
+  }
+  .event-card--horizontal .event-card__body {
+    padding: 0.3rem 0.5rem;
+    gap: 0.05rem;
+  }
+  .event-card--horizontal .event-card__title {
+    font-size: 0.75rem;
+  }
+  .event-card--horizontal .event-card__meta {
+    font-size: 0.6rem;
+  }
+  .event-card--horizontal .event-card__cta {
+    margin-top: 0.15rem;
+    font-size: 0.65rem;
+  }
+}
 .event-card__placeholder {
   width: 100%;
   height: 100%;

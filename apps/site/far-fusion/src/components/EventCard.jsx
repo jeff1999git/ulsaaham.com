@@ -1,6 +1,6 @@
 import { optimizeCloudinary } from "../lib/image.js";
 
-export default function EventCard({ event, linkable = true, index = 0 }) {
+export default function EventCard({ event, linkable = true, index = 0, layout = "vertical" }) {
   const date = new Intl.DateTimeFormat("en-IN", {
     day: "numeric", month: "short", year: "numeric",
   }).format(new Date(event.date));
@@ -13,7 +13,7 @@ export default function EventCard({ event, linkable = true, index = 0 }) {
     : { style: { cursor: "default" } };
 
   return (
-    <Tag {...tagProps} className={`event-card${linkable ? " group" : " event-card--static"}`}>
+    <Tag {...tagProps} className={`event-card${layout === "horizontal" ? " event-card--horizontal" : ""}${linkable ? " group" : " event-card--static"}`}>
       <div className="event-card__image">
         {event.bannerImageUrl ? (
           <img
