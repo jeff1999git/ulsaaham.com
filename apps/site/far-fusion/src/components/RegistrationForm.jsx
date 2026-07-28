@@ -294,9 +294,8 @@ export default function RegistrationForm({ event }) {
     setGlobalError(null);
     if (field === "numberOfParticipants" && isComplimentary && appliedCode.remainingUses != null) {
       const n = Number(value);
-      const rem = appliedCode.remainingUses;
-      if (n > rem) {
-        setFieldErrors((fe) => ({ ...fe, numberOfParticipants: [`Only ${rem} ${rem === 1 ? "entry" : "entries"} remaining on this code.`] }));
+      if (n > appliedCode.remainingUses) {
+        setFieldErrors((fe) => ({ ...fe, numberOfParticipants: ["This code doesn't cover that many participants."] }));
       }
     }
   };
@@ -311,8 +310,7 @@ export default function RegistrationForm({ event }) {
     if (!form.age.trim()) errors.age = ["Age is required."];
     else if (!Number.isInteger(age) || age < 1 || age > 120) errors.age = ["Enter a valid age between 1 and 120."];
     if (isComplimentary && appliedCode.remainingUses != null && count > appliedCode.remainingUses) {
-      const rem = appliedCode.remainingUses;
-      errors.numberOfParticipants = [`Only ${rem} ${rem === 1 ? "entry" : "entries"} remaining on this code.`];
+      errors.numberOfParticipants = ["This code doesn't cover that many participants."];
     }
     return errors;
   };
@@ -639,9 +637,6 @@ export default function RegistrationForm({ event }) {
               {appliedCode.type === "complimentary" ? (
                 <span className="coupon-applied__text">
                   ✓ <strong>{appliedCode.code}</strong> — Free entry
-                  {appliedCode.remainingUses != null && (
-                    <span style={{ opacity: 0.5, fontWeight: 400, marginLeft: 4 }}>({appliedCode.remainingUses} use{appliedCode.remainingUses !== 1 ? "s" : ""} left)</span>
-                  )}
                 </span>
               ) : (
                 <span className="coupon-applied__text">
