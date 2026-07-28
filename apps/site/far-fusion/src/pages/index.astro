@@ -1,4 +1,4 @@
-﻿---
+---
 export const prerender = true;
 import BaseLayout from "../layouts/BaseLayout.astro";
 import HomeEvents from "../components/HomeEvents.jsx";
@@ -79,120 +79,238 @@ import BrandPartners from "../components/BrandPartners.jsx";
     }
   </script>
 
-  <section class="hero-video">
-    <video
-      class="hero-video__media hero-video__media--desktop"
-      src="https://res.cloudinary.com/dk26ldwpu/video/upload/q_auto/f_auto/v1781270617/landscape_takqtx.webm"
-      autoplay
-      muted
-      loop
-      playsinline
-    ></video>
-    <video
-      class="hero-video__media hero-video__media--mobile"
-      src="https://res.cloudinary.com/dk26ldwpu/video/upload/q_auto/f_auto/v1781283333/Boobu_Dj_Boobu_Djboobu_Thrissur_Kerala_Dj_Boobu_kf7rs0.webm"
-      autoplay
-      muted
-      loop
-      playsinline
-    ></video>
-    <div class="hero-quote">
-      <p class="hero-quote__text">"Entertainment is Pure Experience"</p>
-      <a href="#gallery" id="hero-explore-btn" class="hero-explore-btn">
-        <span id="hero-explore-btn__label" class="hero-explore-btn__label">Explore Events</span>
-        <svg class="hero-explore-btn__icon" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 6 15 12 9 18"/></svg>
-      </a>
+  <div id="fp-viewport" class="fp-viewport">
+    <div id="fp-wrap" class="fp-wrap">
+
+      <div class="fp-section">
+        <section class="hero-video">
+          <video
+            class="hero-video__media hero-video__media--desktop"
+            src="https://res.cloudinary.com/dk26ldwpu/video/upload/q_auto/f_auto/v1781270617/landscape_takqtx.webm"
+            autoplay
+            muted
+            loop
+            playsinline
+          ></video>
+          <video
+            class="hero-video__media hero-video__media--mobile"
+            src="https://res.cloudinary.com/dk26ldwpu/video/upload/q_auto/f_auto/v1781283333/Boobu_Dj_Boobu_Djboobu_Thrissur_Kerala_Dj_Boobu_kf7rs0.webm"
+            autoplay
+            muted
+            loop
+            playsinline
+          ></video>
+          <div class="hero-quote">
+            <p class="hero-quote__text">"Entertainment is Pure Experience"</p>
+            <a href="#gallery" id="hero-explore-btn" class="hero-explore-btn">
+              <span id="hero-explore-btn__label" class="hero-explore-btn__label">Explore Events</span>
+              <svg class="hero-explore-btn__icon" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 6 15 12 9 18"/></svg>
+            </a>
+          </div>
+
+          <script is:inline>
+            document.addEventListener("DOMContentLoaded", function () {
+              var items = [
+                { label: "Explore Events", href: "#gallery" },
+                { label: "Explore Partners", href: "#testimonials" },
+                { label: "Connect With Us", href: "#connect" },
+              ];
+              var link = document.getElementById("hero-explore-btn");
+              var label = document.getElementById("hero-explore-btn__label");
+              if (!link || !label) return;
+              var i = 0;
+              setInterval(function () {
+                i = (i + 1) % items.length;
+                label.style.opacity = "0";
+                setTimeout(function () {
+                  label.textContent = items[i].label;
+                  link.setAttribute("href", items[i].href);
+                  label.style.opacity = "1";
+                }, 250);
+              }, 3000);
+            });
+          </script>
+
+          <a href="#gallery" class="hero-scroll-hint" aria-label="Scroll to events">
+            <span class="nav-chevrons" aria-hidden="true">
+              <svg class="nav-chevron" xmlns="http://www.w3.org/2000/svg" width="18" height="11" viewBox="0 0 24 14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="2 2 12 12 22 2"/></svg>
+              <svg class="nav-chevron" xmlns="http://www.w3.org/2000/svg" width="18" height="11" viewBox="0 0 24 14" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="2 2 12 12 22 2"/></svg>
+              <svg class="nav-chevron" xmlns="http://www.w3.org/2000/svg" width="18" height="11" viewBox="0 0 24 14" fill="none" stroke="currentColor" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"><polyline points="2 2 12 12 22 2"/></svg>
+              <svg class="nav-chevron" xmlns="http://www.w3.org/2000/svg" width="18" height="11" viewBox="0 0 24 14" fill="none" stroke="currentColor" stroke-width="5.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="2 2 12 12 22 2"/></svg>
+            </span>
+          </a>
+
+          <script is:inline>
+            document.addEventListener("DOMContentLoaded", function () {
+              var btn = document.getElementById("hero-sound-toggle");
+              var iconOff = document.getElementById("hero-sound-off");
+              var iconOn = document.getElementById("hero-sound-on");
+              var videos = Array.from(document.querySelectorAll(".hero-video__media"));
+              if (!btn || !videos.length) return;
+              btn.addEventListener("click", function () {
+                var wasMuted = videos[0].muted;
+                videos.forEach(function (v) {
+                  v.muted = !wasMuted;
+                  if (wasMuted) { v.play(); }
+                });
+                iconOff.style.display = wasMuted ? "none" : "";
+                iconOn.style.display = wasMuted ? "" : "none";
+                btn.setAttribute("aria-label", wasMuted ? "Mute video" : "Unmute video");
+              });
+            });
+          </script>
+        </section>
+      </div>
+
+      <div class="fp-section">
+        <section class="py-14 md:py-24 text-light relative isolate z-10" id="gallery">
+          <HomeEvents client:load />
+          <PastEventsRunner client:load />
+        </section>
+      </div>
+
+      <div class="fp-section">
+        <BrandPartners client:load />
+      </div>
+
+      <div class="fp-section">
+        <section class="relative isolate overflow-hidden flex flex-col justify-center py-14 md:py-24 text-light z-10 border-t border-white/10" id="connect">
+          <div class="absolute inset-0">
+            <div class="absolute inset-0 bg-[radial-gradient(circle_at_top,_rgba(155,202,59,0.10),_transparent)]"></div>
+            <div class="absolute right-10 top-10 h-48 w-48 rounded-full bg-accent/20 blur-3xl"></div>
+          </div>
+          <div class="relative mx-auto max-w-5xl px-4 sm:px-6 text-center">
+            <p class="animate-fade-up text-sm font-bold uppercase tracking-[0.4em] text-light/90">Connect With Us</p>
+            <div class="mt-8 flex flex-col items-center justify-center gap-4 sm:flex-row sm:gap-6">
+              <a
+                href="https://mail.google.com/mail/?view=cm&to=ulsaham1@gmail.com"
+                target="_blank"
+                rel="noreferrer"
+                class="inline-flex items-center justify-center rounded-full px-8 py-3 text-base font-semibold text-accent transition-transform duration-300 hover:-translate-y-1 hover:scale-[1.04]"
+                style="background: rgba(155,202,59,0.12); border: 1px solid rgba(155,202,59,0.4); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);"
+              >
+                ulsaham1@gmail.com
+              </a>
+              <a
+                href="https://wa.me/9446266011"
+                target="_blank"
+                rel="noreferrer"
+                class="inline-flex items-center justify-center rounded-full px-8 py-3 text-base font-semibold transition-transform duration-300 hover:-translate-y-1 hover:scale-[1.04]"
+                style="background: rgba(37,211,102,0.12); border: 1px solid rgba(37,211,102,0.4); color: rgb(37,211,102); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);"
+              >
+                WhatsApp →
+              </a>
+            </div>
+          </div>
+        </section>
+      </div>
+
     </div>
 
-    <script is:inline>
-      document.addEventListener("DOMContentLoaded", function () {
-        var items = [
-          { label: "Explore Events", href: "#gallery" },
-          { label: "Explore Partners", href: "#testimonials" },
-          { label: "Connect With Us", href: "#connect" },
-        ];
-        var link = document.getElementById("hero-explore-btn");
-        var label = document.getElementById("hero-explore-btn__label");
-        if (!link || !label) return;
-        var i = 0;
-        setInterval(function () {
-          i = (i + 1) % items.length;
-          label.style.opacity = "0";
-          setTimeout(function () {
-            label.textContent = items[i].label;
-            link.setAttribute("href", items[i].href);
-            label.style.opacity = "1";
-          }, 250);
-        }, 3000);
+    <div class="fp-dots" id="fp-dots">
+      <button type="button" class="fp-dot" aria-label="Go to landing"></button>
+      <button type="button" class="fp-dot" aria-label="Go to events"></button>
+      <button type="button" class="fp-dot" aria-label="Go to partners"></button>
+      <button type="button" class="fp-dot" aria-label="Go to connect"></button>
+    </div>
+  </div>
+
+  <script>
+    document.addEventListener("DOMContentLoaded", function () {
+      var mq = window.matchMedia("(min-width: 900px)");
+      var wrap = document.getElementById("fp-wrap");
+      var sections = Array.from(document.querySelectorAll(".fp-section"));
+      var dots = Array.from(document.querySelectorAll(".fp-dot"));
+      if (!wrap || !sections.length) return;
+
+      var anchorIndex = { "#gallery": 1, "#testimonials": 2, "#connect": 3 };
+      var current = 0;
+      var animating = false; // true while the slide transition is actually running
+      var wheelLocked = false; // true from the moment a gesture triggers a nav until the whole gesture has ended
+      var wheelIdleTimer = null;
+
+      function render() {
+        wrap.style.transform = "translateY(-" + (current * (100 / sections.length)) + "%)";
+        dots.forEach(function (d, i) { d.classList.toggle("is-active", i === current); });
+      }
+
+      function goTo(index) {
+        index = Math.max(0, Math.min(sections.length - 1, index));
+        if (index === current) return;
+        current = index;
+        animating = true;
+        render();
+        window.setTimeout(function () { animating = false; }, 800);
+      }
+
+      // A single physical scroll gesture (especially a trackpad swipe) fires many
+      // "wheel" events in a row. Keep pushing the release out on every one of them
+      // so the whole gesture only ever advances one page — never resolves until
+      // both the transition has finished AND the wheel has gone quiet for a beat.
+      function armWheelRelease() {
+        clearTimeout(wheelIdleTimer);
+        wheelIdleTimer = setTimeout(function release() {
+          if (animating) { wheelIdleTimer = setTimeout(release, 100); return; }
+          wheelLocked = false;
+        }, 150);
+      }
+
+      if (mq.matches && location.hash && anchorIndex[location.hash] != null) {
+        current = anchorIndex[location.hash];
+      }
+      render();
+
+      window.addEventListener(
+        "wheel",
+        function (e) {
+          if (!mq.matches || window.scrollY > 0) return;
+
+          if (wheelLocked) {
+            e.preventDefault();
+            armWheelRelease();
+            return;
+          }
+
+          var dir = e.deltaY > 0 ? 1 : -1;
+
+          if (dir > 0) {
+            if (current === sections.length - 1) return; // let native scroll reveal the footer
+            e.preventDefault();
+            wheelLocked = true;
+            goTo(current + 1);
+          } else {
+            e.preventDefault();
+            if (current === 0) return;
+            wheelLocked = true;
+            goTo(current - 1);
+          }
+          armWheelRelease();
+        },
+        { passive: false }
+      );
+
+      window.addEventListener("keydown", function (e) {
+        if (!mq.matches || window.scrollY > 0 || animating) return;
+        if (e.key === "ArrowDown" || e.key === "PageDown") { e.preventDefault(); goTo(current + 1); }
+        else if (e.key === "ArrowUp" || e.key === "PageUp") { e.preventDefault(); goTo(current - 1); }
       });
-    </script>
 
-    <a href="#gallery" class="hero-scroll-hint" aria-label="Scroll to events">
-      <span class="nav-chevrons" aria-hidden="true">
-        <svg class="nav-chevron" xmlns="http://www.w3.org/2000/svg" width="18" height="11" viewBox="0 0 24 14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="2 2 12 12 22 2"/></svg>
-        <svg class="nav-chevron" xmlns="http://www.w3.org/2000/svg" width="18" height="11" viewBox="0 0 24 14" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="2 2 12 12 22 2"/></svg>
-        <svg class="nav-chevron" xmlns="http://www.w3.org/2000/svg" width="18" height="11" viewBox="0 0 24 14" fill="none" stroke="currentColor" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"><polyline points="2 2 12 12 22 2"/></svg>
-        <svg class="nav-chevron" xmlns="http://www.w3.org/2000/svg" width="18" height="11" viewBox="0 0 24 14" fill="none" stroke="currentColor" stroke-width="5.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="2 2 12 12 22 2"/></svg>
-      </span>
-    </a>
-
-    <script is:inline>
-      document.addEventListener("DOMContentLoaded", function () {
-        var btn = document.getElementById("hero-sound-toggle");
-        var iconOff = document.getElementById("hero-sound-off");
-        var iconOn = document.getElementById("hero-sound-on");
-        var videos = Array.from(document.querySelectorAll(".hero-video__media"));
-        if (!btn || !videos.length) return;
-        btn.addEventListener("click", function () {
-          var wasMuted = videos[0].muted;
-          videos.forEach(function (v) {
-            v.muted = !wasMuted;
-            if (wasMuted) { v.play(); }
-          });
-          iconOff.style.display = wasMuted ? "none" : "";
-          iconOn.style.display = wasMuted ? "" : "none";
-          btn.setAttribute("aria-label", wasMuted ? "Mute video" : "Unmute video");
+      document.querySelectorAll('a[href^="#"]').forEach(function (link) {
+        link.addEventListener("click", function (e) {
+          var idx = anchorIndex[link.getAttribute("href")];
+          if (!mq.matches || idx == null) return;
+          e.preventDefault();
+          goTo(idx);
         });
       });
-    </script>
-  </section>
 
-  <section class="py-14 md:py-24 text-light relative isolate z-10" id="gallery">
-    <HomeEvents client:load />
-    <PastEventsRunner client:load />
-  </section>
+      dots.forEach(function (dot, i) {
+        dot.addEventListener("click", function () { goTo(i); });
+      });
 
-  <BrandPartners client:load />
-
-  <section class="relative isolate overflow-hidden py-14 md:py-24 text-light z-10 border-t border-white/10" id="connect">
-    <div class="absolute inset-0">
-      <div class="absolute inset-0 bg-[radial-gradient(circle_at_top,_rgba(155,202,59,0.10),_transparent)]"></div>
-      <div class="absolute right-10 top-10 h-48 w-48 rounded-full bg-accent/20 blur-3xl"></div>
-    </div>
-    <div class="relative mx-auto max-w-5xl px-4 sm:px-6 text-center">
-      <p class="animate-fade-up text-sm font-bold uppercase tracking-[0.4em] text-light/90">Connect With Us</p>
-      <div class="mt-8 flex flex-col items-center justify-center gap-4 sm:flex-row sm:gap-6">
-        <a
-          href="https://mail.google.com/mail/?view=cm&to=ulsaham1@gmail.com"
-          target="_blank"
-          rel="noreferrer"
-          class="inline-flex items-center justify-center rounded-full px-8 py-3 text-base font-semibold text-accent transition-transform duration-300 hover:-translate-y-1 hover:scale-[1.04]"
-          style="background: rgba(155,202,59,0.12); border: 1px solid rgba(155,202,59,0.4); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);"
-        >
-          ulsaham1@gmail.com
-        </a>
-        <a
-          href="https://wa.me/9446266011"
-          target="_blank"
-          rel="noreferrer"
-          class="inline-flex items-center justify-center rounded-full px-8 py-3 text-base font-semibold transition-transform duration-300 hover:-translate-y-1 hover:scale-[1.04]"
-          style="background: rgba(37,211,102,0.12); border: 1px solid rgba(37,211,102,0.4); color: rgb(37,211,102); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);"
-        >
-          WhatsApp →
-        </a>
-      </div>
-    </div>
-  </section>
+      window.addEventListener("resize", render);
+    });
+  </script>
 
   <footer class="py-12 text-light relative isolate z-10 border-t border-white/10">
     <div class="mx-auto flex max-w-6xl justify-center px-6">

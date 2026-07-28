@@ -15,6 +15,58 @@ body {
   color: #ffffff;
 }
 
+/* ─── Home page: paginated full-screen slides (desktop only) ─── */
+@media (min-width: 900px) {
+  .fp-viewport {
+    height: 100vh;
+    height: 100dvh;
+    overflow: hidden;
+  }
+  .fp-wrap {
+    height: 400%;
+    transition: transform 0.8s cubic-bezier(0.65, 0, 0.35, 1);
+    will-change: transform;
+  }
+  .fp-section {
+    height: 25%;
+    overflow: hidden;
+    display: grid;
+  }
+  .fp-section > * {
+    min-height: 0;
+  }
+}
+
+.fp-dots {
+  position: fixed;
+  right: clamp(1rem, 2.5vw, 2rem);
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 90;
+  display: none;
+  flex-direction: column;
+  gap: 14px;
+}
+@media (min-width: 900px) {
+  .fp-dots { display: flex; }
+}
+.fp-dot {
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.25);
+  border: 1px solid rgba(255, 255, 255, 0.35);
+  padding: 0;
+  cursor: pointer;
+  transition: background 0.25s ease, transform 0.25s ease, border-color 0.25s ease;
+}
+.fp-dot:hover { border-color: rgba(155, 202, 59, 0.6); }
+.fp-dot.is-active {
+  background: #9bca3b;
+  border-color: #9bca3b;
+  transform: scale(1.3);
+}
+
 a {
   color: #9bca3b;
   transition: color 0.3s ease;
@@ -273,6 +325,16 @@ a:hover {
   gap: clamp(2rem, 6vw, 6rem);
   width: max-content;
   animation: scroll-clients-horizontal 42s linear infinite;
+}
+.client-carousel__track--paused {
+  animation-play-state: paused;
+}
+
+.client-carousel__skeleton {
+  width: clamp(72px, 10vw, 96px);
+  height: clamp(72px, 10vw, 96px);
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.08);
 }
 
 .client-carousel__item {
