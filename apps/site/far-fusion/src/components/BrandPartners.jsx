@@ -50,7 +50,7 @@ export default function BrandPartners() {
                 <img
                   src={optimizeCloudinary(partner.logoUrl, 192)}
                   alt={partner.name}
-                  loading="lazy"
+                  loading={scrollable ? "eager" : "lazy"}
                   decoding="async"
                   width="96"
                   height="96"

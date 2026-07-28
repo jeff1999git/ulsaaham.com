@@ -138,3 +138,84 @@ Browserslist: browsers data (caniuse-lite) is 8 months old. Please run:
 [2m19:59:17[22m [34m[200][39m / [2m16ms[22m
 [2m19:59:19[22m [34m[200][39m / [2m15ms[22m
 [2m19:59:22[22m [34m[200][39m / [2m12ms[22m
+[2m19:59:25[22m [34m[200][39m / [2m15ms[22m
+[2m19:59:28[22m [34m[200][39m / [2m17ms[22m
+[2m19:59:31[22m [34m[200][39m / [2m10ms[22m
+[2m19:59:33[22m [34m[200][39m / [2m13ms[22m
+[2m20:00:20[22m [34m[200][39m / [2m24ms[22m
+[2m20:00:35[22m [34m[200][39m / [2m13ms[22m
+[2m20:01:00[22m [34m[200][39m / [2m10ms[22m
+[2m20:03:57[22m [34m[watch][39m src/components/RegistrationForm.jsx
+[2m20:03:57[22m [34m[watch][39m src/components/RegistrationForm.jsx
+[2m20:03:58[22m [34m[200][39m / [2m83ms[22m
+[2m20:03:58[22m [34m[200][39m / [2m21ms[22m
+[2m20:04:09[22m [34m[watch][39m src/components/RegistrationForm.jsx
+[2m20:04:09[22m [34m[watch][39m src/components/RegistrationForm.jsx
+[2m20:04:09[22m [34m[200][39m / [2m83ms[22m
+[2m20:04:09[22m [34m[200][39m / [2m10ms[22m
+[2m20:04:21[22m [34m[watch][39m src/components/RegistrationForm.jsx
+[2m20:04:21[22m [34m[watch][39m src/components/RegistrationForm.jsx
+[2m20:04:21[22m [34m[200][39m / [2m77ms[22m
+[2m20:04:21[22m [34m[200][39m / [2m36ms[22m
+[2m20:04:31[22m [34m[watch][39m src/components/RegistrationForm.jsx
+[2m20:04:31[22m [34m[watch][39m src/components/RegistrationForm.jsx
+[2m20:04:32[22m [34m[200][39m / [2m115ms[22m
+[2m20:04:33[22m [34m[200][39m / [2m20ms[22m
+[2m20:05:19[22m [34m[200][39m /account [2m5ms[22m
+[2m20:05:21[22m [34m[200][39m /events [2m8ms[22m
+[2m20:05:27[22m [34m[200][39m /events/detail [2m8ms[22m
+[2m20:05:28[22m [34m[200][39m / [2m13ms[22m
+[2m20:05:36[22m [34m[200][39m /events/detail [2m7ms[22m
+[2m20:06:54[22m [34m[200][39m /events/detail [2m7ms[22m
+[2m20:06:54[22m [34m[200][39m /events/detail [2m5ms[22m
+[2m20:12:18[22m [34m[200][39m / [2m10ms[22m
+[2m20:12:25[22m [34m[200][39m /events/detail [2m6ms[22m
+[2m20:22:44[22m [34m[watch][39m /src/styles/global.css, /src/components/PastEventsRunner.jsx, /src/components/HomeEvents.jsx, /src/components/BrandPartners.jsx, /src/components/EventsList.jsx, /src/components/AccountPage.jsx, /src/components/EventDetail.jsx, /src/components/RegistrationForm.jsx
+[2m20:22:44[22m [34m[watch][39m src/lib/api.js
+[2m20:23:03[22m [34m[watch][39m /src/components/RegistrationForm.jsx, /src/styles/global.css
+[2m20:23:03[22m [34m[watch][39m src/components/RegistrationForm.jsx
+[2m20:24:50[22m [34m[200][39m /events/detail [2m94ms[22m
+[2m20:29:19[22m [34m[200][39m /events/detail [2m8ms[22m
+[2m20:29:19[22m [34m[200][39m /events/detail [2m7ms[22m
+[send-ticket] mail error: connect ECONNREFUSED 127.0.0.1:587
+[2m20:29:39[22m [31m[500][39m [31mPOST[39m /api/send-ticket [2m45ms[22m
+[2m20:29:43[22m [34m[200][39m /account [2m6ms[22m
+[2m20:30:05[22m [34m[200][39m /events [2m9ms[22m
+[2m20:30:13[22m [34m[200][39m /account [2m5ms[22m
+[2m20:31:36[22m [34m[200][39m /events [2m9ms[22m
+[2m20:31:40[22m [34m[200][39m /events/detail [2m8ms[22m
+[send-ticket] mail error: connect ECONNREFUSED 127.0.0.1:587
+[2m20:32:47[22m [31m[500][39m [31mPOST[39m /api/send-ticket [2m19ms[22m
+[2m20:32:54[22m [34m[200][39m /account [2m6ms[22m
+[2m20:36:54[22m [34m[watch][39m /src/components/RegistrationForm.jsx, /src/styles/global.css
+[2m20:36:54[22m [34m[watch][39m src/components/RegistrationForm.jsx
+[2m20:37:13[22m [34m[watch][39m /src/components/RegistrationForm.jsx, /src/styles/global.css
+[2m20:37:13[22m [34m[watch][39m src/components/RegistrationForm.jsx
+[2m20:37:22[22m [34m[watch][39m /src/components/RegistrationForm.jsx, /src/styles/global.css
+[2m20:37:22[22m [34m[watch][39m src/components/RegistrationForm.jsx
+[2m20:40:05[22m [34m[200][39m /account [2m88ms[22m
+[2m20:40:10[22m [34m[200][39m /account [2m5ms[22m
+[2m20:40:10[22m [34m[200][39m /account [2m5ms[22m
+[2m20:40:31[22m [34m[200][39m /account [2m8ms[22m
+[2m20:40:34[22m [34m[200][39m /events [2m9ms[22m
+[2m20:40:41[22m [34m[200][39m /events/detail [2m4ms[22m
+[send-ticket] mail error: connect ECONNREFUSED 127.0.0.1:587
+[2m20:41:36[22m [31m[500][39m [31mPOST[39m /api/send-ticket [2m30ms[22m
+[2m20:41:38[22m [34m[200][39m /account [2m5ms[22m
+[2m20:42:00[22m [34m[200][39m / [2m8ms[22m
+[2m20:46:22[22m [34m[200][39m / [2m17ms[22m
+[2m20:46:29[22m [34m[200][39m / [2m9ms[22m
+[2m20:46:29[22m [34m[watch][39m /src/styles/global.css
+[2m20:46:31[22m [34m[200][39m / [2m610ms[22m
+[2m20:46:31[22m [34m[200][39m / [2m11ms[22m
+[2m20:47:03[22m [34m[watch][39m /src/styles/global.css
+[2m20:47:04[22m [34m[200][39m / [2m265ms[22m
+[2m20:47:04[22m [34m[200][39m / [2m14ms[22m
+[2m20:47:24[22m [34m[watch][39m /src/components/BrandPartners.jsx, /src/styles/global.css
+[2m20:47:24[22m [34m[watch][39m src/components/BrandPartners.jsx
+[2m20:48:23[22m [34m[200][39m / [2m101ms[22m
+[2m20:48:24[22m [34m[200][39m / [2m8ms[22m
+[2m20:49:05[22m [34m[200][39m / [2m12ms[22m
+[2m20:49:08[22m [34m[200][39m / [2m11ms[22m
+[2m20:49:35[22m [34m[watch][39m /src/styles/global.css
+[2m20:49:36[22m [34m[200][39m / [2m291ms[22m
