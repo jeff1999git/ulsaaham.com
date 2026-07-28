@@ -31,7 +31,7 @@ export default function BrandPartners() {
   const items = partners ? (scrollable ? [...partners, ...partners] : partners) : [];
 
   return (
-    <section className="partners-section py-14 md:py-24 text-light relative isolate z-10 border-t border-white/10" id="testimonials">
+    <section className="partners-section pt-16 sm:pt-24 pb-6 md:pb-10 text-light relative isolate z-10 border-t border-white/10" id="testimonials">
       <div className="mx-auto max-w-6xl px-6">
         <div className="mx-auto max-w-2xl px-4 sm:px-6 text-center">
           <h2 className="section-title">Our Partners</h2>

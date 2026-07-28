@@ -33,6 +33,7 @@ body {
 }
 .fp-section > * {
   min-height: 0;
+  min-width: 0;
 }
 
 .fp-dots {
@@ -376,7 +377,7 @@ a:hover {
 /* ── Past Events Runner ─────────────────────────────────────────────────────── */
 
 .past-runner-wrap {
-  margin-top: 4rem;
+  margin-top: 1.5rem;
 }
 
 .past-runner-heading {
