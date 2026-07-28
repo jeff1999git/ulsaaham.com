@@ -1,0 +1,51 @@
+{
+	"version": 3,
+	"routes": [
+		{
+			"handle": "filesystem"
+		},
+		{
+			"src": "^/_astro/(.*)$",
+			"headers": {
+				"cache-control": "public, max-age=31536000, immutable"
+			},
+			"continue": true
+		},
+		{
+			"src": "^/_server-islands/([^/]+?)/?$",
+			"dest": "_render"
+		},
+		{
+			"src": "^/_image/?$",
+			"dest": "_render"
+		},
+		{
+			"src": "^/api/auth/google/callback/?$",
+			"dest": "_render"
+		},
+		{
+			"src": "^/api/auth/google/?$",
+			"dest": "_render"
+		},
+		{
+			"src": "^/api/auth/send-otp/?$",
+			"dest": "_render"
+		},
+		{
+			"src": "^/api/auth/verify-otp/?$",
+			"dest": "_render"
+		},
+		{
+			"src": "^/api/public(?:/(.*?))?/?$",
+			"dest": "_render"
+		},
+		{
+			"src": "^/api/send-ticket/?$",
+			"dest": "_render"
+		},
+		{
+			"src": "^/auth/complete/?$",
+			"dest": "_render"
+		}
+	]
+}

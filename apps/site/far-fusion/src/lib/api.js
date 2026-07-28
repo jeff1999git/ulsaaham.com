@@ -85,17 +85,20 @@ export async function verifyPayment(slug, body) {
   }
 }
 
-export async function applyCoupon(slug, couponCode) {
-  const res = await fetch(`${BASE}/events/${encodeURIComponent(slug)}/apply-coupon`, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ couponCode }),
-  });
-  if (res.status === 429) {
-    return { ok: false, status: 429, data: { success: false, error: "Too many attempts. Please wait before trying again." } };
+export async function validateCode(slug, code) {
+  try {
+    const res = await fetch(`${BASE}/events/${encodeURIComponent(slug)}/validate-code`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ code }),
+    });
+    if (res.status === 429) {
+      return { ok: false, status: 429, data: { success: false, error: "Too many requests. Please try again later." } };
+    }
+    return { ok: res.ok, status: res.status, data: await res.json() };
+  } catch {
+    return { ok: false, status: 0, data: { success: false, error: "Network error. Please try again." } };
   }
-  const data = await res.json().catch(() => ({ error: `Server error (${res.status}). The coupon endpoint may not be available yet.` }));
-  return { ok: res.ok, status: res.status, data };
 }
 
 export async function fetchMyTickets(ticketCodes) {
