@@ -9,10 +9,15 @@
   color: #ffffff;
 }
 
+html {
+  overflow-x: hidden;
+}
+
 body {
   min-height: 100vh;
   background-color: #023301;
   color: #ffffff;
+  overflow-x: hidden;
 }
 
 /* ─── Home page: paginated full-screen slides (all viewport sizes) ─── */
@@ -32,6 +37,12 @@ body {
   display: grid;
 }
 .fp-section > * {
+  min-height: 0;
+  min-width: 0;
+}
+/* astro-island wrappers render as display:contents, so the browser treats
+   their children as the real grid items — min-width/height must land there too */
+.fp-section > astro-island > * {
   min-height: 0;
   min-width: 0;
 }
@@ -326,9 +337,11 @@ a:hover {
   animation-play-state: paused;
 }
 .client-carousel--static .client-carousel__track {
-  width: 100%;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, clamp(72px, 10vw, 96px));
   justify-content: center;
-  flex-wrap: wrap;
+  gap: 1.75rem;
+  width: 100%;
 }
 
 .client-carousel__skeleton {
