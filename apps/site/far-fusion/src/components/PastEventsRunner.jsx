@@ -48,11 +48,13 @@ export default function PastEventsRunner() {
         <div className={`past-runner__track${started ? "" : " past-runner__track--paused"}`}>
           {items.map((ev, i) => {
             const isOriginal = i < posters.length;
+            const Tag = isOriginal ? "a" : "div";
+            const tagProps = isOriginal ? { href: `/events/detail?slug=${ev.slug}` } : { "aria-hidden": "true" };
             return (
-              <div
+              <Tag
                 key={`${ev.id}-${i}`}
                 className="past-runner__item"
-                aria-hidden={!isOriginal ? "true" : "false"}
+                {...tagProps}
               >
                 <img
                   src={optimizeCloudinary(ev.bannerImageUrl, 400)}
@@ -65,7 +67,7 @@ export default function PastEventsRunner() {
                   onLoad={isOriginal ? handleLoad : undefined}
                 />
                 <div className="past-runner__label">{ev.name}</div>
-              </div>
+              </Tag>
             );
           })}
         </div>

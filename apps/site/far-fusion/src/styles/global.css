@@ -345,12 +345,14 @@ a:hover {
 
 .past-runner__item {
   position: relative;
+  display: block;
   flex-shrink: 0;
   width: clamp(100px, 14vw, 190px);
   aspect-ratio: 4 / 5;
   border-radius: 8px;
   overflow: hidden;
   border: 1px solid rgba(254, 204, 1, 0.1);
+  text-decoration: none;
   transition: transform 0.35s ease, box-shadow 0.35s ease, border-color 0.35s ease;
 }
 
