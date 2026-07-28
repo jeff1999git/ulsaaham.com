@@ -99,18 +99,6 @@ a:hover {
   overflow: hidden;
 }
 
-.hero-video::after {
-  content: "";
-  position: absolute;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  height: clamp(120px, 18vh, 220px);
-  background: linear-gradient(to bottom, transparent, #023301);
-  z-index: 1;
-  pointer-events: none;
-}
-
 .hero-video__media {
   position: absolute;
   inset: 0;
