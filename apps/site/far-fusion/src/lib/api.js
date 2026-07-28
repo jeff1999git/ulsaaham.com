@@ -87,10 +87,10 @@ export async function verifyPayment(slug, body) {
 
 export async function validateCode(slug, code) {
   try {
-    const res = await fetch(`${BASE}/events/${encodeURIComponent(slug)}/validate-code`, {
+    const res = await fetch(`${BASE}/events/${encodeURIComponent(slug)}/apply-coupon`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ code }),
+      body: JSON.stringify({ couponCode: code }),
     });
     if (res.status === 429) {
       return { ok: false, status: 429, data: { success: false, error: "Too many requests. Please try again later." } };

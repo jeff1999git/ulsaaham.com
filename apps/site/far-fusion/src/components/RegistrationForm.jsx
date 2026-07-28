@@ -347,13 +347,7 @@ export default function RegistrationForm({ event }) {
     }
 
     const cd = data.data;
-    if (cd.type === "complimentary" && cd.remainingUses === 0) {
-      setAppliedCode(null);
-      setPromoError("This code has no remaining entries.");
-      return;
-    }
-
-    setAppliedCode({ type: cd.type, code: cd.code, discount: cd.discount, remainingUses: cd.remainingUses });
+    setAppliedCode({ type: cd.type, code: cd.couponCode, discount: cd.discount, remainingUses: cd.remainingUses });
     setPromoError(null);
     // Clear any participant count error that may have been showing
     setFieldErrors((fe) => { const n = { ...fe }; delete n.numberOfParticipants; return n; });
