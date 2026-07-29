@@ -1,31 +1,9 @@
 $ astro dev
 [baseline-browser-mapping] The data in this module is over two months old.  To ensure accurate Baseline data, please update: `npm i baseline-browser-mapping@latest -D`
-[2m22:54:23[22m [34m[types][39m Generated [2m1ms[22m
-[2m22:54:23[22m [34m[content][39m Syncing content
-[2m22:54:23[22m [34m[content][39m Synced content
+[2m20:46:46[22m [34m[types][39m Generated [2m4ms[22m
+[2m20:46:46[22m [34m[content][39m Syncing content
+[2m20:46:46[22m [34m[content][39m Synced content
 
-[42m[1m astro [22m[49m [32mv5.15.4[39m [2mready in[22m 1738 [2mms[22m
+[42m[1m astro [22m[49m [32mv5.15.4[39m [2mready in[22m 5429 [2mms[22m
 
 [2m┃[22m Local    [36mhttp://localhost:4321/[39m
-[2m┃[22m Network  [2muse --host to expose[22m
-
-[2m22:54:23[22m [32mwatching for file changes...[39m
-Browserslist: browsers data (caniuse-lite) is 8 months old. Please run:
-  npx update-browserslist-db@latest
-  Why you should do it regularly: https://github.com/browserslist/update-db#readme
-[2m22:54:25[22m [34m[200][39m / [2m381ms[22m
-[2m22:55:13[22m [34m[watch][39m .vercel/output/static/about/index.html
-[2m22:55:13[22m [34m[watch][39m .vercel/output/static/account/index.html
-[2m22:55:13[22m [34m[watch][39m .vercel/output/static/events/detail/index.html
-[2m22:55:13[22m [34m[watch][39m .vercel/output/static/login/index.html
-[2m22:55:13[22m [34m[watch][39m .vercel/output/static/privacy/index.html
-[2m22:55:13[22m [34m[watch][39m .vercel/output/static/terms/index.html
-[2m22:55:13[22m Configuration file updated. Restarting...
-[2m22:55:13[22m [34m[watch][39m .vercel/output/static/index.html
-[2m22:55:13[22m [34m[watch][39m .vercel/output/static/events/index.html
-[2m22:55:13[22m [34m[watch][39m src/layouts/BaseLayout.astro
-[2m22:55:13[22m [34m[watch][39m src/layouts/BaseLayout.astro
-[2m22:55:14[22m [34m[vite][39m Re-optimizing dependencies because vite config has changed
-[2m22:55:14[22m [34m[content][39m Syncing content
-[2m22:55:14[22m [34m[content][39m Synced content
-[2m22:55:14[22m [34m[types][39m Generated [2m561ms[22m
