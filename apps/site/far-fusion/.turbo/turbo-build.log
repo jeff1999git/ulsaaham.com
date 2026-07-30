@@ -1,11 +1,64 @@
 $ astro build
-error: could not find bin metadata file
+[baseline-browser-mapping] The data in this module is over two months old.  To ensure accurate Baseline data, please update: `npm i baseline-browser-mapping@latest -D`
+[2m08:18:02[22m [34m[vite][39m Re-optimizing dependencies because vite config has changed
+[2m08:18:04[22m [34m[content][39m Syncing content
+[2m08:18:04[22m [34m[content][39m Synced content
+[2m08:18:04[22m [34m[types][39m Generated [2m2.33s[22m
+[2m08:18:04[22m [34m[build][39m output: [34m"server"[39m
+[2m08:18:04[22m [34m[build][39m mode: [34m"server"[39m
+[2m08:18:04[22m [34m[build][39m directory: [34mF:\Projects\ulsaaham.com\web-app\apps\site\far-fusion\dist\[39m
+[2m08:18:04[22m [34m[build][39m adapter: [32m@astrojs/vercel[39m
+[2m08:18:04[22m [34m[build][39m Collecting build info...
+[2m08:18:04[22m [34m[build][39m [32m✓ Completed in 2.64s.[39m
+[2m08:18:04[22m [34m[build][39m Building server entrypoints...
+Browserslist: browsers data (caniuse-lite) is 8 months old. Please run:
+  npx update-browserslist-db@latest
+  Why you should do it regularly: https://github.com/browserslist/update-db#readme
+[2m08:18:08[22m [34m[vite][39m [32m✓ built in 3.27s[39m
+[2m08:18:08[22m [34m[build][39m [32m✓ Completed in 3.34s.[39m
 
-Bun failed to remap this bin to its proper location within node_modules.
-This is an indication of a corrupted node_modules directory.
+[42m[30m building client (vite) [39m[49m
+[2m08:18:08[22m [34m[vite][39m transforming...
+[2m08:18:09[22m [34m[vite][39m [32m✓[39m 73 modules transformed.
+[2m08:18:09[22m [34m[vite][39m rendering chunks...
+[2m08:18:09[22m [34m[vite][39m computing gzip size...
+[2m08:18:09[22m [34m[vite][39m [2mdist/client/[22m[36m_astro/jsx-runtime.D_zvdyIk.js       [39m[1m[2m  0.73 kB[22m[1m[22m[2m │ gzip:  0.46 kB[22m
+[2m08:18:09[22m [34m[vite][39m [2mdist/client/[22m[36m_astro/auth.DO8xDwr8.js              [39m[1m[2m  0.80 kB[22m[1m[22m[2m │ gzip:  0.41 kB[22m
+[2m08:18:09[22m [34m[vite][39m [2mdist/client/[22m[36m_astro/PastEventsRunner.BNbUWEFN.js  [39m[1m[2m  1.49 kB[22m[1m[22m[2m │ gzip:  0.74 kB[22m
+[2m08:18:09[22m [34m[vite][39m [2mdist/client/[22m[36m_astro/BrandPartners.CRQA3Wcq.js     [39m[1m[2m  1.68 kB[22m[1m[22m[2m │ gzip:  0.82 kB[22m
+[2m08:18:09[22m [34m[vite][39m [2mdist/client/[22m[36m_astro/HomeEvents.aQ5VesSU.js        [39m[1m[2m  1.72 kB[22m[1m[22m[2m │ gzip:  0.91 kB[22m
+[2m08:18:09[22m [34m[vite][39m [2mdist/client/[22m[36m_astro/EventsList.CX1eEXO_.js        [39m[1m[2m  2.33 kB[22m[1m[22m[2m │ gzip:  1.08 kB[22m
+[2m08:18:09[22m [34m[vite][39m [2mdist/client/[22m[36m_astro/EventCard.BZNxaAxm.js         [39m[1m[2m  2.41 kB[22m[1m[22m[2m │ gzip:  1.11 kB[22m
+[2m08:18:09[22m [34m[vite][39m [2mdist/client/[22m[36m_astro/image.BGwRoMQi.js             [39m[1m[2m  3.26 kB[22m[1m[22m[2m │ gzip:  0.80 kB[22m
+[2m08:18:09[22m [34m[vite][39m [2mdist/client/[22m[36m_astro/AuthForm.C5P1B-XR.js          [39m[1m[2m  6.24 kB[22m[1m[22m[2m │ gzip:  2.70 kB[22m
+[2m08:18:09[22m [34m[vite][39m [2mdist/client/[22m[36m_astro/index.Cd_vQiNd.js             [39m[1m[2m  7.85 kB[22m[1m[22m[2m │ gzip:  3.05 kB[22m
+[2m08:18:09[22m [34m[vite][39m [2mdist/client/[22m[36m_astro/AccountPage.DWfrmKPC.js       [39m[1m[2m 12.48 kB[22m[1m[22m[2m │ gzip:  4.40 kB[22m
+[2m08:18:09[22m [34m[vite][39m [2mdist/client/[22m[36m_astro/generate-ticket.CQvocGlW.js   [39m[1m[2m 21.58 kB[22m[1m[22m[2m │ gzip:  7.92 kB[22m
+[2m08:18:09[22m [34m[vite][39m [2mdist/client/[22m[36m_astro/EventDetail.DaCxDdZy.js       [39m[1m[2m 22.99 kB[22m[1m[22m[2m │ gzip:  7.18 kB[22m
+[2m08:18:09[22m [34m[vite][39m [2mdist/client/[22m[36m_astro/client.BLUn-lwI.js            [39m[1m[2m186.62 kB[22m[1m[22m[2m │ gzip: 58.54 kB[22m
+[2m08:18:09[22m [34m[vite][39m [32m✓ built in 1.31s[39m
 
-Please run 'bun install --force' in the project root and try
-it again. If this message persists, please open an issue:
-https://github.com/oven-sh/bun/issues
-
-error: script "build" exited with code 255
+[42m[30m prerendering static routes [39m[49m
+[2m08:18:09[22m [32m▶[39m src/pages/about.astro
+[2m08:18:09[22m   [34m└─[39m [2m/about/index.html[22m [2m(+17ms)[22m 
+[2m08:18:09[22m [32m▶[39m src/pages/account.astro
+[2m08:18:09[22m   [34m└─[39m [2m/account/index.html[22m [2m(+27ms)[22m 
+[2m08:18:09[22m [32m▶[39m src/pages/events/detail.astro
+[2m08:18:09[22m   [34m└─[39m [2m/events/detail/index.html[22m [2m(+8ms)[22m 
+[2m08:18:09[22m [32m▶[39m src/pages/events/index.astro
+[2m08:18:09[22m   [34m└─[39m [2m/events/index.html[22m [2m(+7ms)[22m 
+[2m08:18:09[22m [32m▶[39m src/pages/login.astro
+[2m08:18:09[22m   [34m└─[39m [2m/login/index.html[22m [2m(+12ms)[22m 
+[2m08:18:09[22m [32m▶[39m src/pages/privacy.astro
+[2m08:18:09[22m   [34m└─[39m [2m/privacy/index.html[22m [2m(+3ms)[22m 
+[2m08:18:09[22m [32m▶[39m src/pages/terms.astro
+[2m08:18:09[22m   [34m└─[39m [2m/terms/index.html[22m [2m(+3ms)[22m 
+[2m08:18:09[22m [32m▶[39m src/pages/index.astro
+[2m08:18:09[22m   [34m└─[39m [2m/index.html[22m [2m(+9ms)[22m 
+[2m08:18:09[22m [32m✓ Completed in 220ms.
+[39m
+[2m08:18:09[22m [34m[build][39m Rearranging server assets...
+[2m08:18:09[22m [34m[@astrojs/vercel][39m Bundling function ..\..\..\..\dist\server\entry.mjs
+[2m08:18:12[22m [34m[@astrojs/vercel][39m Copying static files to .vercel/output/static
+[2m08:18:12[22m [34m[build][39m Server built in [1m10.50s[22m
+[2m08:18:12[22m [34m[build][39m [1mComplete![22m
