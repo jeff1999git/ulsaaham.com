@@ -2,6 +2,5 @@
   "$schema": "https://openapi.vercel.sh/vercel.json",
   "framework": "astro",
   "installCommand": "bun install",
-  "buildCommand": "bun run build",
-  "outputDirectory": "apps/site/far-fusion/dist"
+  "buildCommand": "bun run build && mkdir -p .vercel/output && cp -r apps/site/far-fusion/.vercel/output/. .vercel/output/"
 }
