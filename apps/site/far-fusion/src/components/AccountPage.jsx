@@ -3,6 +3,7 @@ import QRCode from "react-qr-code";
 import { getUser, setUser, clearUser, addTicket } from "../lib/auth.js";
 import { fetchMyTickets, getTicketCodesByIdentifier, getEvent, createPaymentOrder, verifyPayment } from "../lib/api.js";
 import { generateTicketCanvas, downloadCanvasAsPng } from "../lib/generate-ticket.js";
+import { downloadParticipationCardPdf } from "../lib/participation-card-pdf.js";
 import { optimizeCloudinary } from "../lib/image.js";
 
 function loadRazorpay() {
@@ -16,10 +17,15 @@ function loadRazorpay() {
   });
 }
 
-function calcFees(amount, count) {
-  const base = amount * count;
-  const gst = Math.round(base * 0.18 * 100) / 100;
-  const platformFee = Math.round(base * 0.02 * 100) / 100;
+function calcFees(event, count) {
+  const price = event.effectiveAmount ?? event.amount;
+  // Competition group pricing: first member pays the entry price, each extra
+  // member adds groupExtraAmount (falls back to the entry price if unset).
+  const base = event.isCompetition
+    ? price + (event.groupExtraAmount ?? price) * Math.max(0, count - 1)
+    : price * count;
+  const gst = event.gstEnabled ? Math.round(base * 0.18 * 100) / 100 : 0;
+  const platformFee = event.platformFeeEnabled !== false ? Math.round(base * 0.02 * 100) / 100 : 0;
   const total = Math.round((base + gst + platformFee) * 100) / 100;
   return { base, gst, platformFee, total };
 }
@@ -113,17 +119,26 @@ function RepayPanel({ ticket, user, onSuccess, onClose }) {
         {phase === "loading" && <div className="spinner" style={{ margin: "32px auto" }} />}
 
         {event && phase === "breakdown" && (() => {
-          const fees = calcFees(event.amount, ticket.numberOfParticipants);
+          const count = ticket.numberOfParticipants;
+          const price = event.effectiveAmount ?? event.amount;
+          const extraPrice = event.groupExtraAmount ?? price;
+          const fees = calcFees(event, count);
           return (
             <>
               <p className="text-light/40 text-sm mb-4">{event.name}</p>
               <div className="fee-breakdown">
                 <div className="fee-breakdown__row">
-                  <span>₹{event.amount} × {ticket.numberOfParticipants} person{ticket.numberOfParticipants !== 1 ? "s" : ""}</span>
+                  <span>
+                    {event.isCompetition && count > 1
+                      ? `₹${price} + ${count - 1} × ₹${extraPrice} (group entry)`
+                      : event.isCompetition
+                      ? `₹${price} (individual entry)`
+                      : `₹${price} × ${count} person${count !== 1 ? "s" : ""}`}
+                  </span>
                   <span>₹{fees.base.toFixed(2)}</span>
                 </div>
-                <div className="fee-breakdown__row"><span>GST (18%)</span><span>₹{fees.gst.toFixed(2)}</span></div>
-                <div className="fee-breakdown__row"><span>Platform fee (2%)</span><span>₹{fees.platformFee.toFixed(2)}</span></div>
+                {fees.gst > 0 && <div className="fee-breakdown__row"><span>GST (18%)</span><span>₹{fees.gst.toFixed(2)}</span></div>}
+                {fees.platformFee > 0 && <div className="fee-breakdown__row"><span>Platform fee (2%)</span><span>₹{fees.platformFee.toFixed(2)}</span></div>}
                 <div className="fee-breakdown__divider" />
                 <div className="fee-breakdown__total"><span>Total</span><span>₹{fees.total.toFixed(2)}</span></div>
               </div>
@@ -153,10 +168,14 @@ function TicketCard({ ticket, onRepay }) {
   const date = fmtDate(ticket.event?.date);
   const venue = ticket.event?.venue;
   const banner = ticket.event?.bannerImageUrl;
+  const isEntryCard = ticket.competitionNumber != null;
+  const instructions = ticket.event?.competitionInstructions || null;
+  const notes = ticket.event?.competitionNotes || null;
+  const hasExtras = !!(instructions?.trim() || notes?.trim());
 
   const handleDownloadTicket = async () => {
-    const svgEl = qrRef.current?.querySelector("svg");
-    if (!svgEl) return;
+    const svgEl = qrRef.current?.querySelector("svg") || null;
+    if (!isEntryCard && !svgEl) return;
     setDlLoading(true);
     try {
       const eventDate = new Intl.DateTimeFormat("en-IN", { day: "numeric", month: "short", year: "numeric" }).format(new Date(ticket.event?.date));
@@ -167,11 +186,22 @@ function TicketCard({ ticket, onRepay }) {
         eventDate,
         eventVenue: venue,
         numberOfParticipants: ticket.numberOfParticipants,
+        competitionNumber: ticket.competitionNumber ?? null,
         bannerImageUrl: banner,
       });
-      downloadCanvasAsPng(canvas, `ticket-${ticket.ticketCode}.png`);
+      if (isEntryCard && hasExtras) {
+        // Card + instructions/notes bundled as a PDF
+        downloadParticipationCardPdf(canvas, {
+          eventName: name,
+          instructions,
+          notes,
+          filename: `participation-card-${ticket.ticketCode}.pdf`,
+        });
+      } else {
+        downloadCanvasAsPng(canvas, isEntryCard ? `participation-card-${ticket.ticketCode}.png` : `ticket-${ticket.ticketCode}.png`);
+      }
     } catch {
-      alert("Failed to generate ticket. Please try again.");
+      alert(`Failed to generate ${isEntryCard ? "participation card" : "ticket"}. Please try again.`);
     } finally {
       setDlLoading(false);
     }
@@ -199,8 +229,8 @@ function TicketCard({ ticket, onRepay }) {
         </p>
       </div>
 
-      {/* QR rendered off-screen — always present for confirmed tickets, canvas reads it */}
-      {ticket.amountPaid && (
+      {/* QR rendered off-screen — canvas reads it (not needed for participation cards) */}
+      {ticket.amountPaid && !isEntryCard && (
         <div ref={qrRef} style={{ position: "fixed", left: -9999, top: -9999, pointerEvents: "none" }}>
           <QRCode value={ticket.ticketCode} size={260} />
         </div>
@@ -208,7 +238,12 @@ function TicketCard({ ticket, onRepay }) {
 
       {ticket.amountPaid ? (
         <div style={{ padding: "12px 16px", borderTop: "1px solid rgba(255,255,255,0.06)" }}>
-          {ticket.qrCodeUrl ? (
+          {isEntryCard ? (
+            <div style={{ background: "#fff", borderRadius: 8, padding: "12px 24px", width: "fit-content", margin: "0 auto 8px", textAlign: "center" }}>
+              <p style={{ fontSize: 10, fontWeight: 700, letterSpacing: "0.18em", color: "#666", margin: 0 }}>CHEST NO</p>
+              <p style={{ fontSize: 44, fontWeight: 700, color: "#014421", margin: 0, lineHeight: 1.15 }}>{ticket.competitionNumber}</p>
+            </div>
+          ) : ticket.qrCodeUrl ? (
             <img src={ticket.qrCodeUrl} alt="QR code" style={{ width: "100%", maxWidth: 150, display: "block", margin: "0 auto 8px" }} />
           ) : (
             <div style={{ background: "#fff", padding: 8, display: "block", width: "fit-content", margin: "0 auto 8px", borderRadius: 6 }}>
@@ -220,9 +255,14 @@ function TicketCard({ ticket, onRepay }) {
           </p>
           <div style={{ display: "flex", justifyContent: "center" }}>
             <button onClick={handleDownloadTicket} disabled={dlLoading} className="account-btn" style={{ fontSize: 11, padding: "5px 12px" }}>
-              {dlLoading ? "Generating…" : "Download Ticket"}
+              {dlLoading ? "Generating…" : isEntryCard ? (hasExtras ? "Download Participation Card (PDF)" : "Download Participation Card") : "Download Ticket"}
             </button>
           </div>
+          {isEntryCard && hasExtras && (
+            <p style={{ fontSize: 10, textAlign: "center", color: "rgba(255,255,255,0.35)", margin: "8px 0 0" }}>
+              Includes the competition instructions — read them before the event.
+            </p>
+          )}
         </div>
       ) : (
         <div style={{ padding: "12px 16px", borderTop: "1px solid rgba(255,255,255,0.06)" }}>

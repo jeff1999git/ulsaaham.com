@@ -13,6 +13,7 @@
     "@astrojs/tailwind": "^5.1.2",
     "@astrojs/vercel": "^8.0.0",
     "astro": "^5.15.4",
+    "jspdf": "^4.2.1",
     "nodemailer": "^6.9.16",
     "qrcode": "^1.5.4",
     "react": "^19.0.0",
