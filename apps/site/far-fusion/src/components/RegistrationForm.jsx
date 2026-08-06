@@ -17,21 +17,28 @@ function sendTicketEmail(email, ticketData) {
       eventDate: ticketData.eventDate,
       eventVenue: ticketData.eventVenue,
       numberOfParticipants: ticketData.numberOfParticipants,
+      competitionNumber: ticketData.competitionNumber ?? null,
       paymentId: ticketData.paymentId,
     }),
   }).catch(() => {});
 }
 import { generateTicketCanvas, downloadCanvasAsPng } from "../lib/generate-ticket.js";
+import { downloadParticipationCardPdf } from "../lib/participation-card-pdf.js";
 
 const GST_RATE = 0.18;
 const PLATFORM_FEE_RATE = 0.02;
 
-function calcFees(baseAmountPerPerson, quantity, couponDiscount = 0, gstEnabled = false, platformFeeEnabled = true) {
-  const base = baseAmountPerPerson * quantity;
+function calcFees(event, quantity, couponDiscount = 0) {
+  const price = event.effectiveAmount ?? event.amount;
+  // Competition group pricing: first member pays the entry price, each extra
+  // member adds groupExtraAmount (falls back to the entry price if unset).
+  const base = event.isCompetition
+    ? price + (event.groupExtraAmount ?? price) * Math.max(0, quantity - 1)
+    : price * quantity;
   const discountApplied = Math.min(couponDiscount, base);
   const discountedBase = Math.max(0, base - discountApplied);
-  const gst = gstEnabled ? Math.round(discountedBase * GST_RATE * 100) / 100 : 0;
-  const platformFee = platformFeeEnabled ? Math.round(discountedBase * PLATFORM_FEE_RATE * 100) / 100 : 0;
+  const gst = event.gstEnabled ? Math.round(discountedBase * GST_RATE * 100) / 100 : 0;
+  const platformFee = event.platformFeeEnabled !== false ? Math.round(discountedBase * PLATFORM_FEE_RATE * 100) / 100 : 0;
   const total = Math.round((discountedBase + gst + platformFee) * 100) / 100;
   return { base, discount: discountApplied, discountedBase, gst, platformFee, total };
 }
@@ -49,16 +56,21 @@ function loadRazorpay() {
 
 const confirmedBadge = { padding: "2px 9px", borderRadius: 4, fontSize: 11, fontWeight: 700, letterSpacing: "0.06em", display: "inline-block", background: "#064e3b", color: "#6ee7b7" };
 
-function TicketSuccess({ ticket }) {
+function TicketSuccess({ ticket, event }) {
   const qrRef = useRef(null);
   const [dlLoading, setDlLoading] = useState(false);
+
+  const isEntryCard = ticket.competitionNumber != null;
+  const instructions = event?.competitionInstructions || null;
+  const notes = event?.competitionNotes || null;
+  const hasExtras = !!(instructions?.trim() || notes?.trim());
 
   const eventDateShort = new Intl.DateTimeFormat("en-IN", { day: "numeric", month: "short", year: "numeric" }).format(new Date(ticket.eventDate));
   const eventDateFull = new Intl.DateTimeFormat("en-IN", { dateStyle: "full" }).format(new Date(ticket.eventDate));
 
   const handleDownload = async () => {
-    const svgEl = qrRef.current?.querySelector("svg");
-    if (!svgEl) return;
+    const svgEl = qrRef.current?.querySelector("svg") || null;
+    if (!isEntryCard && !svgEl) return;
     setDlLoading(true);
     try {
       const canvas = await generateTicketCanvas(svgEl, {
@@ -68,11 +80,22 @@ function TicketSuccess({ ticket }) {
         eventDate: eventDateShort,
         eventVenue: ticket.eventVenue,
         numberOfParticipants: ticket.numberOfParticipants,
+        competitionNumber: ticket.competitionNumber ?? null,
         bannerImageUrl: ticket.bannerImageUrl || null,
       });
-      downloadCanvasAsPng(canvas, `ticket-${ticket.ticketCode}.png`);
+      if (isEntryCard && hasExtras) {
+        // Card + instructions/notes bundled as a PDF
+        downloadParticipationCardPdf(canvas, {
+          eventName: ticket.eventName,
+          instructions,
+          notes,
+          filename: `participation-card-${ticket.ticketCode}.pdf`,
+        });
+      } else {
+        downloadCanvasAsPng(canvas, isEntryCard ? `participation-card-${ticket.ticketCode}.png` : `ticket-${ticket.ticketCode}.png`);
+      }
     } catch {
-      alert("Failed to generate ticket. Please try again.");
+      alert(`Failed to generate ${isEntryCard ? "participation card" : "ticket"}. Please try again.`);
     } finally {
       setDlLoading(false);
     }
@@ -100,13 +123,20 @@ function TicketSuccess({ ticket }) {
         </p>
       </div>
 
-      {/* Hidden QR SVG — used only by canvas generator */}
-      <div ref={qrRef} style={{ position: "fixed", left: -9999, top: -9999, pointerEvents: "none" }}>
-        <QRCode value={ticket.ticketCode} size={260} />
-      </div>
+      {/* Hidden QR SVG — used only by canvas generator (not needed for participation cards) */}
+      {!isEntryCard && (
+        <div ref={qrRef} style={{ position: "fixed", left: -9999, top: -9999, pointerEvents: "none" }}>
+          <QRCode value={ticket.ticketCode} size={260} />
+        </div>
+      )}
 
       <div style={{ padding: "12px 16px", borderTop: "1px solid rgba(255,255,255,0.06)" }}>
-        {ticket.qrCodeUrl ? (
+        {isEntryCard ? (
+          <div style={{ background: "#fff", borderRadius: 8, padding: "12px 24px", width: "fit-content", margin: "0 auto 8px", textAlign: "center" }}>
+            <p style={{ fontSize: 10, fontWeight: 700, letterSpacing: "0.18em", color: "#666", margin: 0 }}>CHEST NO</p>
+            <p style={{ fontSize: 44, fontWeight: 700, color: "#014421", margin: 0, lineHeight: 1.15 }}>{ticket.competitionNumber}</p>
+          </div>
+        ) : ticket.qrCodeUrl ? (
           <img src={ticket.qrCodeUrl} alt="QR code" style={{ width: "100%", maxWidth: 150, display: "block", margin: "0 auto 8px" }} />
         ) : (
           <div style={{ background: "#fff", padding: 8, width: "fit-content", margin: "0 auto 8px", borderRadius: 6 }}>
@@ -118,12 +148,17 @@ function TicketSuccess({ ticket }) {
         </p>
         <div style={{ display: "flex", justifyContent: "center", alignItems: "center", gap: 12, flexWrap: "wrap" }}>
           <button onClick={handleDownload} disabled={dlLoading} className="account-btn" style={{ fontSize: 11, padding: "5px 12px" }}>
-            {dlLoading ? "Generating…" : "Download Ticket"}
+            {dlLoading ? "Generating…" : isEntryCard ? (hasExtras ? "Download Participation Card (PDF)" : "Download Participation Card") : "Download Ticket"}
           </button>
           <a href="/account" className="text-accent text-xs font-semibold uppercase tracking-widest hover:underline">
             View My Bookings →
           </a>
         </div>
+        {isEntryCard && hasExtras && (
+          <p style={{ fontSize: 10, textAlign: "center", color: "rgba(255,255,255,0.35)", margin: "8px 0 0" }}>
+            Includes the competition instructions — read them before the event.
+          </p>
+        )}
       </div>
     </div>
   );
@@ -184,9 +219,16 @@ function CompleteProfileStep({ user, onComplete }) {
 }
 
 export default function RegistrationForm({ event }) {
+  // Competition entry rules: 1 person = individual entry, 2+ = group entry
+  const isCompetitionEvent = !!event.isCompetition;
+  const participationType = event.participationType || "INDIVIDUAL";
+  const individualOnly = isCompetitionEvent && participationType === "INDIVIDUAL";
+  const groupOnly = isCompetitionEvent && participationType === "GROUP";
+  const minMembers = groupOnly ? 2 : 1;
+
   const [authStatus, setAuthStatus] = useState("loading"); // "loading" | "guest" | "user"
   const [user, setUser] = useState(null);
-  const [form, setForm] = useState({ name: "", phone: "", email: "", age: "", numberOfParticipants: "1" });
+  const [form, setForm] = useState({ name: "", phone: "", email: "", age: "", numberOfParticipants: String(minMembers) });
   const [phase, setPhase] = useState("form"); // "form" | "breakdown" | "paying" | "verifying" | "success"
   const [ticket, setTicket] = useState(null);
   const [fieldErrors, setFieldErrors] = useState({});
@@ -209,8 +251,9 @@ export default function RegistrationForm({ event }) {
       phone: u.phone || "",
       email: u.email || "",
       age: u.age ? String(u.age) : "",
-      numberOfParticipants: "1",
+      numberOfParticipants: String(minMembers),
     });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   if (event.isFull) {
@@ -256,7 +299,7 @@ export default function RegistrationForm({ event }) {
     );
   }
 
-  if (phase === "success") return <TicketSuccess ticket={ticket} />;
+  if (phase === "success") return <TicketSuccess ticket={ticket} event={event} />;
 
   const needsProfile = !user?.name?.trim() || !user?.phone?.trim() || !user?.age;
   if (needsProfile) {
@@ -276,15 +319,23 @@ export default function RegistrationForm({ event }) {
   // ── Derived state ────────────────────────────────────────────────────────────
   const isComplimentary = appliedCode?.type === "complimentary";
   const isFreeEntry = event.isFree || isComplimentary;
-  const count = Number(form.numberOfParticipants) || 1;
+  const count = individualOnly ? 1 : Number(form.numberOfParticipants) || minMembers;
   const appliedDiscount = appliedCode?.type === "coupon" ? (appliedCode.discount ?? 0) : 0;
   const effectivePrice = event.effectiveAmount ?? event.amount;
-  const fees = !isFreeEntry ? calcFees(effectivePrice, count, appliedDiscount, event.gstEnabled, event.platformFeeEnabled) : null;
+  const extraMemberPrice = event.groupExtraAmount ?? effectivePrice;
+  const fees = !isFreeEntry ? calcFees(event, count, appliedDiscount) : null;
   const spotsLeft = event.capacity ? event.capacity - event.registeredCount : null;
   const feeNoteParts = [];
   if (event.gstEnabled) feeNoteParts.push("18% GST");
   if (event.platformFeeEnabled) feeNoteParts.push("2% platform fee");
   const feeNote = feeNoteParts.length ? ` (+ ${feeNoteParts.join(" + ")})` : "";
+  const priceSuffix = isCompetitionEvent
+    ? individualOnly
+      ? "entry"
+      : groupOnly
+      ? `first member · +₹${extraMemberPrice} per extra member`
+      : `individual · +₹${extraMemberPrice} per extra group member`
+    : "per person";
 
   // ── Field setter with inline participants validation ─────────────────────────
   const set = (field) => (e) => {
@@ -311,6 +362,9 @@ export default function RegistrationForm({ event }) {
     else if (!Number.isInteger(age) || age < 1 || age > 120) errors.age = ["Enter a valid age between 1 and 120."];
     if (isComplimentary && appliedCode.remainingUses != null && count > appliedCode.remainingUses) {
       errors.numberOfParticipants = ["This code doesn't cover that many participants."];
+    }
+    if (groupOnly && count < 2) {
+      errors.numberOfParticipants = ["This competition accepts group entries only — minimum 2 members."];
     }
     return errors;
   };
@@ -481,7 +535,19 @@ export default function RegistrationForm({ event }) {
         <div className="fee-breakdown">
           <div className="fee-breakdown__row">
             <span>
-              {count} × ₹{effectivePrice}
+              {isCompetitionEvent && count > 1 ? (
+                <>
+                  ₹{effectivePrice} + {count - 1} × ₹{extraMemberPrice}
+                  <span style={{ opacity: 0.6, fontSize: "11px", marginLeft: "4px" }}>group entry · {count} members</span>
+                </>
+              ) : isCompetitionEvent ? (
+                <>
+                  ₹{effectivePrice}
+                  <span style={{ opacity: 0.6, fontSize: "11px", marginLeft: "4px" }}>individual entry</span>
+                </>
+              ) : (
+                <>{count} × ₹{effectivePrice}</>
+              )}
               {event.isEarlyBird && event.earlyBirdAmount != null && (
                 <span style={{ color: "#9bca3b", fontSize: "11px", marginLeft: "4px" }}>early bird</span>
               )}
@@ -550,13 +616,24 @@ export default function RegistrationForm({ event }) {
             <span style={{ textDecoration: "line-through", color: "rgba(255,255,255,0.5)", textDecorationColor: "rgba(255,255,255,0.6)" }}>₹{event.amount}</span>
             <span style={{ color: "#9bca3b", fontWeight: 600 }}>₹{event.earlyBirdAmount}</span>
             <span style={{ background: "rgba(155,202,59,0.15)", color: "#9bca3b", fontSize: "10px", fontWeight: 700, letterSpacing: "0.08em", textTransform: "uppercase", padding: "2px 6px", borderRadius: "4px", border: "1px solid rgba(155,202,59,0.3)" }}>Early Bird</span>
-            <span style={{ opacity: 0.45 }}>per person{feeNote}</span>
+            <span style={{ opacity: 0.45 }}>{priceSuffix}{feeNote}</span>
           </>
         ) : (
-          <span>₹{event.amount} per person{feeNote}</span>
+          <span>₹{event.amount} {priceSuffix}{feeNote}</span>
         )}
         {spotsLeft != null && !event.isFull ? <span> · {spotsLeft} spot{spotsLeft !== 1 ? "s" : ""} left</span> : ""}
       </p>
+
+      {isCompetitionEvent && event.competitionNotes && (
+        <div style={{ background: "rgba(155,202,59,0.07)", border: "1px solid rgba(155,202,59,0.25)", borderRadius: 8, padding: "12px 14px", marginBottom: 18 }}>
+          <p className="text-accent text-xs font-semibold uppercase tracking-widest" style={{ marginBottom: 6 }}>
+            📋 Competition Notes
+          </p>
+          <p className="text-light/70 text-xs" style={{ whiteSpace: "pre-wrap", lineHeight: 1.7, margin: 0 }}>
+            {event.competitionNotes}
+          </p>
+        </div>
+      )}
 
       {globalError && <div className="reg-error">{globalError}</div>}
 
@@ -590,11 +667,18 @@ export default function RegistrationForm({ event }) {
           <input type="number" value={form.age} onChange={set("age")} placeholder="25" min={1} max={120} required />
           {fieldErrors.age && <span className="reg-field-error">{fieldErrors.age[0]}</span>}
         </div>
-        <div className="reg-field">
-          <label>Participants *</label>
-          <input type="number" value={form.numberOfParticipants} onChange={set("numberOfParticipants")} min={1} max={isComplimentary && appliedCode.remainingUses != null ? appliedCode.remainingUses : 10} required />
-          {fieldErrors.numberOfParticipants && <span className="reg-field-error">{fieldErrors.numberOfParticipants[0]}</span>}
-        </div>
+        {!individualOnly && (
+          <div className="reg-field">
+            <label>
+              {isCompetitionEvent ? (groupOnly ? "Group Members *" : "Members *") : "Participants *"}
+              {isCompetitionEvent && participationType === "BOTH" && (
+                <span className="reg-field-hint">1 = individual · 2+ = group</span>
+              )}
+            </label>
+            <input type="number" value={form.numberOfParticipants} onChange={set("numberOfParticipants")} min={minMembers} max={isComplimentary && appliedCode.remainingUses != null ? appliedCode.remainingUses : 10} required />
+            {fieldErrors.numberOfParticipants && <span className="reg-field-error">{fieldErrors.numberOfParticipants[0]}</span>}
+          </div>
+        )}
       </div>
 
       {/* Promo code section — only for paid events */}

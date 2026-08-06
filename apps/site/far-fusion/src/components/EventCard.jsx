@@ -43,6 +43,8 @@ export default function EventCard({ event, linkable = true, index = 0, layout = 
               <span style={{ color: "#9bca3b", fontWeight: 700 }}>₹{event.earlyBirdAmount}</span>
               <span style={{ background: "rgba(155,202,59,0.15)", color: "#9bca3b", border: "1px solid rgba(155,202,59,0.35)", borderRadius: 3, fontSize: "9px", fontWeight: 700, letterSpacing: "0.1em", padding: "1px 5px", textTransform: "uppercase" }}>Early Bird</span>
             </p>
+          ) : event.isCompetition ? (
+            <p className="event-card__meta">🏆 ₹{event.amount} {event.participationType === "INDIVIDUAL" ? "entry" : event.participationType === "GROUP" ? "first member" : "individual entry"}</p>
           ) : (
             <p className="event-card__meta">🎟 ₹{event.amount} per person</p>
           )

@@ -134,6 +134,15 @@ export default function EventDetail() {
   const isPast = new Date(event.date) < new Date();
   const spotsLeft = event.capacity ? event.capacity - event.registeredCount : null;
 
+  const isCompetition = !!event.isCompetition;
+  const participationType = event.participationType || "INDIVIDUAL";
+  const entryPrice = event.effectiveAmount ?? event.amount;
+  const extraMemberPrice = event.groupExtraAmount ?? entryPrice;
+  const participationLabel =
+    participationType === "INDIVIDUAL" ? "Individual entries"
+    : participationType === "GROUP" ? "Group entries (min 2 members)"
+    : "Individual & group entries";
+
   return (
     <div className="event-detail">
       <div className="event-detail__layout">
@@ -143,6 +152,7 @@ export default function EventDetail() {
         <div className="event-detail__content">
           <a href="/events" className="back-link">← All Events</a>
           {event.featured && <span className="badge-featured" style={{ marginLeft: "0.75rem" }}>Featured</span>}
+          {isCompetition && <span className="badge-featured" style={{ marginLeft: "0.75rem" }}>Competition</span>}
 
           <h1 className="font-serif text-3xl text-light mt-4 leading-snug">{event.name}</h1>
 
@@ -152,9 +162,17 @@ export default function EventDetail() {
               ? <a href={event.venueLink} target="_blank" rel="noopener noreferrer" style={{ color: "inherit", textDecoration: "underline", textUnderlineOffset: "3px", opacity: 0.85 }}>{event.venue}</a>
               : event.venue}
             </p>
+            {isCompetition && <p>🏆 {participationLabel} — chest number issued on registration</p>}
             {!isPast && (
               event.isFree ? (
                 <p>🎟 Free Entry</p>
+              ) : isCompetition ? (
+                <p>
+                  🎟 ₹{entryPrice} {participationType === "INDIVIDUAL" ? "entry" : participationType === "GROUP" ? "first member" : "individual"}
+                  {participationType !== "INDIVIDUAL" && (
+                    <span style={{ opacity: 0.7 }}> · +₹{extraMemberPrice} per extra group member</span>
+                  )}
+                </p>
               ) : event.isEarlyBird && event.earlyBirdAmount != null ? (
                 <p style={{ display: "flex", alignItems: "center", flexWrap: "wrap", gap: "6px" }}>
                   🎟
