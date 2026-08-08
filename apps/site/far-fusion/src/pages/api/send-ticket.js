@@ -6,12 +6,12 @@ import { jsonErr, jsonOk } from "../../lib/otp.js";
 
 function makeTransporter() {
   return nodemailer.createTransport({
-    host: import.meta.env.SMTP_HOST,
-    port: Number(import.meta.env.SMTP_PORT) || 587,
-    secure: import.meta.env.SMTP_SECURE === "true",
+    host: import.meta.env.SMTP_HOST ?? process.env.SMTP_HOST,
+    port: Number(import.meta.env.SMTP_PORT ?? process.env.SMTP_PORT) || 587,
+    secure: (import.meta.env.SMTP_SECURE ?? process.env.SMTP_SECURE) === "true",
     auth: {
-      user: import.meta.env.SMTP_USER,
-      pass: import.meta.env.SMTP_PASS,
+      user: import.meta.env.SMTP_USER ?? process.env.SMTP_USER,
+      pass: import.meta.env.SMTP_PASS ?? process.env.SMTP_PASS,
     },
   });
 }
@@ -107,7 +107,7 @@ export async function POST({ request }) {
 
   try {
     await transporter.sendMail({
-      from: import.meta.env.EMAIL_FROM || `"Ulsaham Entertainments" <noreply@ulsaham.com>`,
+      from: import.meta.env.EMAIL_FROM || process.env.EMAIL_FROM || `"Ulsaham Entertainments" <noreply@ulsaham.com>`,
       to: email,
       subject: isEntryCard
         ? `Your participation card for ${eventName} — Chest No ${competitionNumber}`

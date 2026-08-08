@@ -8,12 +8,12 @@ import {
 
 function makeTransporter() {
   return nodemailer.createTransport({
-    host: import.meta.env.SMTP_HOST,
-    port: Number(import.meta.env.SMTP_PORT) || 587,
-    secure: import.meta.env.SMTP_SECURE === "true",
+    host: import.meta.env.SMTP_HOST ?? process.env.SMTP_HOST,
+    port: Number(import.meta.env.SMTP_PORT ?? process.env.SMTP_PORT) || 587,
+    secure: (import.meta.env.SMTP_SECURE ?? process.env.SMTP_SECURE) === "true",
     auth: {
-      user: import.meta.env.SMTP_USER,
-      pass: import.meta.env.SMTP_PASS,
+      user: import.meta.env.SMTP_USER ?? process.env.SMTP_USER,
+      pass: import.meta.env.SMTP_PASS ?? process.env.SMTP_PASS,
     },
   });
 }
@@ -21,7 +21,7 @@ function makeTransporter() {
 async function sendOtpEmail(to, otp) {
   const transporter = makeTransporter();
   await transporter.sendMail({
-    from: import.meta.env.EMAIL_FROM || `"Ulsaham Entertainments" <noreply@ulsaham.com>`,
+    from: import.meta.env.EMAIL_FROM || process.env.EMAIL_FROM || `"Ulsaham Entertainments" <noreply@ulsaham.com>`,
     to,
     subject: `Your Ulsaham verification code: ${otp}`,
     text: `Your one-time verification code is: ${otp}\n\nThis code expires in 10 minutes. Do not share it with anyone.\n\nIf you did not request this, ignore this email.`,

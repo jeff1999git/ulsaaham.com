@@ -5,7 +5,7 @@ export async function GET({ request, redirect }) {
   const state = Buffer.from(JSON.stringify({ next })).toString("base64");
 
   const params = new URLSearchParams({
-    client_id: import.meta.env.GOOGLE_CLIENT_ID,
+    client_id: import.meta.env.GOOGLE_CLIENT_ID ?? process.env.GOOGLE_CLIENT_ID,
     redirect_uri: `${url.origin}/api/auth/google/callback`,
     response_type: "code",
     scope: "openid email profile",

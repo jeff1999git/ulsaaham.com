@@ -1,7 +1,7 @@
 import { createHmac, randomInt, timingSafeEqual } from "node:crypto";
 
 const secret = () =>
-  import.meta.env.OTP_SECRET || "dev-otp-secret-change-in-prod";
+  import.meta.env.OTP_SECRET || process.env.OTP_SECRET || "dev-otp-secret-change-in-prod";
 
 export function signCookie(payload) {
   const data = Buffer.from(JSON.stringify(payload)).toString("base64url");
