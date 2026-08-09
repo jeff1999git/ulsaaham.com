@@ -63,16 +63,34 @@ function TicketSuccess({ ticket, event }) {
   const isEntryCard = ticket.competitionNumber != null;
   const instructions = event?.competitionInstructions || null;
   const notes = event?.competitionNotes || null;
-  const hasExtras = !!(instructions?.trim() || notes?.trim());
 
   const eventDateShort = new Intl.DateTimeFormat("en-IN", { day: "numeric", month: "short", year: "numeric" }).format(new Date(ticket.eventDate));
   const eventDateFull = new Intl.DateTimeFormat("en-IN", { dateStyle: "full" }).format(new Date(ticket.eventDate));
 
   const handleDownload = async () => {
-    const svgEl = qrRef.current?.querySelector("svg") || null;
-    if (!isEntryCard && !svgEl) return;
     setDlLoading(true);
     try {
+      if (isEntryCard) {
+        // Competition participation card: plain details PDF, no ticket art / QR
+        downloadParticipationCardPdf(
+          {
+            chestNumber: ticket.competitionNumber,
+            participantName: ticket.participantName,
+            eventName: ticket.eventName,
+            eventDate: eventDateShort,
+            eventVenue: ticket.eventVenue,
+            numberOfParticipants: ticket.numberOfParticipants,
+            ticketCode: ticket.ticketCode,
+            instructions,
+            notes,
+          },
+          `participation-card-${ticket.ticketCode}.pdf`
+        );
+        return;
+      }
+
+      const svgEl = qrRef.current?.querySelector("svg");
+      if (!svgEl) return;
       const canvas = await generateTicketCanvas(svgEl, {
         ticketCode: ticket.ticketCode,
         participantName: ticket.participantName,
@@ -80,20 +98,9 @@ function TicketSuccess({ ticket, event }) {
         eventDate: eventDateShort,
         eventVenue: ticket.eventVenue,
         numberOfParticipants: ticket.numberOfParticipants,
-        competitionNumber: ticket.competitionNumber ?? null,
         bannerImageUrl: ticket.bannerImageUrl || null,
       });
-      if (isEntryCard && hasExtras) {
-        // Card + instructions/notes bundled as a PDF
-        downloadParticipationCardPdf(canvas, {
-          eventName: ticket.eventName,
-          instructions,
-          notes,
-          filename: `participation-card-${ticket.ticketCode}.pdf`,
-        });
-      } else {
-        downloadCanvasAsPng(canvas, isEntryCard ? `participation-card-${ticket.ticketCode}.png` : `ticket-${ticket.ticketCode}.png`);
-      }
+      downloadCanvasAsPng(canvas, `ticket-${ticket.ticketCode}.png`);
     } catch {
       alert(`Failed to generate ${isEntryCard ? "participation card" : "ticket"}. Please try again.`);
     } finally {
@@ -148,13 +155,13 @@ function TicketSuccess({ ticket, event }) {
         </p>
         <div style={{ display: "flex", justifyContent: "center", alignItems: "center", gap: 12, flexWrap: "wrap" }}>
           <button onClick={handleDownload} disabled={dlLoading} className="account-btn" style={{ fontSize: 11, padding: "5px 12px" }}>
-            {dlLoading ? "Generating…" : isEntryCard ? (hasExtras ? "Download Participation Card (PDF)" : "Download Participation Card") : "Download Ticket"}
+            {dlLoading ? "Generating…" : isEntryCard ? "Download Participation Card (PDF)" : "Download Ticket"}
           </button>
           <a href="/account" className="text-accent text-xs font-semibold uppercase tracking-widest hover:underline">
             View My Bookings →
           </a>
         </div>
-        {isEntryCard && hasExtras && (
+        {isEntryCard && (instructions?.trim() || notes?.trim()) && (
           <p style={{ fontSize: 10, textAlign: "center", color: "rgba(255,255,255,0.35)", margin: "8px 0 0" }}>
             Includes the competition instructions — read them before the event.
           </p>

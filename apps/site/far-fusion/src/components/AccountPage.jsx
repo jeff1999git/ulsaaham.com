@@ -171,13 +171,31 @@ function TicketCard({ ticket, onRepay }) {
   const isEntryCard = ticket.competitionNumber != null;
   const instructions = ticket.event?.competitionInstructions || null;
   const notes = ticket.event?.competitionNotes || null;
-  const hasExtras = !!(instructions?.trim() || notes?.trim());
 
   const handleDownloadTicket = async () => {
-    const svgEl = qrRef.current?.querySelector("svg") || null;
-    if (!isEntryCard && !svgEl) return;
     setDlLoading(true);
     try {
+      if (isEntryCard) {
+        // Competition participation card: plain details PDF, no ticket art / QR
+        downloadParticipationCardPdf(
+          {
+            chestNumber: ticket.competitionNumber,
+            participantName: ticket.participantName,
+            eventName: name,
+            eventDate: fmtDate(ticket.event?.date),
+            eventVenue: venue,
+            numberOfParticipants: ticket.numberOfParticipants,
+            ticketCode: ticket.ticketCode,
+            instructions,
+            notes,
+          },
+          `participation-card-${ticket.ticketCode}.pdf`
+        );
+        return;
+      }
+
+      const svgEl = qrRef.current?.querySelector("svg");
+      if (!svgEl) return;
       const eventDate = new Intl.DateTimeFormat("en-IN", { day: "numeric", month: "short", year: "numeric" }).format(new Date(ticket.event?.date));
       const canvas = await generateTicketCanvas(svgEl, {
         ticketCode: ticket.ticketCode,
@@ -186,20 +204,9 @@ function TicketCard({ ticket, onRepay }) {
         eventDate,
         eventVenue: venue,
         numberOfParticipants: ticket.numberOfParticipants,
-        competitionNumber: ticket.competitionNumber ?? null,
         bannerImageUrl: banner,
       });
-      if (isEntryCard && hasExtras) {
-        // Card + instructions/notes bundled as a PDF
-        downloadParticipationCardPdf(canvas, {
-          eventName: name,
-          instructions,
-          notes,
-          filename: `participation-card-${ticket.ticketCode}.pdf`,
-        });
-      } else {
-        downloadCanvasAsPng(canvas, isEntryCard ? `participation-card-${ticket.ticketCode}.png` : `ticket-${ticket.ticketCode}.png`);
-      }
+      downloadCanvasAsPng(canvas, `ticket-${ticket.ticketCode}.png`);
     } catch {
       alert(`Failed to generate ${isEntryCard ? "participation card" : "ticket"}. Please try again.`);
     } finally {
@@ -255,10 +262,10 @@ function TicketCard({ ticket, onRepay }) {
           </p>
           <div style={{ display: "flex", justifyContent: "center" }}>
             <button onClick={handleDownloadTicket} disabled={dlLoading} className="account-btn" style={{ fontSize: 11, padding: "5px 12px" }}>
-              {dlLoading ? "Generating…" : isEntryCard ? (hasExtras ? "Download Participation Card (PDF)" : "Download Participation Card") : "Download Ticket"}
+              {dlLoading ? "Generating…" : isEntryCard ? "Download Participation Card (PDF)" : "Download Ticket"}
             </button>
           </div>
-          {isEntryCard && hasExtras && (
+          {isEntryCard && (instructions?.trim() || notes?.trim()) && (
             <p style={{ fontSize: 10, textAlign: "center", color: "rgba(255,255,255,0.35)", margin: "8px 0 0" }}>
               Includes the competition instructions — read them before the event.
             </p>
