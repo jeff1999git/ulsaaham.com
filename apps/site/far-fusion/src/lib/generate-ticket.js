@@ -61,11 +61,8 @@ async function loadSvgAsImage(svgEl) {
 }
 
 export async function generateTicketCanvas(svgEl, opts) {
-  // Competition participation card: big chest number instead of a QR code
-  const isEntryCard = opts.competitionNumber != null;
-
   const [qrImg, posterImg, logoImg] = await Promise.all([
-    svgEl ? loadSvgAsImage(svgEl) : Promise.resolve(null),
+    loadSvgAsImage(svgEl),
     opts.bannerImageUrl ? loadImage(opts.bannerImageUrl) : Promise.resolve(null),
     loadImage("/brand_logo.avif"),
   ]);
@@ -84,7 +81,7 @@ export async function generateTicketCanvas(svgEl, opts) {
   const INFO_Y_START = posterImg ? BODY_Y + 16 + POSTER_H + 48 : BODY_Y + 24;
   const INFO_H = 52 + 3 * 70;
   const QR_BOX_Y = INFO_Y_START + INFO_H + 16;
-  const QR_BOX_H = isEntryCard ? 220 : QR_SIZE + QR_BOX_PAD * 2 + 56;
+  const QR_BOX_H = QR_SIZE + QR_BOX_PAD * 2 + 56;
   const FOOTER_Y = QR_BOX_Y + QR_BOX_H + 20;
   const H = FOOTER_Y + 84;
 
@@ -125,12 +122,12 @@ export async function generateTicketCanvas(svgEl, opts) {
     ctx.fillText("ENTERTAINMENTS", W / 2, 165);
   }
 
-  // "EVENT TICKET" / "PARTICIPATION CARD" heading
+  // "EVENT TICKET" heading
   let y = INFO_Y_START;
   ctx.fillStyle = "#000";
   ctx.font = "bold 30px Arial, sans-serif";
   ctx.textAlign = "center";
-  ctx.fillText(isEntryCard ? "PARTICIPATION CARD" : "EVENT TICKET", W / 2, y);
+  ctx.fillText("EVENT TICKET", W / 2, y);
   y += 52;
 
   const COL_L = W / 4;
@@ -168,33 +165,24 @@ export async function generateTicketCanvas(svgEl, opts) {
   // Row 3: Date
   ctx.fillText(col(`Date : ${opts.eventDate}`), COL_L, y);
 
-  // White box: chest number (participation card) or QR code
+  // White QR box
   ctx.fillStyle = "#fff";
   drawRoundRect(ctx, QR_BOX_X, QR_BOX_Y, QR_BOX_W, QR_BOX_H, 18);
   ctx.fill();
 
-  if (isEntryCard) {
-    ctx.fillStyle = "#666";
-    ctx.font = "bold 20px Arial, sans-serif";
-    ctx.fillText("CHEST NO", W / 2, QR_BOX_Y + 52);
-    ctx.fillStyle = GREEN;
-    ctx.font = "bold 120px Arial, sans-serif";
-    ctx.fillText(String(opts.competitionNumber), W / 2, QR_BOX_Y + 175);
-  } else if (qrImg) {
-    const QR_X = (W - QR_SIZE) / 2;
-    const QR_Y_POS = QR_BOX_Y + QR_BOX_PAD;
-    ctx.fillStyle = "#fff";
-    ctx.fillRect(QR_X, QR_Y_POS, QR_SIZE, QR_SIZE);
-    ctx.drawImage(qrImg, QR_X, QR_Y_POS, QR_SIZE, QR_SIZE);
+  const QR_X = (W - QR_SIZE) / 2;
+  const QR_Y_POS = QR_BOX_Y + QR_BOX_PAD;
+  ctx.fillStyle = "#fff";
+  ctx.fillRect(QR_X, QR_Y_POS, QR_SIZE, QR_SIZE);
+  ctx.drawImage(qrImg, QR_X, QR_Y_POS, QR_SIZE, QR_SIZE);
 
-    ctx.fillStyle = "#666";
-    ctx.font = "14px Arial, sans-serif";
-    ctx.fillText("Scan this code at the entrance", W / 2, QR_Y_POS + QR_SIZE + 22);
+  ctx.fillStyle = "#666";
+  ctx.font = "14px Arial, sans-serif";
+  ctx.fillText("Scan this code at the entrance", W / 2, QR_Y_POS + QR_SIZE + 22);
 
-    ctx.fillStyle = "#222";
-    ctx.font = "bold 16px 'Courier New', Courier, monospace";
-    ctx.fillText(opts.ticketCode, W / 2, QR_Y_POS + QR_SIZE + 46);
-  }
+  ctx.fillStyle = "#222";
+  ctx.font = "bold 16px 'Courier New', Courier, monospace";
+  ctx.fillText(opts.ticketCode, W / 2, QR_Y_POS + QR_SIZE + 46);
 
   // Footer
   ctx.strokeStyle = "#00000015";
