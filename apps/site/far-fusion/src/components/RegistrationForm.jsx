@@ -631,17 +631,6 @@ export default function RegistrationForm({ event }) {
         {spotsLeft != null && !event.isFull ? <span> · {spotsLeft} spot{spotsLeft !== 1 ? "s" : ""} left</span> : ""}
       </p>
 
-      {isCompetitionEvent && event.competitionNotes && (
-        <div style={{ background: "rgba(155,202,59,0.07)", border: "1px solid rgba(155,202,59,0.25)", borderRadius: 8, padding: "12px 14px", marginBottom: 18 }}>
-          <p className="text-accent text-xs font-semibold uppercase tracking-widest" style={{ marginBottom: 6 }}>
-            📋 Competition Notes
-          </p>
-          <p className="text-light/70 text-xs" style={{ whiteSpace: "pre-wrap", lineHeight: 1.7, margin: 0 }}>
-            {event.competitionNotes}
-          </p>
-        </div>
-      )}
-
       {globalError && <div className="reg-error">{globalError}</div>}
 
       <div className="reg-field">

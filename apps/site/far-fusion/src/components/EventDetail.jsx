@@ -1,12 +1,63 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { getEvent } from "../lib/api.js";
 import RegistrationForm from "./RegistrationForm.jsx";
 import { optimizeCloudinary } from "../lib/image.js";
 
-function PosterViewer({ src, alt }) {
-  const [open, setOpen] = useState(false);
+function isTypingTarget(el) {
+  if (!el) return false;
+  const tag = el.tagName;
+  return tag === "INPUT" || tag === "TEXTAREA" || tag === "SELECT" || el.isContentEditable;
+}
 
-  // ESC to close + body scroll lock
+function GalleryArrow({ direction, onClick, size = 44 }) {
+  return (
+    <button
+      type="button"
+      onClick={(e) => { e.stopPropagation(); onClick(); }}
+      aria-label={direction === "prev" ? "Previous image" : "Next image"}
+      className="event-gallery__arrow"
+      style={{
+        [direction === "prev" ? "left" : "right"]: 10,
+        width: size,
+        height: size,
+      }}
+    >
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+        {direction === "prev" ? <polyline points="15 18 9 12 15 6" /> : <polyline points="9 18 15 12 9 6" />}
+      </svg>
+    </button>
+  );
+}
+
+function ImageGallery({ images, alt }) {
+  const [index, setIndex] = useState(0);
+  const [open, setOpen] = useState(false);
+  const hasMultiple = images.length > 1;
+
+  const goPrev = useCallback(() => setIndex((i) => (i - 1 + images.length) % images.length), [images.length]);
+  const goNext = useCallback(() => setIndex((i) => (i + 1) % images.length), [images.length]);
+
+  // Arrow-key navigation across the whole event detail page (ignored while typing in a field)
+  useEffect(() => {
+    if (!hasMultiple) return;
+    const onKey = (e) => {
+      if (isTypingTarget(document.activeElement)) return;
+      if (e.key === "ArrowLeft") goPrev();
+      else if (e.key === "ArrowRight") goNext();
+      else if (e.key === "Escape" && open) setOpen(false);
+    };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [hasMultiple, open, goPrev, goNext]);
+
+  // Autoscroll every 5s; pauses while zoomed and restarts on manual navigation
+  useEffect(() => {
+    if (!hasMultiple || open) return;
+    const timer = setTimeout(goNext, 5000);
+    return () => clearTimeout(timer);
+  }, [hasMultiple, open, index, goNext]);
+
+  // ESC to close zoom + body scroll lock (also handles single-image case)
   useEffect(() => {
     if (!open) return;
     document.body.style.overflow = "hidden";
@@ -18,22 +69,30 @@ function PosterViewer({ src, alt }) {
     };
   }, [open]);
 
+  const src = images[index];
+
   return (
     <>
-      <div
-        className="event-detail__poster"
-        style={{ cursor: "zoom-in" }}
-        onClick={() => setOpen(true)}
-      >
-        <img
-          src={optimizeCloudinary(src, 900)}
-          alt={alt}
-          loading="eager"
-          decoding="async"
-          fetchPriority="high"
-          width="900"
-          height="1125"
-        />
+      <div className="event-detail__poster" style={{ position: "relative" }}>
+        <div style={{ cursor: "zoom-in" }} onClick={() => setOpen(true)}>
+          <img
+            src={optimizeCloudinary(src, 900)}
+            alt={hasMultiple ? `${alt} — photo ${index + 1} of ${images.length}` : alt}
+            loading="eager"
+            decoding="async"
+            fetchPriority="high"
+            width="900"
+            height="1125"
+          />
+        </div>
+
+        {hasMultiple && (
+          <>
+            <GalleryArrow direction="prev" onClick={goPrev} />
+            <GalleryArrow direction="next" onClick={goNext} />
+            <div className="event-gallery__counter">{index + 1} / {images.length}</div>
+          </>
+        )}
       </div>
 
       {open && (
@@ -52,7 +111,7 @@ function PosterViewer({ src, alt }) {
         >
           <img
             src={optimizeCloudinary(src, 1400)}
-            alt={alt}
+            alt={hasMultiple ? `${alt} — photo ${index + 1} of ${images.length}` : alt}
             style={{
               maxWidth: "min(100%, 560px)",
               maxHeight: "93vh",
@@ -63,6 +122,17 @@ function PosterViewer({ src, alt }) {
             }}
             onClick={(e) => e.stopPropagation()}
           />
+
+          {hasMultiple && (
+            <>
+              <GalleryArrow direction="prev" onClick={goPrev} size={48} />
+              <GalleryArrow direction="next" onClick={goNext} size={48} />
+              <div className="event-gallery__counter event-gallery__counter--zoom">
+                {index + 1} / {images.length}
+              </div>
+            </>
+          )}
+
           <button
             onClick={() => setOpen(false)}
             aria-label="Close"
@@ -96,8 +166,9 @@ function PosterViewer({ src, alt }) {
             fontSize: 12,
             letterSpacing: "0.08em",
             pointerEvents: "none",
+            textAlign: "center",
           }}>
-            Click anywhere or press ESC to close
+            {hasMultiple ? "Use ← → to browse · ESC to close" : "Click anywhere or press ESC to close"}
           </p>
         </div>
       )}
@@ -143,11 +214,13 @@ export default function EventDetail() {
     : participationType === "GROUP" ? "Group entries (min 2 members)"
     : "Individual & group entries";
 
+  const galleryImages = [event.bannerImageUrl, ...(event.galleryImageUrls || [])].filter(Boolean);
+
   return (
     <div className="event-detail">
       <div className="event-detail__layout">
 
-        {event.bannerImageUrl && <PosterViewer src={event.bannerImageUrl} alt={event.name} />}
+        {galleryImages.length > 0 && <ImageGallery images={galleryImages} alt={event.name} />}
 
         <div className="event-detail__content">
           <a href="/events" className="back-link">← All Events</a>
