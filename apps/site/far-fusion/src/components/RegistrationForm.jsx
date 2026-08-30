@@ -3,6 +3,7 @@ import QRCode from "react-qr-code";
 import { registerForEvent, createPaymentOrder, verifyPayment, validateCode } from "../lib/api.js";
 import { getUser, setUser as persistUser, addTicket } from "../lib/auth.js";
 import { optimizeCloudinary } from "../lib/image.js";
+import { hasEventStarted } from "../lib/event-time.js";
 
 function sendTicketEmail(email, ticketData) {
   if (!email) return;
@@ -271,10 +272,10 @@ export default function RegistrationForm({ event }) {
       </div>
     );
   }
-  if (new Date(event.date) < new Date()) {
+  if (hasEventStarted(event)) {
     return (
       <div className="reg-closed">
-        <p className="font-serif text-2xl text-light/60">This event has ended.</p>
+        <p className="font-serif text-2xl text-light/60">Booking is closed — this event has started.</p>
       </div>
     );
   }

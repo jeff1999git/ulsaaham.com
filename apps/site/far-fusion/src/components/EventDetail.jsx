@@ -2,6 +2,7 @@ import { useState, useEffect, useCallback } from "react";
 import { getEvent } from "../lib/api.js";
 import RegistrationForm from "./RegistrationForm.jsx";
 import { optimizeCloudinary } from "../lib/image.js";
+import { hasEventStarted } from "../lib/event-time.js";
 
 function isTypingTarget(el) {
   if (!el) return false;
@@ -202,7 +203,7 @@ export default function EventDetail() {
   );
 
   const date = new Intl.DateTimeFormat("en-IN", { dateStyle: "full" }).format(new Date(event.date));
-  const isPast = new Date(event.date) < new Date();
+  const isPast = hasEventStarted(event);
   const spotsLeft = event.capacity ? event.capacity - event.registeredCount : null;
 
   const isCompetition = !!event.isCompetition;
