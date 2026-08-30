@@ -1,11 +1,12 @@
 import { optimizeCloudinary } from "../lib/image.js";
+import { hasEventStarted } from "../lib/event-time.js";
 
 export default function EventCard({ event, linkable = true, index = 0, layout = "vertical" }) {
   const date = new Intl.DateTimeFormat("en-IN", {
     day: "numeric", month: "short", year: "numeric",
   }).format(new Date(event.date));
 
-  const isUpcoming = new Date(event.date) >= new Date();
+  const isUpcoming = !hasEventStarted(event);
 
   const Tag = linkable ? "a" : "div";
   const tagProps = linkable
