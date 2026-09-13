@@ -71,11 +71,15 @@ function RepayPanel({ ticket, user, onSuccess, onClose }) {
     const loaded = await loadRazorpay();
     if (!loaded) { setError("Could not load payment gateway."); setPhase("breakdown"); return; }
 
+    // ticketCode tells the backend this payment settles THIS unpaid ticket
+    // (rather than creating a new booking). The server uses the ticket's own
+    // quantity for the amount.
     const body = {
       name: user.name,
       phone: user.phone,
       age: user.age,
       numberOfParticipants: ticket.numberOfParticipants,
+      ticketCode: ticket.ticketCode,
       ...(user.email ? { email: user.email } : {}),
     };
 
@@ -306,22 +310,24 @@ export default function AccountPage() {
     if (!u) return;
     let stored = u.tickets || [];
 
-    // No tickets in localStorage (e.g. after logout + re-login) — try recovering from backend
-    if (stored.length === 0) {
-      const identifier = u.phone || u.email;
-      if (!identifier) { setTicketsLoading(false); return; }
+    // Merge in every booking the backend knows for this phone/email, so tickets
+    // booked on another device (or before localStorage was cleared) show up too.
+    const identifier = u.phone || u.email;
+    if (identifier) {
       const { ok, data } = await getTicketCodesByIdentifier(identifier);
-      if (ok && data.data?.ticketCodes?.length > 0) {
-        stored = data.data.ticketCodes.map((code) => ({ ticketCode: code }));
+      const remoteCodes = ok ? data.data?.ticketCodes || [] : [];
+      const known = new Set(stored.map((t) => t.ticketCode));
+      const missing = remoteCodes.filter((code) => !known.has(code)).map((code) => ({ ticketCode: code }));
+      if (missing.length > 0) {
+        stored = [...stored, ...missing];
         const restored = { ...u, tickets: stored };
         setUser(restored);
         userRef.current = restored;
         setUserState(restored);
-      } else {
-        setTicketsLoading(false);
-        return;
       }
     }
+
+    if (stored.length === 0) { setTicketsLoading(false); return; }
 
     const codes = stored.map((t) => t.ticketCode).slice(0, 20);
     const { ok, data } = await fetchMyTickets(codes);
