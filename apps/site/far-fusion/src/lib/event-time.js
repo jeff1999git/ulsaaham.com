@@ -1,8 +1,9 @@
 const IST_OFFSET_MINUTES = 5 * 60 + 30;
+const DAY_MS = 24 * 60 * 60 * 1000;
 
-function parseStartTime(startTime) {
-  const match = typeof startTime === "string" ? startTime.match(/(\d{1,2}):(\d{2})\s?(AM|PM)/i) : null;
-  if (!match) return { hours: 0, minutes: 0 };
+function parseClockTime(time) {
+  const match = typeof time === "string" ? time.match(/(\d{1,2}):(\d{2})\s?(AM|PM)/i) : null;
+  if (!match) return null;
   let hours = parseInt(match[1], 10);
   const minutes = parseInt(match[2], 10);
   const meridiem = match[3].toUpperCase();
@@ -11,17 +12,39 @@ function parseStartTime(startTime) {
   return { hours, minutes };
 }
 
+// The UTC instant for hh:mm IST on the calendar day held by `date`.
+function istInstantOn(date, hours, minutes) {
+  const d = new Date(date);
+  const utcMs = Date.UTC(d.getUTCFullYear(), d.getUTCMonth(), d.getUTCDate(), hours, minutes) - IST_OFFSET_MINUTES * 60 * 1000;
+  return new Date(utcMs);
+}
+
 // event.date holds only a calendar day (stored as UTC midnight of the day picked
 // in the admin panel); the actual start time lives separately in event.startTime
 // ("hh:mm AM/PM", India Standard Time). Combine them into the real UTC instant
 // the event starts so "has it started" reflects start time, not just midnight.
 export function getEventStartDateTime(event) {
-  const d = new Date(event.date);
-  const { hours, minutes } = parseStartTime(event.startTime);
-  const utcMs = Date.UTC(d.getUTCFullYear(), d.getUTCMonth(), d.getUTCDate(), hours, minutes) - IST_OFFSET_MINUTES * 60 * 1000;
-  return new Date(utcMs);
+  const start = parseClockTime(event.startTime) || { hours: 0, minutes: 0 };
+  return istInstantOn(event.date, start.hours, start.minutes);
 }
 
 export function hasEventStarted(event) {
   return getEventStartDateTime(event) <= new Date();
+}
+
+// The real UTC instant the event ends. endTime is "hh:mm AM/PM" IST on the same
+// calendar day as `date`, except for events that run past midnight (end at or
+// before start), which finish on the following day. A missing or unparsable
+// endTime falls back to the end of the event day (23:59 IST).
+export function getEventEndDateTime(event) {
+  const end = parseClockTime(event.endTime);
+  if (!end) return istInstantOn(event.date, 23, 59);
+
+  const endAt = istInstantOn(event.date, end.hours, end.minutes);
+  const startAt = getEventStartDateTime(event);
+  return endAt <= startAt ? new Date(endAt.getTime() + DAY_MS) : endAt;
+}
+
+export function hasEventEnded(event) {
+  return getEventEndDateTime(event) <= new Date();
 }

@@ -2,7 +2,7 @@ import { useState, useEffect, useCallback } from "react";
 import { getEvent } from "../lib/api.js";
 import RegistrationForm from "./RegistrationForm.jsx";
 import { optimizeCloudinary } from "../lib/image.js";
-import { hasEventStarted } from "../lib/event-time.js";
+import { hasEventEnded } from "../lib/event-time.js";
 
 function isTypingTarget(el) {
   if (!el) return false;
@@ -203,7 +203,7 @@ export default function EventDetail() {
   );
 
   const date = new Intl.DateTimeFormat("en-IN", { dateStyle: "full" }).format(new Date(event.date));
-  const isPast = hasEventStarted(event);
+  const isPast = hasEventEnded(event);
   const spotsLeft = event.capacity ? event.capacity - event.registeredCount : null;
 
   const isCompetition = !!event.isCompetition;
@@ -262,7 +262,7 @@ export default function EventDetail() {
             {event.capacity != null && (
               <p className={event.isFull || spotsLeft <= 20 ? "text-red-400" : "text-light/50"}>
                 🔢 {event.isFull
-                  ? "Event is full"
+                  ? "Booking closed — event is full"
                   : spotsLeft === null
                   ? "Unlimited capacity"
                   : `${spotsLeft} spot${spotsLeft !== 1 ? "s" : ""} remaining`}

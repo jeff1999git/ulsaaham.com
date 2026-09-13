@@ -1,12 +1,16 @@
 import { optimizeCloudinary } from "../lib/image.js";
-import { hasEventStarted } from "../lib/event-time.js";
+import { hasEventEnded } from "../lib/event-time.js";
+import { isBookingOpen } from "../lib/event-status.js";
 
 export default function EventCard({ event, linkable = true, index = 0, layout = "vertical" }) {
   const date = new Intl.DateTimeFormat("en-IN", {
     day: "numeric", month: "short", year: "numeric",
   }).format(new Date(event.date));
 
-  const isUpcoming = !hasEventStarted(event);
+  // Booking runs right up to the event's end time, so an event only stops being
+  // "upcoming" once it is over.
+  const isUpcoming = !hasEventEnded(event);
+  const bookable = isBookingOpen(event);
 
   const Tag = linkable ? "a" : "div";
   const tagProps = linkable
@@ -29,7 +33,7 @@ export default function EventCard({ event, linkable = true, index = 0, layout = 
         ) : (
           <div className="event-card__placeholder" />
         )}
-        {event.isFull && <span className="event-card__full">FULL</span>}
+        {isUpcoming && !bookable && <span className="event-card__closed">Booking Closed</span>}
       </div>
       <div className="event-card__body">
         {event.featured && <span className="event-card__featured">Featured</span>}
@@ -57,7 +61,7 @@ export default function EventCard({ event, linkable = true, index = 0, layout = 
             : event.venue}
         </p>
         {linkable && (
-          <span className="event-card__cta">{isUpcoming ? "Book Now →" : "View Details →"}</span>
+          <span className="event-card__cta">{bookable ? "Book Now →" : "View Details →"}</span>
         )}
       </div>
     </Tag>
