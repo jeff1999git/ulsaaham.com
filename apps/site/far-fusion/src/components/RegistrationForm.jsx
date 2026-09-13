@@ -439,8 +439,8 @@ export default function RegistrationForm({ event }) {
     }
     setPhase("form");
     if (status === 400 && data.fieldErrors) { setFieldErrors(data.fieldErrors); return; }
-    if (status === 409) { setGlobalError("This phone number is already booked for this event, try with another phone number."); return; }
-    if (status === 410) { setGlobalError("This event is now full."); return; }
+    if (status === 409) { setGlobalError(data?.error || "This booking could not be completed. Please try again or contact support."); return; }
+    if (status === 410) { setGlobalError(data?.error || "This event is now full."); return; }
     if (status === 429) { setGlobalError("Too many requests. Please try again in a moment."); return; }
     setGlobalError(data?.error || "Something went wrong. Please try again.");
   };
@@ -471,7 +471,7 @@ export default function RegistrationForm({ event }) {
     const { ok, status, data } = await createPaymentOrder(event.slug, body);
     if (!ok) {
       setPhase("breakdown");
-      if (status === 410) { setGlobalError("This event is now full."); return; }
+      if (status === 410) { setGlobalError(data?.error || "This event is now full."); return; }
       if (status === 404 && appliedCode) {
         setAppliedCode(null);
         setPromoError("Code is no longer valid. Please try again without it.");
