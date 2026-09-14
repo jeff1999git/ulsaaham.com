@@ -117,6 +117,27 @@ export async function fetchMyTickets(ticketCodes) {
   }
 }
 
+/**
+ * Ask the site to email a booking. Only the code and the recipient travel —
+ * the mail itself is built on the server from the booking the backend holds.
+ */
+export async function sendTicketEmail({ ticketCode, email, paymentId = null }) {
+  if (!ticketCode || !email) {
+    return { ok: false, status: 0, data: { success: false, error: "Add an email address to receive your ticket." } };
+  }
+  try {
+    const res = await fetch("/api/send-ticket", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ ticketCode, email, paymentId }),
+    });
+    const data = await res.json().catch(() => ({}));
+    return { ok: res.ok, status: res.status, data };
+  } catch {
+    return { ok: false, status: 0, data: { success: false, error: "Network error. Please try again." } };
+  }
+}
+
 // Looks up ticket codes by phone (10-digit string) or email after re-login
 export function getTicketCodesByIdentifier(identifier) {
   const key = /^\d{10}$/.test(String(identifier)) ? "phone" : "email";
