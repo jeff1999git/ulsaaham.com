@@ -1,7 +1,7 @@
 ﻿import { useState, useEffect, useRef, useCallback } from "react";
 import QRCode from "react-qr-code";
 import { getUser, setUser, clearUser, addTicket } from "../lib/auth.js";
-import { fetchMyTickets, getTicketCodesByIdentifier, getEvent, createPaymentOrder, verifyPayment } from "../lib/api.js";
+import { fetchMyTickets, getTicketCodesByIdentifier, getEvent, createPaymentOrder, verifyPayment, sendTicketEmail } from "../lib/api.js";
 import { generateTicketCanvas, downloadCanvasAsPng } from "../lib/generate-ticket.js";
 import { downloadParticipationCardPdf } from "../lib/participation-card-pdf.js";
 import { optimizeCloudinary } from "../lib/image.js";
@@ -105,6 +105,15 @@ function RepayPanel({ ticket, user, onSuccess, onClose }) {
           return;
         }
         addTicket({ ...result.data.data, registeredAt: new Date().toISOString() });
+        // Settling a booking later deserves the same ticket email as booking it
+        // outright. The card's own Email Ticket button covers a failure here.
+        if (user.email) {
+          sendTicketEmail({
+            ticketCode: ticket.ticketCode,
+            email: user.email,
+            paymentId: response.razorpay_payment_id,
+          }).catch(() => {});
+        }
         onSuccess();
       },
       modal: { ondismiss: () => setPhase("breakdown") },
@@ -164,9 +173,21 @@ function RepayPanel({ ticket, user, onSuccess, onClose }) {
 
 // ── Ticket card ───────────────────────────────────────────────────────────────
 
-function TicketCard({ ticket, onRepay }) {
+function TicketCard({ ticket, onRepay, userEmail }) {
   const qrRef = useRef(null);
   const [dlLoading, setDlLoading] = useState(false);
+  // null | { state: "sending" | "sent" | "failed", message? }
+  const [mail, setMail] = useState(null);
+
+  // Covers every booking the automatic send missed — a payment finished by the
+  // Razorpay webhook after the browser closed, a send that failed at the time,
+  // or a ticket the visitor simply wants again.
+  const handleEmailTicket = async () => {
+    if (!userEmail || mail?.state === "sending") return;
+    setMail({ state: "sending" });
+    const { ok, data } = await sendTicketEmail({ ticketCode: ticket.ticketCode, email: userEmail });
+    setMail(ok ? { state: "sent" } : { state: "failed", message: data?.error });
+  };
 
   const name = ticket.event?.name;
   const date = fmtDate(ticket.event?.date);
@@ -264,11 +285,33 @@ function TicketCard({ ticket, onRepay }) {
           <p style={{ fontFamily: "monospace", fontSize: "0.8rem", textAlign: "center", letterSpacing: "0.12em", color: "rgba(255,255,255,0.5)", marginBottom: 10 }}>
             {ticket.ticketCode}
           </p>
-          <div style={{ display: "flex", justifyContent: "center" }}>
+          <div style={{ display: "flex", justifyContent: "center", gap: 10, flexWrap: "wrap" }}>
             <button onClick={handleDownloadTicket} disabled={dlLoading} className="account-btn" style={{ fontSize: 11, padding: "5px 12px" }}>
               {dlLoading ? "Generating…" : isEntryCard ? "Download Participation Card (PDF)" : "Download Ticket"}
             </button>
+            {userEmail && (
+              <button
+                onClick={handleEmailTicket}
+                disabled={mail?.state === "sending"}
+                className="account-btn"
+                style={{ fontSize: 11, padding: "5px 12px" }}
+              >
+                {mail?.state === "sending" ? "Sending…" : "Email Ticket"}
+              </button>
+            )}
           </div>
+          {mail && mail.state !== "sending" && (
+            <p
+              style={{
+                fontSize: 10,
+                textAlign: "center",
+                margin: "8px 0 0",
+                color: mail.state === "sent" ? "rgba(255,255,255,0.4)" : "#fca5a5",
+              }}
+            >
+              {mail.state === "sent" ? `Sent to ${userEmail}` : mail.message || "Could not send the email."}
+            </p>
+          )}
           {isEntryCard && (instructions?.trim() || notes?.trim()) && (
             <p style={{ fontSize: 10, textAlign: "center", color: "rgba(255,255,255,0.35)", margin: "8px 0 0" }}>
               Includes the competition instructions — read them before the event.
@@ -475,7 +518,7 @@ export default function AccountPage() {
               )}
               <div className="my-tickets-grid">
                 {liveTickets.map((t) => (
-                  <TicketCard key={t.ticketCode} ticket={t} onRepay={setRepayTarget} />
+                  <TicketCard key={t.ticketCode} ticket={t} onRepay={setRepayTarget} userEmail={user?.email} />
                 ))}
               </div>
             </>

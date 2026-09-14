@@ -1,28 +1,9 @@
 import { useState, useEffect, useRef } from "react";
 import QRCode from "react-qr-code";
-import { registerForEvent, createPaymentOrder, verifyPayment, validateCode } from "../lib/api.js";
+import { registerForEvent, createPaymentOrder, verifyPayment, validateCode, sendTicketEmail } from "../lib/api.js";
 import { getUser, setUser as persistUser, addTicket } from "../lib/auth.js";
 import { optimizeCloudinary } from "../lib/image.js";
 import { getBookingClosedReason, getBookingClosedDetail } from "../lib/event-status.js";
-
-function sendTicketEmail(email, ticketData) {
-  if (!email) return;
-  fetch("/api/send-ticket", {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({
-      email,
-      ticketCode: ticketData.ticketCode,
-      participantName: ticketData.participantName,
-      eventName: ticketData.eventName,
-      eventDate: ticketData.eventDate,
-      eventVenue: ticketData.eventVenue,
-      numberOfParticipants: ticketData.numberOfParticipants,
-      competitionNumber: ticketData.competitionNumber ?? null,
-      paymentId: ticketData.paymentId,
-    }),
-  }).catch(() => {});
-}
 import { generateTicketCanvas, downloadCanvasAsPng } from "../lib/generate-ticket.js";
 import { downloadParticipationCardPdf } from "../lib/participation-card-pdf.js";
 
@@ -57,7 +38,42 @@ function loadRazorpay() {
 
 const confirmedBadge = { padding: "2px 9px", borderRadius: 4, fontSize: 11, fontWeight: 700, letterSpacing: "0.06em", display: "inline-block", background: "#064e3b", color: "#6ee7b7" };
 
-function TicketSuccess({ ticket, event }) {
+// Delivery of the ticket email, reported on the success screen so a failed
+// send is visible instead of silent.
+function TicketEmailStatus({ status, onRetry }) {
+  if (!status) return null;
+
+  const base = { fontSize: 11, textAlign: "center", margin: "10px 0 0" };
+
+  if (status.state === "skipped") {
+    return (
+      <p style={{ ...base, color: "rgba(255,255,255,0.35)" }}>
+        No email address on this booking, so nothing was sent. Download your ticket above, or add an
+        email in your <a href="/account" style={{ color: "#9bca3b" }}>account</a> to have it mailed.
+      </p>
+    );
+  }
+  if (status.state === "sending") {
+    return <p style={{ ...base, color: "rgba(255,255,255,0.35)" }}>Emailing your ticket…</p>;
+  }
+  if (status.state === "sent") {
+    return <p style={{ ...base, color: "rgba(255,255,255,0.45)" }}>Ticket emailed to {status.email}</p>;
+  }
+  return (
+    <p style={{ ...base, color: "#fca5a5" }}>
+      {status.error || "We couldn't email your ticket."}{" "}
+      <button
+        type="button"
+        onClick={onRetry}
+        style={{ background: "none", border: "none", padding: 0, color: "#9bca3b", font: "inherit", cursor: "pointer", textDecoration: "underline" }}
+      >
+        Send again
+      </button>
+    </p>
+  );
+}
+
+function TicketSuccess({ ticket, event, emailStatus, onResendEmail }) {
   const qrRef = useRef(null);
   const [dlLoading, setDlLoading] = useState(false);
 
@@ -162,6 +178,7 @@ function TicketSuccess({ ticket, event }) {
             View My Bookings →
           </a>
         </div>
+        <TicketEmailStatus status={emailStatus} onRetry={onResendEmail} />
         {isEntryCard && (instructions?.trim() || notes?.trim()) && (
           <p style={{ fontSize: 10, textAlign: "center", color: "rgba(255,255,255,0.35)", margin: "8px 0 0" }}>
             Includes the competition instructions — read them before the event.
@@ -239,6 +256,8 @@ export default function RegistrationForm({ event }) {
   const [form, setForm] = useState({ name: "", phone: "", email: "", age: "", numberOfParticipants: String(minMembers) });
   const [phase, setPhase] = useState("form"); // "form" | "breakdown" | "paying" | "verifying" | "success"
   const [ticket, setTicket] = useState(null);
+  // null | { state: "sending" | "sent" | "failed", email, error? }
+  const [emailStatus, setEmailStatus] = useState(null);
   const [fieldErrors, setFieldErrors] = useState({});
   const [globalError, setGlobalError] = useState(null);
 
@@ -263,6 +282,34 @@ export default function RegistrationForm({ event }) {
     });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  // Sends the ticket email without holding up the success screen, and records
+  // how it went so the visitor can retry a failed send instead of never
+  // learning it failed. Defined above the early returns so the success screen
+  // can call it again.
+  const deliverTicketEmail = (ticketData, paymentId = null) => {
+    const to = form.email.trim();
+    if (!ticketData?.ticketCode) {
+      setEmailStatus(null);
+      return;
+    }
+    // The email field is optional, so say plainly that nothing was sent rather
+    // than leaving the visitor to wonder.
+    if (!to) {
+      setEmailStatus({ state: "skipped" });
+      return;
+    }
+    setEmailStatus({ state: "sending", email: to });
+    sendTicketEmail({
+      ticketCode: ticketData.ticketCode,
+      email: to,
+      paymentId: paymentId ?? ticketData.paymentId ?? null,
+    })
+      .then(({ ok, data }) =>
+        setEmailStatus({ state: ok ? "sent" : "failed", email: to, error: ok ? null : data?.error })
+      )
+      .catch(() => setEmailStatus({ state: "failed", email: to }));
+  };
 
   // Closed because the admin closed it, the event is over or cancelled, or
   // every seat is taken — the visitor sees one consistent "Booking Closed".
@@ -295,7 +342,15 @@ export default function RegistrationForm({ event }) {
     );
   }
 
-  if (phase === "success") return <TicketSuccess ticket={ticket} event={event} />;
+  if (phase === "success")
+    return (
+      <TicketSuccess
+        ticket={ticket}
+        event={event}
+        emailStatus={emailStatus}
+        onResendEmail={() => deliverTicketEmail(ticket)}
+      />
+    );
 
   const needsProfile = !user?.name?.trim() || !user?.phone?.trim() || !user?.age;
   if (needsProfile) {
@@ -420,7 +475,7 @@ export default function RegistrationForm({ event }) {
     if (ok) {
       const ticketData = data.data;
       addTicket({ ...ticketData, registeredAt: new Date().toISOString() });
-      sendTicketEmail(form.email, ticketData);
+      deliverTicketEmail(ticketData);
       setTicket(ticketData);
       setPhase("success");
       return;
@@ -495,7 +550,7 @@ export default function RegistrationForm({ event }) {
         }
         const ticketData = result.data.data;
         addTicket({ ...ticketData, registeredAt: new Date().toISOString() });
-        sendTicketEmail(form.email, ticketData);
+        deliverTicketEmail(ticketData, response.razorpay_payment_id);
         setTicket(ticketData);
         setPhase("success");
       },
