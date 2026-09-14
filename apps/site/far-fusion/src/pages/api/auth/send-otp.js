@@ -37,7 +37,7 @@ async function sendOtpEmail(to, otp) {
       bodyHtml,
       footerHtml: "If you didn&#39;t request this, you can safely ignore this email.",
     }),
-  });
+  }, "otp");
 }
 
 export async function POST(context) {

@@ -6,20 +6,37 @@ import nodemailer from "nodemailer";
 // Each variable is read by name, never through a computed lookup: indexing
 // import.meta.env with a variable forces the bundler to inline the whole
 // build-time environment — SMTP password included — into the output.
+// The same goes for any bare import.meta.env, whether destructured, spread
+// or aliased: only the form import.meta.env.NAME is safe.
 const ENV = {
   SMTP_HOST: import.meta.env.SMTP_HOST ?? process.env.SMTP_HOST,
   SMTP_PORT: import.meta.env.SMTP_PORT ?? process.env.SMTP_PORT,
   SMTP_SECURE: import.meta.env.SMTP_SECURE ?? process.env.SMTP_SECURE,
   SMTP_USER: import.meta.env.SMTP_USER ?? process.env.SMTP_USER,
   SMTP_PASS: import.meta.env.SMTP_PASS ?? process.env.SMTP_PASS,
-  EMAIL_FROM: import.meta.env.EMAIL_FROM ?? process.env.EMAIL_FROM,
+  OTP_EMAIL_FROM: import.meta.env.OTP_EMAIL_FROM ?? process.env.OTP_EMAIL_FROM,
+  TICKET_EMAIL_FROM: import.meta.env.TICKET_EMAIL_FROM ?? process.env.TICKET_EMAIL_FROM,
   // Deployment-only, so it is read straight from the runtime environment: a
   // name the bundler cannot resolve at build time expands into a copy of the
   // whole environment.
   SITE_URL: process.env.SITE_URL,
 };
 
-const FROM_FALLBACK = '"Ulsaham Entertainments" <noreply@ulsaaham.com>';
+// Dotenv strips one wrapping pair of quotes; a dashboard field does not. Without
+// this, a value pasted as "Name <addr>" parses as a quoted display name with no
+// address at all, and every message ships a broken From header.
+function cleanAddress(value) {
+  const text = String(value ?? "").trim();
+  return /^(["']).*\1$/s.test(text) ? text.slice(1, -1).trim() : text;
+}
+
+// One verified Brevo sender per kind of mail. The fallbacks are those same two
+// addresses, so a variable missing from a deployment still sends from an address
+// the relay accepts. The SMTP login is a credential and is never a sender.
+const SENDERS = {
+  otp: cleanAddress(ENV.OTP_EMAIL_FROM) || '"Ulsaham Entertainments" <noreply@ulsaaham.com>',
+  ticket: cleanAddress(ENV.TICKET_EMAIL_FROM) || '"Tickets Ulsaham" <tickets@ulsaaham.com>',
+};
 
 export const SITE_URL = String(ENV.SITE_URL || "https://www.ulsaaham.com").replace(/\/+$/, "");
 
@@ -27,8 +44,9 @@ export function isMailConfigured() {
   return Boolean(ENV.SMTP_HOST && ENV.SMTP_USER && ENV.SMTP_PASS);
 }
 
-function fromAddress() {
-  return ENV.EMAIL_FROM || FROM_FALLBACK;
+function fromAddress(sender) {
+  if (!Object.hasOwn(SENDERS, sender)) throw new Error(`Unknown mail sender "${sender}"`);
+  return SENDERS[sender];
 }
 
 let transporter = null;
@@ -57,11 +75,13 @@ function createTransporter() {
 // message never reached the server. Message-level rejections are not retried.
 const RETRYABLE = new Set(["ECONNECTION", "ESOCKET", "ETIMEDOUT", "ECONNRESET", "EPIPE", "EAI_AGAIN"]);
 
-export async function sendMail(message) {
+export async function sendMail(message, sender) {
+  // An unknown sender is a programming error: fail before opening a socket.
+  const from = fromAddress(sender);
   if (!isMailConfigured()) throw new Error("SMTP is not configured");
   if (!transporter) transporter = createTransporter();
 
-  const payload = { from: fromAddress(), ...message };
+  const payload = { ...message, from };
 
   try {
     return await transporter.sendMail(payload);
