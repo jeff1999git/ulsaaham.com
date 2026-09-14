@@ -45,6 +45,14 @@ function TicketEmailStatus({ status, onRetry }) {
 
   const base = { fontSize: 11, textAlign: "center", margin: "10px 0 0" };
 
+  if (status.state === "skipped") {
+    return (
+      <p style={{ ...base, color: "rgba(255,255,255,0.35)" }}>
+        No email address on this booking, so nothing was sent. Download your ticket above, or add an
+        email in your <a href="/account" style={{ color: "#9bca3b" }}>account</a> to have it mailed.
+      </p>
+    );
+  }
   if (status.state === "sending") {
     return <p style={{ ...base, color: "rgba(255,255,255,0.35)" }}>Emailing your ticket…</p>;
   }
@@ -281,8 +289,14 @@ export default function RegistrationForm({ event }) {
   // can call it again.
   const deliverTicketEmail = (ticketData, paymentId = null) => {
     const to = form.email.trim();
-    if (!ticketData?.ticketCode || !to) {
+    if (!ticketData?.ticketCode) {
       setEmailStatus(null);
+      return;
+    }
+    // The email field is optional, so say plainly that nothing was sent rather
+    // than leaving the visitor to wonder.
+    if (!to) {
+      setEmailStatus({ state: "skipped" });
       return;
     }
     setEmailStatus({ state: "sending", email: to });
