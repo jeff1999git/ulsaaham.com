@@ -182,7 +182,7 @@ export async function POST(context) {
       text: textLines.join("\n"),
       html,
       attachments: qrBuffer ? [{ filename: "ticket-qr.png", content: qrBuffer, cid: "ticket-qr" }] : [],
-    });
+    }, "ticket");
   } catch (err) {
     console.error("[send-ticket] mail error:", err?.message);
     // Nothing was delivered, so let the visitor try again straight away.
