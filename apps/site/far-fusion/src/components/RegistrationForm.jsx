@@ -3,7 +3,7 @@ import QRCode from "react-qr-code";
 import { registerForEvent, createPaymentOrder, verifyPayment, validateCode } from "../lib/api.js";
 import { getUser, setUser as persistUser, addTicket } from "../lib/auth.js";
 import { optimizeCloudinary } from "../lib/image.js";
-import { hasEventStarted } from "../lib/event-time.js";
+import { getBookingClosedReason, getBookingClosedDetail } from "../lib/event-status.js";
 
 function sendTicketEmail(email, ticketData) {
   if (!email) return;
@@ -264,26 +264,14 @@ export default function RegistrationForm({ event }) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  if (event.isFull) {
-    return (
-      <div className="reg-closed">
-        <p className="font-serif text-2xl text-accent">Event Full</p>
-        <p className="text-light/50 mt-2 text-sm">This event has reached its capacity.</p>
-      </div>
-    );
-  }
-  if (hasEventStarted(event)) {
-    return (
-      <div className="reg-closed">
-        <p className="font-serif text-2xl text-light/60">Booking is closed — this event has started.</p>
-      </div>
-    );
-  }
-  if (event.status !== "PUBLISHED") {
+  // Closed because the admin closed it, the event is over or cancelled, or
+  // every seat is taken — the visitor sees one consistent "Booking Closed".
+  const closedReason = getBookingClosedReason(event);
+  if (closedReason) {
     return (
       <div className="reg-closed">
         <p className="font-serif text-2xl text-accent">Booking Closed</p>
-        <p className="text-light/50 mt-2 text-sm">This event is no longer accepting bookings.</p>
+        <p className="text-light/50 mt-2 text-sm">{getBookingClosedDetail(closedReason)}</p>
       </div>
     );
   }

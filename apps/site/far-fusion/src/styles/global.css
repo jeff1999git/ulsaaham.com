@@ -954,7 +954,8 @@ a:hover {
 }
 .event-card__price.free { background: #9bca3b; color: #023301; }
 .event-card__price.paid { background: rgba(2, 51, 1, 0.9); color: #9bca3b; border: 1px solid rgba(155, 202, 59, 0.4); }
-.event-card__full {
+.event-card__full,
+.event-card__closed {
   position: absolute;
   top: 0.65rem;
   left: 0.65rem;
@@ -966,6 +967,11 @@ a:hover {
   text-transform: uppercase;
   padding: 0.18rem 0.5rem;
   border-radius: 999px;
+}
+.event-card__closed {
+  background: rgba(15, 23, 42, 0.82);
+  border: 1px solid rgba(255, 255, 255, 0.28);
+  letter-spacing: 0.06em;
 }
 .event-card__featured {
   display: inline-block;
