@@ -1,4 +1,4 @@
-﻿const KEY = "ulsaham_user";
+const KEY = "ulsaham_user";
 // Persists through logout so returning users are routed correctly
 const ACCOUNTS_KEY = "ulsaham_accounts";
 
@@ -29,10 +29,6 @@ export function clearUser() {
   // Intentionally keep ACCOUNTS_KEY so re-login routing works after logout
 }
 
-export function isLoggedIn() {
-  return !!getUser();
-}
-
 export function getKnownAccount(email) {
   try {
     const map = JSON.parse(localStorage.getItem(ACCOUNTS_KEY) || "{}");
@@ -48,21 +44,4 @@ export function addTicket(ticket) {
     tickets.unshift({ ...ticket, savedAt: new Date().toISOString() });
   }
   setUser({ ...user, tickets });
-}
-
-/**
- * Hash a password using email as a deterministic salt.
- * Uses Web Crypto SHA-256 — no packages needed.
- */
-export async function hashPassword(password, email) {
-  const data = new TextEncoder().encode(`${email.toLowerCase()}:${password}:ulsaham`);
-  const buf = await crypto.subtle.digest("SHA-256", data);
-  return Array.from(new Uint8Array(buf))
-    .map((b) => b.toString(16).padStart(2, "0"))
-    .join("");
-}
-
-export async function verifyPassword(password, email, storedHash) {
-  const hash = await hashPassword(password, email);
-  return hash === storedHash;
 }

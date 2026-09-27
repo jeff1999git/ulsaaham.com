@@ -1,6 +1,7 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useCallback } from "react";
 import { getEvents } from "../lib/api.js";
 import { optimizeCloudinary } from "../lib/image.js";
+import { HOME_PAST } from "../lib/page-data.js";
 import PastEventsCoverflow from "./PastEventsCoverflow.jsx";
 
 function PastEventsHeading() {
@@ -13,24 +14,61 @@ function PastEventsHeading() {
   );
 }
 
+// The events slide when there is nothing upcoming and no past poster to show
+// either, so it never sits empty. onRetry is set when the past events failed
+// to load.
+function ComingSoon({ onRetry }) {
+  return (
+    <div className="mx-auto max-w-6xl px-4 sm:px-6">
+      <h2 className="section-title">Our Events</h2>
+      <p className="section-subtitle max-w-xl">New events coming soon.</p>
+      <div className="mt-8 flex flex-wrap items-center gap-4">
+        <a
+          href="/events"
+          className="inline-flex items-center rounded-full px-6 py-3 text-sm font-semibold uppercase tracking-[0.3em] text-light/80 transition hover:text-light hover:border-white/30"
+          style={{ background: "rgba(255,255,255,0.08)", border: "1px solid rgba(255,255,255,0.18)" }}
+        >
+          View All Events
+        </a>
+        {onRetry && (
+          <button type="button" onClick={onRetry} className="account-btn">
+            Couldn't load past events · Retry
+          </button>
+        )}
+      </div>
+    </div>
+  );
+}
+
 /**
  * variant "runner" is the scrolling strip shown under upcoming events;
  * "coverflow" fills the slide when there are none; null waits until the
  * caller knows which, so the section never swaps layouts in front of the visitor.
+ * onPosters, if given, hears how many posters there are to show once loaded.
  */
-export default function PastEventsRunner({ variant = "runner" }) {
+export default function PastEventsRunner({ variant = "runner", onPosters }) {
   const [posters, setPosters] = useState([]);
+  // "loading" | "done" | "failed"
+  const [state, setState] = useState("loading");
   const [started, setStarted] = useState(false);
   const loadedRef = useRef(0);
   const timerRef = useRef(null);
 
-  useEffect(() => {
-    getEvents({ past: true, limit: 30 }).then(({ ok, data }) => {
-      if (!ok) return;
+  const load = useCallback(() => {
+    setState("loading");
+    getEvents(HOME_PAST).then(({ ok, data }) => {
+      if (!ok) { setState("failed"); return; }
       const withBanner = (data?.data?.events ?? []).filter((e) => e.bannerImageUrl);
       setPosters(withBanner);
-    }).catch(() => {});
+      setState("done");
+    }).catch(() => setState("failed"));
   }, []);
+
+  useEffect(() => { load(); }, [load]);
+
+  useEffect(() => {
+    onPosters?.(posters.length);
+  }, [posters.length]);
 
   // Fallback: start animation after 2s even if images are slow
   useEffect(() => {
@@ -49,7 +87,13 @@ export default function PastEventsRunner({ variant = "runner" }) {
     }
   }
 
-  if (posters.length === 0 || !variant) return null;
+  if (!variant) return null;
+  if (posters.length === 0) {
+    // Under upcoming events the strip simply stays away; alone on the slide,
+    // something has to say why it is empty.
+    if (variant !== "coverflow" || state === "loading") return null;
+    return <ComingSoon onRetry={state === "failed" ? load : null} />;
+  }
 
   if (variant === "coverflow") {
     return (
@@ -87,7 +131,6 @@ export default function PastEventsRunner({ variant = "runner" }) {
                   height="267"
                   onLoad={isOriginal ? handleLoad : undefined}
                 />
-                <div className="past-runner__label">{ev.name}</div>
               </Tag>
             );
           })}

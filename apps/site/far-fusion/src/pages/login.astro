@@ -1,16 +1,17 @@
-﻿---
+---
 export const prerender = true;
 import BaseLayout from "../layouts/BaseLayout.astro";
+import navLogo from "../assets/brand_logo_128.avif?url";
 import AuthForm from "../components/AuthForm.jsx";
 ---
 
-<BaseLayout title="Login — Ulsaham" description="Sign in or create your Ulsaham account.">
+<BaseLayout title="Login — Ulsaham" description="Sign in or create your Ulsaham account." noindex>
   <div class="min-h-screen bg-primary text-light">
 
     <nav class="hero-video__menu">
       <div style="display:flex;align-items:center;gap:0.75rem;">
         <a href="/" class="hero-logo-link" aria-label="Ulsaham Home">
-          <img src="/brand_logo.avif" alt="Ulsaham" class="topbar-logo" />
+          <img src={navLogo} alt="Ulsaham" class="topbar-logo" width="38" height="38" />
           <div class="hero-logo-link__brand">
             <span class="hero-logo-link__name">ULSAHAM</span>
             <span class="hero-logo-link__sub">Entertainments</span>

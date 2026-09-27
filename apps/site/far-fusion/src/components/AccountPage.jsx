@@ -1,10 +1,12 @@
-﻿import { useState, useEffect, useRef, useCallback } from "react";
+import { useState, useEffect, useRef, useCallback } from "react";
 import QRCode from "react-qr-code";
 import { getUser, setUser, clearUser, addTicket } from "../lib/auth.js";
 import { fetchMyTickets, getTicketCodesByIdentifier, getEvent, createPaymentOrder, verifyPayment, sendTicketEmail } from "../lib/api.js";
 import { generateTicketCanvas, downloadCanvasAsPng } from "../lib/generate-ticket.js";
-import { downloadParticipationCardPdf } from "../lib/participation-card-pdf.js";
+import { downloadParticipationCardPdf, warmParticipationCardPdf } from "../lib/participation-card-pdf.js";
 import { optimizeCloudinary } from "../lib/image.js";
+import { hasEventEnded } from "../lib/event-time.js";
+import { formatDateShort, formatDateMedium } from "../lib/format-date.js";
 
 function loadRazorpay() {
   return new Promise((resolve) => {
@@ -30,20 +32,38 @@ function calcFees(event, count) {
   return { base, gst, platformFee, total };
 }
 
-function fmtDate(d) {
-  try { return new Intl.DateTimeFormat("en-IN", { dateStyle: "medium" }).format(new Date(d)); }
-  catch { return d || ""; }
-}
+// My Bookings: the backend reads at most this many ticket codes per request.
+const MAX_CODES = 20;
+// A pending payment is checked this often, for this long; a tab left open
+// in the background should not poll for ever.
+const POLL_EVERY_MS = 30_000;
+const POLL_FOR_MS = 10 * 60_000;
+// Coming back to the tab reloads the bookings unless they are this fresh.
+const RELOAD_AFTER_MS = 30_000;
+
+const isCancelled = (ticket) => ticket.event?.status === "CANCELLED";
+
+// An unpaid booking that can still be paid (one for a cancelled event cannot).
+const awaitingPayment = (ticket) => !ticket.amountPaid && !isCancelled(ticket);
 
 // ── Status badge ──────────────────────────────────────────────────────────────
 
 function StatusBadge({ ticket }) {
   const base = { padding: "2px 9px", borderRadius: 4, fontSize: 11, fontWeight: 700, letterSpacing: "0.06em", display: "inline-block" };
+  const entered = ticket.enteredCount || 0;
+  const total = ticket.numberOfParticipants || 0;
+  if (isCancelled(ticket))
+    return <span style={{ ...base, background: "#7f1d1d", color: "#fecaca" }}>Cancelled</span>;
   if (!ticket.amountPaid)
     return <span style={{ ...base, background: "#78350f", color: "#fde68a" }}>Payment Required</span>;
   if (ticket.attended)
     return <span style={{ ...base, background: "#064e3b", color: "#6ee7b7" }}>Attended ✓</span>;
-  if (new Date(ticket.event?.date) < new Date())
+  // Part of a group is in; the rest can still enter on the same ticket.
+  if (entered > 0 && entered < total)
+    return <span style={{ ...base, background: "#064e3b", color: "#6ee7b7" }}>{entered} of {total} entered</span>;
+  // Only once the event is over: event.date alone is midnight UTC, 05:30 IST
+  // on the day itself. Without an end time this falls back to 23:59 IST.
+  if (ticket.event?.date && hasEventEnded(ticket.event))
     return <span style={{ ...base, background: "#1f2937", color: "#9ca3af" }}>Not Attended</span>;
   return <span style={{ ...base, background: "#064e3b", color: "#6ee7b7" }}>Confirmed</span>;
 }
@@ -190,24 +210,29 @@ function TicketCard({ ticket, onRepay, userEmail }) {
   };
 
   const name = ticket.event?.name;
-  const date = fmtDate(ticket.event?.date);
+  const date = formatDateMedium(ticket.event?.date);
   const venue = ticket.event?.venue;
   const banner = ticket.event?.bannerImageUrl;
   const isEntryCard = ticket.competitionNumber != null;
   const instructions = ticket.event?.competitionInstructions || null;
   const notes = ticket.event?.competitionNotes || null;
+  const canDownloadCard = isEntryCard && !!ticket.amountPaid;
+
+  useEffect(() => {
+    if (canDownloadCard) warmParticipationCardPdf();
+  }, [canDownloadCard]);
 
   const handleDownloadTicket = async () => {
     setDlLoading(true);
     try {
       if (isEntryCard) {
         // Competition participation card: plain details PDF, no ticket art / QR
-        downloadParticipationCardPdf(
+        await downloadParticipationCardPdf(
           {
             chestNumber: ticket.competitionNumber,
             participantName: ticket.participantName,
             eventName: name,
-            eventDate: fmtDate(ticket.event?.date),
+            eventDate: date,
             eventVenue: venue,
             numberOfParticipants: ticket.numberOfParticipants,
             ticketCode: ticket.ticketCode,
@@ -219,9 +244,13 @@ function TicketCard({ ticket, onRepay, userEmail }) {
         return;
       }
 
-      const svgEl = qrRef.current?.querySelector("svg");
-      if (!svgEl) return;
-      const eventDate = new Intl.DateTimeFormat("en-IN", { day: "numeric", month: "short", year: "numeric" }).format(new Date(ticket.event?.date));
+      // The on-screen QR, copied at the ticket's 260 px so it stays sharp.
+      const shown = qrRef.current?.querySelector("svg");
+      if (!shown) throw new Error("QR code not rendered");
+      const svgEl = shown.cloneNode(true);
+      svgEl.setAttribute("width", "260");
+      svgEl.setAttribute("height", "260");
+      const eventDate = formatDateShort(ticket.event?.date);
       const canvas = await generateTicketCanvas(svgEl, {
         ticketCode: ticket.ticketCode,
         participantName: ticket.participantName,
@@ -232,8 +261,8 @@ function TicketCard({ ticket, onRepay, userEmail }) {
         bannerImageUrl: banner,
       });
       downloadCanvasAsPng(canvas, `ticket-${ticket.ticketCode}.png`);
-    } catch {
-      alert(`Failed to generate ${isEntryCard ? "participation card" : "ticket"}. Please try again.`);
+    } catch (err) {
+      alert(err?.chunkLoad ? err.message : `Failed to generate ${isEntryCard ? "participation card" : "ticket"}. Please try again.`);
     } finally {
       setDlLoading(false);
     }
@@ -261,13 +290,6 @@ function TicketCard({ ticket, onRepay, userEmail }) {
         </p>
       </div>
 
-      {/* QR rendered off-screen — canvas reads it (not needed for participation cards) */}
-      {ticket.amountPaid && !isEntryCard && (
-        <div ref={qrRef} style={{ position: "fixed", left: -9999, top: -9999, pointerEvents: "none" }}>
-          <QRCode value={ticket.ticketCode} size={260} />
-        </div>
-      )}
-
       {ticket.amountPaid ? (
         <div style={{ padding: "12px 16px", borderTop: "1px solid rgba(255,255,255,0.06)" }}>
           {isEntryCard ? (
@@ -275,10 +297,8 @@ function TicketCard({ ticket, onRepay, userEmail }) {
               <p style={{ fontSize: 10, fontWeight: 700, letterSpacing: "0.18em", color: "#666", margin: 0 }}>CHEST NO</p>
               <p style={{ fontSize: 44, fontWeight: 700, color: "#014421", margin: 0, lineHeight: 1.15 }}>{ticket.competitionNumber}</p>
             </div>
-          ) : ticket.qrCodeUrl ? (
-            <img src={ticket.qrCodeUrl} alt="QR code" style={{ width: "100%", maxWidth: 150, display: "block", margin: "0 auto 8px" }} />
           ) : (
-            <div style={{ background: "#fff", padding: 8, display: "block", width: "fit-content", margin: "0 auto 8px", borderRadius: 6 }}>
+            <div ref={qrRef} style={{ background: "#fff", padding: 8, display: "block", width: "fit-content", margin: "0 auto 8px", borderRadius: 6 }}>
               <QRCode value={ticket.ticketCode} size={130} />
             </div>
           )}
@@ -318,6 +338,10 @@ function TicketCard({ ticket, onRepay, userEmail }) {
             </p>
           )}
         </div>
+      ) : isCancelled(ticket) ? (
+        <div style={{ padding: "12px 16px", borderTop: "1px solid rgba(255,255,255,0.06)" }}>
+          <p className="text-light/40 text-xs text-center">This event has been cancelled.</p>
+        </div>
       ) : (
         <div style={{ padding: "12px 16px", borderTop: "1px solid rgba(255,255,255,0.06)" }}>
           <button onClick={() => onRepay(ticket)} className="reg-submit" style={{ width: "100%", padding: "10px 16px", margin: 0 }}>
@@ -344,49 +368,110 @@ export default function AccountPage() {
   const [ticketsLoading, setTicketsLoading] = useState(true);
   const [ticketsError, setTicketsError] = useState(null);
   const [repayTarget, setRepayTarget] = useState(null);
+  const [polling, setPolling] = useState(false);
 
   const userRef = useRef(null);
   const autoRefreshRef = useRef(null);
+  const inFlightRef = useRef(false);
+  const reloadRef = useRef(false);
+  const lastLoadAtRef = useRef(0);
+
+  const stopPolling = useCallback(() => {
+    clearInterval(autoRefreshRef.current);
+    autoRefreshRef.current = null;
+    setPolling(false);
+  }, []);
+
+  const saveTickets = useCallback((tickets) => {
+    const next = { ...userRef.current, tickets };
+    try { setUser(next); } catch { /* storage full or blocked: kept for this visit only */ }
+    userRef.current = next;
+    setUserState(next);
+  }, []);
 
   const loadTickets = useCallback(async () => {
     const u = userRef.current;
     if (!u) return;
-    let stored = u.tickets || [];
+    // One load at a time. A load asked for meanwhile (Refresh, a payment just
+    // settled) runs as soon as this one ends, so it still sees the latest state.
+    if (inFlightRef.current) { reloadRef.current = true; return; }
+    inFlightRef.current = true;
+    lastLoadAtRef.current = Date.now();
 
-    // Merge in every booking the backend knows for this phone/email, so tickets
-    // booked on another device (or before localStorage was cleared) show up too.
-    const identifier = u.phone || u.email;
-    if (identifier) {
-      const { ok, data } = await getTicketCodesByIdentifier(identifier);
-      const remoteCodes = ok ? data.data?.ticketCodes || [] : [];
+    try {
+      let stored = u.tickets || [];
+      const storedCodes = stored.map((t) => t.ticketCode).slice(0, MAX_CODES);
+
+      // Merge in every booking the backend knows for this phone/email, so tickets
+      // booked on another device (or before localStorage was cleared) show up too.
+      // That lookup and the details of the bookings stored here are requested
+      // together rather than one after the other.
+      const identifier = u.phone || u.email;
+      const [lookup, first] = await Promise.all([
+        identifier ? getTicketCodesByIdentifier(identifier) : null,
+        storedCodes.length > 0 ? fetchMyTickets(storedCodes) : null,
+      ]);
+      const remoteCodes = lookup?.ok ? lookup.data?.data?.ticketCodes || [] : [];
       const known = new Set(stored.map((t) => t.ticketCode));
       const missing = remoteCodes.filter((code) => !known.has(code)).map((code) => ({ ticketCode: code }));
       if (missing.length > 0) {
         stored = [...stored, ...missing];
-        const restored = { ...u, tickets: stored };
-        setUser(restored);
-        userRef.current = restored;
-        setUserState(restored);
+        saveTickets(stored);
+      }
+
+      if (stored.length === 0) {
+        setLiveTickets([]);
+        setTicketsError(null);
+        setTicketsLoading(false);
+        stopPolling();
+        return;
+      }
+
+      // A second request, for the whole set, only when the lookup added codes
+      // that fit under the cap; the order and the cap stay as they were.
+      const codes = stored.map((t) => t.ticketCode).slice(0, MAX_CODES);
+      const unchanged = first && codes.length === storedCodes.length && codes.every((c, i) => c === storedCodes[i]);
+      const { ok, data } = unchanged ? first : await fetchMyTickets(codes);
+      setTicketsLoading(false);
+
+      if (!ok) { setTicketsError("Could not load booking details. Tap to retry."); return; }
+      const fetched = data.data?.tickets || [];
+      setLiveTickets(fetched);
+      setTicketsError(null);
+
+      // Bookings are deleted 14 days after their event. A code this request
+      // asked about that did not come back is gone for good, so it goes from
+      // here too. Codes beyond the cap were not asked about and stay.
+      const sent = new Set(codes);
+      const live = new Set(fetched.map((t) => t.ticketCode));
+      const kept = stored.filter((t) => !sent.has(t.ticketCode) || live.has(t.ticketCode));
+      if (kept.length < stored.length) saveTickets(kept);
+
+      // While a payment is pending, check again every 30 s, skipping ticks
+      // while the tab is hidden, and give up after 10 minutes. Once it has
+      // stopped, the next load that still finds one pending (coming back to
+      // the tab, Refresh) starts it again.
+      if (!fetched.some(awaitingPayment)) {
+        stopPolling();
+      } else if (!autoRefreshRef.current) {
+        const until = Date.now() + POLL_FOR_MS;
+        autoRefreshRef.current = setInterval(() => {
+          if (Date.now() > until) stopPolling();
+          else if (!document.hidden) loadTickets();
+        }, POLL_EVERY_MS);
+        setPolling(true);
+      }
+    } catch {
+      setTicketsLoading(false);
+      setTicketsError("Could not load booking details. Tap to retry.");
+    } finally {
+      inFlightRef.current = false;
+      if (reloadRef.current) {
+        reloadRef.current = false;
+        loadTickets();
       }
     }
-
-    if (stored.length === 0) { setTicketsLoading(false); return; }
-
-    const codes = stored.map((t) => t.ticketCode).slice(0, 20);
-    const { ok, data } = await fetchMyTickets(codes);
-    setTicketsLoading(false);
-
-    if (!ok) { setTicketsError("Could not load booking details. Tap to retry."); return; }
-    const fetched = data.data?.tickets || [];
-    setLiveTickets(fetched);
-    setTicketsError(null);
-
-    // Auto-refresh every 30s while any ticket shows unpaid
-    clearInterval(autoRefreshRef.current);
-    if (fetched.some((t) => !t.amountPaid)) {
-      autoRefreshRef.current = setInterval(loadTickets, 30000);
-    }
-  }, []);
+  }, [saveTickets, stopPolling]);
 
   useEffect(() => {
     const u = getUser();
@@ -396,11 +481,17 @@ export default function AccountPage() {
     setForm({ name: u.name, email: u.email || "", age: String(u.age || "") });
     loadTickets();
 
-    const onVisible = () => { if (!document.hidden) loadTickets(); };
+    // Coming back to the tab shows fresh bookings, unless they were only just loaded.
+    const onVisible = () => {
+      if (document.hidden || inFlightRef.current) return;
+      if (Date.now() - lastLoadAtRef.current < RELOAD_AFTER_MS) return;
+      loadTickets();
+    };
     document.addEventListener("visibilitychange", onVisible);
     return () => {
       document.removeEventListener("visibilitychange", onVisible);
       clearInterval(autoRefreshRef.current);
+      autoRefreshRef.current = null;
     };
   }, [loadTickets]);
 
@@ -511,7 +602,7 @@ export default function AccountPage() {
 
           {!ticketsLoading && !ticketsError && liveTickets.length > 0 && (
             <>
-              {liveTickets.some((t) => !t.amountPaid) && (
+              {polling && (
                 <p className="text-light/40 text-xs mb-4">
                   Auto-refreshing every 30 s for pending payments.
                 </p>

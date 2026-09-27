@@ -2,13 +2,80 @@
 @tailwind components;
 @tailwind utilities;
 
+/* ─── Fonts ───
+   Self-hosted copies of the Google Fonts files, one per face, subset once with
+   fontTools (pyftsubset) to Basic Latin, Latin-1, dashes, curly quotes,
+   bullet, ellipsis, ₹ and minus. Jakarta is a variable font limited to
+   weights 400-700; Playfair is only ever used at 400. Anything outside that
+   range (Malayalam, arrows, emoji) falls through to the system fonts, as
+   before.
+
+   Each "Fallback" face is a local system font resized to its web font's
+   metrics, so text barely moves when the web font swaps in. */
+@font-face {
+  font-family: 'Plus Jakarta Sans';
+  font-style: normal;
+  font-weight: 400 700;
+  font-display: swap;
+  src: url('../assets/fonts/plus-jakarta-sans-var.woff2') format('woff2');
+  unicode-range: U+0020-007E, U+00A0-00FF, U+2013-2014, U+2018-201A, U+201C-201E, U+2022, U+2026, U+20B9, U+2212;
+}
+@font-face {
+  font-family: 'Playfair Display';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url('../assets/fonts/playfair-display-400.woff2') format('woff2');
+  unicode-range: U+0020-007E, U+00A0-00FF, U+2013-2014, U+2018-201A, U+201C-201E, U+2022, U+2026, U+20B9, U+2212;
+}
+@font-face {
+  font-family: 'Playfair Display';
+  font-style: italic;
+  font-weight: 400;
+  font-display: swap;
+  src: url('../assets/fonts/playfair-display-400-italic.woff2') format('woff2');
+  unicode-range: U+0020-007E, U+00A0-00FF, U+2013-2014, U+2018-201A, U+201C-201E, U+2022, U+2026, U+20B9, U+2212;
+}
+@font-face {
+  font-family: 'Plus Jakarta Sans Fallback';
+  src: local('Arial'), local('ArialMT');
+  size-adjust: 104.96%;
+  ascent-override: 98.89%;
+  descent-override: 21.15%;
+  line-gap-override: 0%;
+  unicode-range: U+0020-007E, U+00A0-00FF, U+2013-2014, U+2018-201A, U+201C-201E, U+2022, U+2026, U+20B9, U+2212;
+}
+@font-face {
+  font-family: 'Playfair Display Fallback';
+  font-style: normal;
+  src: local('Times New Roman'), local('TimesNewRomanPSMT');
+  size-adjust: 112.45%;
+  ascent-override: 96.22%;
+  descent-override: 22.32%;
+  line-gap-override: 0%;
+  unicode-range: U+0020-007E, U+00A0-00FF, U+2013-2014, U+2018-201A, U+201C-201E, U+2022, U+2026, U+20B9, U+2212;
+}
+@font-face {
+  font-family: 'Playfair Display Fallback';
+  font-style: italic;
+  src: local('Times New Roman Italic'), local('TimesNewRomanPS-ItalicMT');
+  size-adjust: 105.15%;
+  ascent-override: 102.9%;
+  descent-override: 23.87%;
+  line-gap-override: 0%;
+  unicode-range: U+0020-007E, U+00A0-00FF, U+2013-2014, U+2018-201A, U+201C-201E, U+2022, U+2026, U+20B9, U+2212;
+}
+
 :root {
-  font-family: 'Plus Jakarta Sans', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI',
+  font-family: 'Plus Jakarta Sans', 'Plus Jakarta Sans Fallback', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI',
     'Helvetica Neue', Arial, sans-serif;
   background-color: #023301;
   color: #ffffff;
 }
 
+/* Sideways scrolling is stopped here and by main's overflow-x: clip. Not on
+   body as well: that would make body a scroll container of its own, and the
+   event page's sticky poster would stick to it instead of the window. */
 html {
   overflow-x: hidden;
 }
@@ -17,7 +84,6 @@ body {
   min-height: 100vh;
   background-color: #023301;
   color: #ffffff;
-  overflow-x: hidden;
 }
 
 /* ─── Home page: paginated full-screen slides (all viewport sizes) ─── */
@@ -45,6 +111,12 @@ body {
 .fp-section > astro-island > * {
   min-height: 0;
   min-width: 0;
+}
+/* Every slide stays rendered (the pager only translates them), so endless
+   animations hold while their slide is off screen. The pager marks the slide
+   on screen with .is-current. The coverflow pauses itself. */
+.fp-section:not(.is-current) :is(.past-runner__track, .client-carousel__track, .nav-chevron) {
+  animation-play-state: paused;
 }
 
 .fp-dots {
@@ -80,68 +152,6 @@ a {
 }
 a:hover {
   color: #ffffff;
-}
-
-@layer utilities {
-  .animation-delay-100 {
-    animation-delay: 0.1s;
-  }
-  .animation-delay-200 {
-    animation-delay: 0.2s;
-  }
-  .animation-delay-300 {
-    animation-delay: 0.3s;
-  }
-  .animation-delay-400 {
-    animation-delay: 0.4s;
-  }
-  .animation-delay-500 {
-    animation-delay: 0.5s;
-  }
-  .animation-delay-600 {
-    animation-delay: 0.6s;
-  }
-}
-
-.hero-scene-wrapper {
-  position: relative;
-  width: 100%;
-  height: 100%;
-  overflow: hidden;
-  isolation: isolate;
-}
-
-.hero-scene-canvas {
-  position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-  z-index: 0;
-  pointer-events: none;
-}
-
-.hero-scene-canvas canvas {
-  width: 100% !important;
-  height: 100% !important;
-  display: block;
-}
-
-.profile-scene {
-  position: absolute;
-  inset: 0;
-  z-index: 0;
-  pointer-events: none;
-  opacity: 0.92;
-  filter: saturate(1.05);
-}
-
-.profile-scene::after {
-  content: "";
-  position: absolute;
-  inset: 0;
-  background: radial-gradient(circle at top, rgba(155, 202, 59, 0.16), transparent 65%);
-  mix-blend-mode: screen;
-  pointer-events: none;
 }
 
 .hero-video {
@@ -199,7 +209,7 @@ a:hover {
 }
 
 .hero-video__menu-link {
-  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-family: 'Plus Jakarta Sans', 'Plus Jakarta Sans Fallback', sans-serif;
   font-size: clamp(0.7rem, 1.8vw, 0.95rem);
   letter-spacing: 0.22em;
   text-transform: uppercase;
@@ -279,7 +289,7 @@ a:hover {
   position: relative;
   display: inline-block;
   padding-bottom: 0.75rem;
-  font-family: 'Playfair Display', serif;
+  font-family: 'Playfair Display', 'Playfair Display Fallback', serif;
   font-size: clamp(1.5rem, 3.5vw, 2.25rem);
   color: #ffffff;
 }
@@ -332,7 +342,6 @@ a:hover {
   gap: clamp(2rem, 6vw, 6rem);
   width: max-content;
   animation: scroll-clients-horizontal 42s linear infinite;
-  will-change: transform;
 }
 .client-carousel__track--paused {
   animation-play-state: paused;
@@ -343,6 +352,35 @@ a:hover {
   justify-content: center;
   gap: 1.75rem;
   width: 100%;
+}
+
+/* No partners to show, or they failed to load: a line and an action instead. */
+.client-carousel--empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1.25rem;
+  padding-left: 1.5rem;
+  padding-right: 1.5rem;
+  text-align: center;
+  color: rgba(255, 255, 255, 0.6);
+}
+.client-carousel__cta {
+  display: inline-flex;
+  align-items: center;
+  border-radius: 999px;
+  padding: 0.75rem 2rem;
+  font-weight: 600;
+  text-decoration: none;
+  color: #9bca3b;
+  background: rgba(155, 202, 59, 0.12);
+  border: 1px solid rgba(155, 202, 59, 0.4);
+  transition: background 0.25s ease, border-color 0.25s ease;
+}
+.client-carousel__cta:hover {
+  color: #9bca3b;
+  background: rgba(155, 202, 59, 0.2);
+  border-color: rgba(155, 202, 59, 0.6);
 }
 
 .client-carousel__skeleton {
@@ -459,10 +497,6 @@ a:hover {
   z-index: 2;
 }
 
-.past-runner__label {
-  display: none;
-}
-
 @keyframes scroll-past-horizontal {
   0% { transform: translateX(0); }
   100% { transform: translateX(-50%); }
@@ -507,19 +541,45 @@ a:hover {
   aspect-ratio: 4 / 5;
   margin-left: calc(var(--cf-w) / -2);
   display: block;
+  /* No overflow: hidden, so the centre card's shadow on ::before can reach
+     outside the card; the poster and the dim layer round their own corners. */
   border-radius: 20px;
-  overflow: hidden;
   background: #0b2a0a;
   border: 1px solid rgba(155, 202, 59, 0.12);
   box-shadow: 0 18px 40px -18px rgba(0, 0, 0, 0.7);
   transform-origin: 50% 50%;
   transition:
     transform 0.7s cubic-bezier(0.22, 0.61, 0.36, 1),
-    opacity 0.7s ease,
-    box-shadow 0.7s ease,
-    border-color 0.7s ease;
-  will-change: transform;
+    opacity 0.7s ease;
   -webkit-tap-highlight-color: transparent;
+}
+
+/* Only cards near the centre ever move on screen, so only they get a layer. */
+.past-cf__card.is-near {
+  will-change: transform;
+}
+
+/* The centre card's lift: a deeper shadow and a brighter border (the inset
+   ring over the card's own border adds up to its old 0.35 border colour).
+   Only this layer's opacity changes, which the compositor animates without
+   repainting the card. */
+.past-cf__card::before {
+  content: "";
+  position: absolute;
+  inset: -1px;
+  z-index: -1;
+  border-radius: inherit;
+  box-shadow:
+    inset 0 0 0 1px rgba(155, 202, 59, 0.26),
+    0 34px 70px -22px rgba(0, 0, 0, 0.85),
+    0 0 0 1px rgba(155, 202, 59, 0.12);
+  opacity: 0;
+  transition: opacity 0.7s ease;
+  pointer-events: none;
+}
+
+.past-cf__card.is-active::before {
+  opacity: 1;
 }
 
 /* Side cards sink back into the dark; --cf-dim is set per card. */
@@ -527,6 +587,8 @@ a:hover {
   content: "";
   position: absolute;
   inset: 0;
+  /* The card's 20px corner, inside its 1px border. */
+  border-radius: 19px;
   background: #021c01;
   opacity: var(--cf-dim, 0);
   transition: opacity 0.7s ease;
@@ -537,16 +599,10 @@ a:hover {
   display: block;
   width: 100%;
   height: 100%;
+  border-radius: 19px;
   object-fit: cover;
   user-select: none;
   -webkit-user-drag: none;
-}
-
-.past-cf__card.is-active {
-  border-color: rgba(155, 202, 59, 0.35);
-  box-shadow:
-    0 34px 70px -22px rgba(0, 0, 0, 0.85),
-    0 0 0 1px rgba(155, 202, 59, 0.12);
 }
 
 .past-cf__card:focus-visible {
@@ -555,6 +611,7 @@ a:hover {
 }
 
 .past-cf__card--instant,
+.past-cf__card--instant::before,
 .past-cf__card--instant::after {
   transition: none;
 }
@@ -578,7 +635,7 @@ a:hover {
   z-index: 2;
 }
 .hero-quote__text {
-  font-family: 'Playfair Display', serif;
+  font-family: 'Playfair Display', 'Playfair Display Fallback', serif;
   font-size: clamp(1.4rem, 4vw, 2.6rem);
   font-style: italic;
   font-weight: 400;
@@ -586,9 +643,17 @@ a:hover {
   text-align: center;
   letter-spacing: 0.04em;
   text-shadow: 0 4px 32px rgba(0, 0, 0, 0.5);
-  animation: fade-up 1.2s ease forwards;
-  opacity: 0;
+  animation: fade-up 1.2s ease backwards;
   padding: 0 1.5rem;
+}
+
+/* Rises into place. The hero rules fill backwards, so the element is hidden
+   until its delay is over and afterwards its own styles apply again (the
+   Explore button's hover lift included). Also used by Tailwind's
+   animate-fade-up (tailwind.config.mjs). */
+@keyframes fade-up {
+  from { opacity: 0; transform: translateY(24px); }
+  to { opacity: 1; transform: translateY(0); }
 }
 
 .hero-explore-btn {
@@ -603,12 +668,11 @@ a:hover {
   backdrop-filter: blur(10px);
   -webkit-backdrop-filter: blur(10px);
   color: #ffffff;
-  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-family: 'Plus Jakarta Sans', 'Plus Jakarta Sans Fallback', sans-serif;
   font-weight: 700;
   font-size: clamp(0.85rem, 1.6vw, 1rem);
   text-decoration: none;
-  animation: fade-up 1.2s ease 0.2s forwards;
-  opacity: 0;
+  animation: fade-up 1.2s ease 0.2s backwards;
   transition: background 0.25s ease, border-color 0.25s ease, transform 0.25s ease;
 }
 .hero-explore-btn:hover {
@@ -687,29 +751,7 @@ a:hover {
   70%       { opacity: 0.2; }
 }
 
-.overview-logo {
-  width: clamp(96px, 12vw, 150px);
-  max-width: 100%;
-  height: auto;
-  filter: drop-shadow(0 18px 42px rgba(2, 51, 1, 0.45));
-  border-radius: 14px;
-  border: 1px solid rgba(155, 202, 59, 0.28);
-  background: radial-gradient(circle at center, rgba(155, 202, 59, 0.15), rgba(2, 51, 1, 0.6));
-  padding: clamp(0.6rem, 1.5vw, 0.85rem);
-}
-
-/* ─── Page topbar (events / ticket pages) ─── */
-.page-topbar {
-  position: sticky;
-  top: 0;
-  z-index: 50;
-  background: rgba(2, 51, 1, 0.92);
-  border-bottom: 1px solid rgba(155, 202, 59, 0.12);
-  backdrop-filter: blur(12px);
-  height: 56px;
-  display: flex;
-  align-items: center;
-}
+/* ─── Nav logo and brand (shared by every page's nav) ─── */
 .topbar-logo {
   height: 38px;
   width: auto;
@@ -732,7 +774,7 @@ a:hover {
   line-height: 1;
 }
 .hero-logo-link__name {
-  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-family: 'Plus Jakarta Sans', 'Plus Jakarta Sans Fallback', sans-serif;
   font-size: 1.1rem;
   font-weight: 700;
   letter-spacing: 0.22em;
@@ -740,32 +782,13 @@ a:hover {
   text-transform: uppercase;
 }
 .hero-logo-link__sub {
-  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-family: 'Plus Jakarta Sans', 'Plus Jakarta Sans Fallback', sans-serif;
   font-size: 0.78rem;
   font-weight: 500;
   letter-spacing: 0.15em;
   color: #9bca3b;
   text-transform: none;
   margin-top: 3px;
-}
-.page-topbar__brand {
-  text-decoration: none;
-  transition: opacity 0.2s;
-  line-height: 0;
-}
-.page-topbar__brand:hover { opacity: 0.75; }
-.page-topbar__link {
-  font-size: 0.75rem;
-  font-weight: 600;
-  letter-spacing: 0.15em;
-  text-transform: uppercase;
-  color: rgba(255, 255, 255, 0.5);
-  text-decoration: none;
-  transition: color 0.2s;
-}
-.page-topbar__link:hover { color: #9bca3b; }
-@media (max-width: 360px) {
-  .page-topbar__link { display: none; }
 }
 
 .topbar-avatar {
@@ -795,7 +818,7 @@ a:hover {
   color: #9bca3b;
   line-height: 1;
   text-transform: uppercase;
-  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-family: 'Plus Jakarta Sans', 'Plus Jakarta Sans Fallback', sans-serif;
 }
 
 /* ─── Profile menu wrap + mobile nav dropdown ─── */
@@ -811,8 +834,6 @@ a:hover {
   right: 0;
   min-width: 190px;
   background: #021401;
-  backdrop-filter: blur(18px);
-  -webkit-backdrop-filter: blur(18px);
   border: 1px solid rgba(255, 255, 255, 0.12);
   border-radius: 14px;
   padding: 0.45rem 0;
@@ -837,7 +858,7 @@ a:hover {
   align-items: center;
   gap: 0.45rem;
   padding: 0.65rem 1.1rem;
-  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-family: 'Plus Jakarta Sans', 'Plus Jakarta Sans Fallback', sans-serif;
   font-size: 0.78rem;
   font-weight: 600;
   letter-spacing: 0.18em;
@@ -873,8 +894,6 @@ a:hover {
   border-radius: 1.25rem;
   overflow: hidden;
   text-decoration: none;
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
   box-shadow: 0 4px 24px rgba(0, 0, 0, 0.25);
   transition: transform 0.35s ease, border-color 0.35s ease, box-shadow 0.35s ease;
 }
@@ -924,10 +943,45 @@ a:hover {
 .home-events-grid {
   margin-top: 3rem;
 }
+/* Stands in for the upcoming cards the #gallery slide has no room for
+   (HomeEvents.jsx). Alone in a row it stays short; beside cards it takes
+   their height. */
+.home-events-more {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.25rem;
+  max-width: 420px;
+  padding: 0.9rem 1.1rem;
+  border: 1px dashed rgba(155, 202, 59, 0.4);
+  border-radius: 1.25rem;
+  background: rgba(255, 255, 255, 0.04);
+  text-align: center;
+  text-decoration: none;
+  transition: border-color 0.35s ease, background 0.35s ease;
+}
+.home-events-more:hover {
+  border-color: rgba(155, 202, 59, 0.7);
+  background: rgba(155, 202, 59, 0.08);
+}
+.home-events-more__count {
+  font-family: 'Playfair Display', 'Playfair Display Fallback', serif;
+  font-size: 1.1rem;
+  color: #ffffff;
+}
+.home-events-more__cta {
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: #9bca3b;
+}
 
 /* The #gallery slide (Our Events + Past Events) is a fixed 100dvh pagination
    section with no scroll — on shorter windows its combined content can run
-   past the fold, so vertical spacing scales down as height shrinks. */
+   past the fold, so vertical spacing scales down as height shrinks, and
+   HomeEvents.jsx shows only as many cards as still fit. */
 @media (max-height: 900px) {
   #gallery {
     padding-top: 4.5rem;
@@ -1039,37 +1093,19 @@ a:hover {
   height: 100%;
   background: linear-gradient(135deg, rgba(155, 202, 59, 0.08), rgba(0, 0, 0, 0.6));
 }
-.event-card__price {
-  position: absolute;
-  top: 0.65rem;
-  right: 0.65rem;
-  padding: 0.18rem 0.6rem;
-  border-radius: 999px;
-  font-size: 0.68rem;
-  font-weight: 700;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-}
-.event-card__price.free { background: #9bca3b; color: #023301; }
-.event-card__price.paid { background: rgba(2, 51, 1, 0.9); color: #9bca3b; border: 1px solid rgba(155, 202, 59, 0.4); }
-.event-card__full,
 .event-card__closed {
   position: absolute;
   top: 0.65rem;
   left: 0.65rem;
-  background: rgba(220, 38, 38, 0.85);
+  background: rgba(15, 23, 42, 0.82);
+  border: 1px solid rgba(255, 255, 255, 0.28);
   color: #fff;
   font-size: 0.65rem;
   font-weight: 700;
-  letter-spacing: 0.08em;
+  letter-spacing: 0.06em;
   text-transform: uppercase;
   padding: 0.18rem 0.5rem;
   border-radius: 999px;
-}
-.event-card__closed {
-  background: rgba(15, 23, 42, 0.82);
-  border: 1px solid rgba(255, 255, 255, 0.28);
-  letter-spacing: 0.06em;
 }
 .event-card__featured {
   display: inline-block;
@@ -1092,7 +1128,7 @@ a:hover {
   gap: 0.3rem;
 }
 .event-card__title {
-  font-family: 'Playfair Display', serif;
+  font-family: 'Playfair Display', 'Playfair Display Fallback', serif;
   font-size: 1.1rem;
   color: #ffffff;
   line-height: 1.35;
@@ -1111,6 +1147,27 @@ a:hover {
   border-radius: 1.25rem;
   background: rgba(255, 255, 255, 0.05);
   aspect-ratio: 4 / 5;
+}
+/* A whole vertical card, as /events shows them: the 4:5 poster plus the text
+   block beneath it, so real cards take the place of these without a jump.
+   Past cards have no price line or button, hence --short. */
+.event-card-skeleton--card {
+  aspect-ratio: auto;
+  overflow: hidden;
+}
+.event-card-skeleton--card::before {
+  content: "";
+  display: block;
+  aspect-ratio: 4 / 5;
+  background: rgba(0, 0, 0, 0.15);
+}
+.event-card-skeleton--card::after {
+  content: "";
+  display: block;
+  height: 11rem;
+}
+.event-card-skeleton--short::after {
+  height: 7rem;
 }
 
 /* ─── Event detail page ─── */

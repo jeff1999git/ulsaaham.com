@@ -4,12 +4,31 @@
 
 // Read by name, never through a computed lookup on import.meta.env — that
 // would inline the whole build-time environment into the bundle.
-const BACKEND_ORIGIN = process.env.BACKEND_URL;
+const BACKEND_ORIGIN = import.meta.env.BACKEND_URL ?? process.env.BACKEND_URL;
 const PROXY_SHARED_SECRET = import.meta.env.PROXY_SHARED_SECRET ?? process.env.PROXY_SHARED_SECRET;
 
-export const BACKEND_URL = String(
-  BACKEND_ORIGIN || "https://ulsaham-admin-panel.vercel.app/api/public"
-).replace(/\/+$/, "");
+const PRODUCTION_BACKEND = "https://ulsaham-admin-panel.vercel.app/api/public";
+// Outside a production build an unset BACKEND_URL means a local admin panel,
+// never the live one, so a dev session cannot write to production by default.
+const LOCAL_BACKEND = "http://localhost:3000/api/public";
+
+function resolveBackendUrl(value) {
+  const url = String(value ?? "").trim().replace(/\/+$/, "");
+  if (!url) {
+    if (import.meta.env.PROD) return PRODUCTION_BACKEND;
+    console.warn(`BACKEND_URL is not set; using ${LOCAL_BACKEND}.`);
+    return LOCAL_BACKEND;
+  }
+  // A bare origin ("https://admin.example.com") gets the public API path.
+  try {
+    if (new URL(url).pathname === "/") return `${url}/api/public`;
+  } catch {
+    // Not a URL; fetch will report it.
+  }
+  return url;
+}
+
+export const BACKEND_URL = resolveBackendUrl(BACKEND_ORIGIN);
 
 /**
  * Relay the visitor's own IP so the backend rate-limits per person rather than

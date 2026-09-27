@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from "react";
-import { optimizeCloudinary } from "../lib/image.js";
+import { cloudinarySrcSet, optimizeCloudinary } from "../lib/image.js";
 
 const AUTOPLAY_MS = 3000;
 const SWIPE_PX = 40;
@@ -17,6 +17,12 @@ const LAYOUT = [
   { x: 150, rot: 42, scale: 0.5, opacity: 0, dim: 0.7 },
 ];
 const VISIBLE = LAYOUT.length - 2;
+// A card this close to the centre gets its poster (one step before it shows)
+// and its own compositor layer.
+const NEAR = VISIBLE + 1;
+// The centre card is min(64vw, 44vh, 400px) wide (global.css --cf-w).
+const POSTER_WIDTHS = [360, 480, 640];
+const POSTER_SIZES = "(min-width: 640px) 400px, 64vw";
 
 // Before the slide is first seen every card waits, hidden, stacked behind the
 // centre; on arrival they fan out to their places.
@@ -49,6 +55,13 @@ export default function PastEventsCoverflow({ posters }) {
   const touchStart = useRef(null);
   const swiped = useRef(false);
   const holdTimer = useRef(null);
+  // Indexes of cards that have come within NEAR of the centre. Only these
+  // render a poster src, and keep it, so the slide fetches a handful of
+  // posters rather than all of them at once. Filled during render so a card's
+  // src lands in the same commit as its move.
+  const seenRef = useRef(null);
+  seenRef.current ??= new Set();
+  for (let k = -NEAR; k <= NEAR; k++) seenRef.current.add((((active + k) % count) + count) % count);
 
   const step = (dir) => setActive((a) => (a + dir + count) % count);
 
@@ -209,13 +222,16 @@ export default function PastEventsCoverflow({ posters }) {
         // sliding across the front of the others.
         const prev = prevOffsets.current[i];
         const jumped = prev !== undefined && Math.abs(d - prev) > 1;
+        // dist is capped at the parking row, so nearness uses the raw offset.
+        const near = Math.abs(d) <= NEAR;
+        const seen = seenRef.current.has(i);
 
         return (
           <a
             key={ev.id}
             ref={(el) => { cardRefs.current[i] = el; }}
             href={`/events/detail?slug=${encodeURIComponent(ev.slug)}`}
-            className={`past-cf__card${d === 0 ? " is-active" : ""}${jumped ? " past-cf__card--instant" : ""}`}
+            className={`past-cf__card${d === 0 ? " is-active" : ""}${near ? " is-near" : ""}${jumped ? " past-cf__card--instant" : ""}`}
             style={{
               transform: `translateX(${side * spot.x}%) rotateY(${-side * spot.rot}deg) scale(${spot.scale})`,
               opacity: spot.opacity,
@@ -234,9 +250,12 @@ export default function PastEventsCoverflow({ posters }) {
             }}
           >
             <img
-              src={optimizeCloudinary(ev.bannerImageUrl, 640)}
+              src={seen ? optimizeCloudinary(ev.bannerImageUrl, 640) : undefined}
+              srcSet={seen ? cloudinarySrcSet(ev.bannerImageUrl, POSTER_WIDTHS) : undefined}
+              sizes={POSTER_SIZES}
               alt=""
               loading={dist <= VISIBLE ? "eager" : "lazy"}
+              fetchPriority={d === 0 ? "auto" : "low"}
               decoding="async"
               width="400"
               height="500"

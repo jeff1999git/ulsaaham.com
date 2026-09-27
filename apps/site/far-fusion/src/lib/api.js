@@ -1,10 +1,32 @@
 const BASE = "/api/public";
 
+const tooMany = () => ({ ok: false, status: 429, data: { success: false, error: "Too many requests. Please try again in a moment." } });
+
+/**
+ * The response an inline page script already requested for this path
+ * (src/components/ApiPrefetch.astro), handed out once: a later call, such as
+ * a pager or a retry, fetches afresh.
+ */
+function takePrefetched(path) {
+  if (typeof window === "undefined") return null;
+  const store = window.__ulsPre;
+  const entry = store && store[path];
+  if (!entry) return null;
+  delete store[path];
+  return entry;
+}
+
 async function apiFetch(path, init) {
+  const prefetched = init ? null : takePrefetched(path);
+  if (prefetched) {
+    // Settles to null when the early request failed; ask again below.
+    const result = await prefetched;
+    if (result) return result.status === 429 ? tooMany() : result;
+  }
   try {
     const res = await fetch(`${BASE}${path}`, init);
     if (res.status === 429) {
-      return { ok: false, status: 429, data: { success: false, error: "Too many requests. Please try again in a moment." } };
+      return tooMany();
     }
     const data = await res.json();
     return { ok: res.ok, status: res.status, data };
@@ -13,20 +35,36 @@ async function apiFetch(path, init) {
   }
 }
 
-export function getEvents({ page = 1, limit = 12, featured, upcoming, past } = {}) {
+/**
+ * The list URL for a query. The parameter order is part of the contract: the
+ * edge cache only keeps URLs written exactly this way (src/lib/edge-cache.js).
+ */
+export function eventsPath({ page = 1, limit = 12, featured, upcoming, past } = {}) {
   const p = new URLSearchParams({ page, limit });
   if (featured) p.set("featured", "true");
+  else if (featured === false) p.set("featured", "false");
   if (upcoming) p.set("upcoming", "true");
   if (past) p.set("past", "true");
-  return apiFetch(`/events?${p}`);
+  return `/events?${p}`;
 }
 
-export function getEvent(slug) {
-  return apiFetch(`/events/${encodeURIComponent(slug)}`);
+export function getEvents(query) {
+  return apiFetch(eventsPath(query));
 }
+
+/**
+ * fresh: skip the edge cache, e.g. after the server has turned a booking down.
+ * The admin panel ignores the parameter; it only makes the URL one the cache
+ * does not keep.
+ */
+export function getEvent(slug, { fresh = false } = {}) {
+  return apiFetch(`/events/${encodeURIComponent(slug)}${fresh ? "?fresh=1" : ""}`);
+}
+
+export const BRAND_PARTNERS_PATH = "/brand-partners";
 
 export function getBrandPartners() {
-  return apiFetch("/brand-partners");
+  return apiFetch(BRAND_PARTNERS_PATH);
 }
 
 export async function registerForEvent(slug, body) {
@@ -43,14 +81,6 @@ export async function registerForEvent(slug, body) {
   } catch {
     return { ok: false, status: 0, data: { success: false, error: "Network error. Please try again." } };
   }
-}
-
-export async function checkTicket(ticketCode) {
-  const res = await fetch(`${BASE}/participants/check?ticketCode=${encodeURIComponent(ticketCode)}`);
-  if (res.status === 429) {
-    return { ok: false, status: 429, data: { success: false, error: "Too many requests. Please try again later." } };
-  }
-  return { ok: res.ok, status: res.status, data: await res.json() };
 }
 
 export async function createPaymentOrder(slug, body) {

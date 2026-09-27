@@ -1,0 +1,5 @@
+# Plain UTF-8, without the byte-order mark some Windows editors add.
+root = true
+
+[*]
+charset = utf-8
