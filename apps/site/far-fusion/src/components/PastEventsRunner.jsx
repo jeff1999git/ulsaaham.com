@@ -1,8 +1,24 @@
 import { useState, useEffect, useRef } from "react";
 import { getEvents } from "../lib/api.js";
 import { optimizeCloudinary } from "../lib/image.js";
+import PastEventsCoverflow from "./PastEventsCoverflow.jsx";
 
-export default function PastEventsRunner() {
+function PastEventsHeading() {
+  return (
+    <p className="past-runner-heading">
+      <span className="past-runner-heading__line" />
+      <span>Past Events</span>
+      <span className="past-runner-heading__line" />
+    </p>
+  );
+}
+
+/**
+ * variant "runner" is the scrolling strip shown under upcoming events;
+ * "coverflow" fills the slide when there are none; null waits until the
+ * caller knows which, so the section never swaps layouts in front of the visitor.
+ */
+export default function PastEventsRunner({ variant = "runner" }) {
   const [posters, setPosters] = useState([]);
   const [started, setStarted] = useState(false);
   const loadedRef = useRef(0);
@@ -33,17 +49,22 @@ export default function PastEventsRunner() {
     }
   }
 
-  if (posters.length === 0) return null;
+  if (posters.length === 0 || !variant) return null;
+
+  if (variant === "coverflow") {
+    return (
+      <div className="past-cf-wrap">
+        <PastEventsHeading />
+        <PastEventsCoverflow posters={posters} />
+      </div>
+    );
+  }
 
   const items = [...posters, ...posters];
 
   return (
     <div className="past-runner-wrap">
-      <p className="past-runner-heading">
-        <span className="past-runner-heading__line" />
-        <span>Past Events</span>
-        <span className="past-runner-heading__line" />
-      </p>
+      <PastEventsHeading />
       <div className="past-runner">
         <div className={`past-runner__track${started ? "" : " past-runner__track--paused"}`}>
           {items.map((ev, i) => {

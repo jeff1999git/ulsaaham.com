@@ -2,7 +2,8 @@ import { useState, useEffect } from "react";
 import { getEvents } from "../lib/api.js";
 import EventCard from "./EventCard.jsx";
 
-export default function HomeEvents() {
+/** onResult, if given, hears "some", "none" or "error" once the list has loaded. */
+export default function HomeEvents({ onResult }) {
   const [events, setEvents] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -11,16 +12,18 @@ export default function HomeEvents() {
     let cancelled = false;
     getEvents({ upcoming: true, limit: 8 }).then(({ ok, data }) => {
       if (cancelled) return;
-      if (!ok) { setError(data?.error || "Failed to load events."); setLoading(false); return; }
-      setEvents(data?.data?.events ?? []);
+      if (!ok) { setError(data?.error || "Failed to load events."); setLoading(false); onResult?.("error"); return; }
+      const list = data?.data?.events ?? [];
+      setEvents(list);
       setLoading(false);
+      onResult?.(list.length ? "some" : "none");
     }).catch(() => {
-      if (!cancelled) { setError("Could not load events."); setLoading(false); }
+      if (!cancelled) { setError("Could not load events."); setLoading(false); onResult?.("error"); }
     });
     return () => { cancelled = true; };
   }, []);
 
-  // No upcoming events and nothing went wrong — let the past events runner carry this section instead
+  // No upcoming events and nothing went wrong — past events carry this section instead
   if (!loading && !error && events.length === 0) return null;
 
   return (

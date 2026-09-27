@@ -1,8 +1,7 @@
 ---
 export const prerender = true;
 import BaseLayout from "../layouts/BaseLayout.astro";
-import HomeEvents from "../components/HomeEvents.jsx";
-import PastEventsRunner from "../components/PastEventsRunner.jsx";
+import HomeEventsSection from "../components/HomeEventsSection.jsx";
 import BrandPartners from "../components/BrandPartners.jsx";
 ---
 
@@ -164,8 +163,7 @@ import BrandPartners from "../components/BrandPartners.jsx";
 
       <div class="fp-section">
         <section class="pt-16 sm:pt-24 pb-6 md:pb-10 text-light relative isolate z-10" id="gallery">
-          <HomeEvents client:load />
-          <PastEventsRunner client:load />
+          <HomeEventsSection client:load />
         </section>
       </div>
 
