@@ -1,15 +1,20 @@
 ---
 export const prerender = false;
 import BaseLayout from "../../layouts/BaseLayout.astro";
+import { safeNextPath } from "../../lib/next-path.js";
 
+// Both values below are written into an inline script by define:vars, which
+// escapes only a lowercase "</script>". next is reduced to a same-site path
+// (percent-encoded, so it holds no "<"), and userJson has every "<" escaped;
+// JSON.parse turns < back into "<".
 const cookieValue = Astro.cookies.get("google_auth_result")?.value;
-const next = Astro.url.searchParams.get("next") || "/account";
+const next = safeNextPath(Astro.url.searchParams.get("next"));
 
 let userJson = null;
 if (cookieValue) {
   try {
     const parsed = JSON.parse(decodeURIComponent(cookieValue));
-    userJson = JSON.stringify(parsed);
+    userJson = JSON.stringify(parsed).replace(/</g, "\\u003c");
     Astro.cookies.delete("google_auth_result", { path: "/" });
   } catch {}
 }

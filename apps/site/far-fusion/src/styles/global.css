@@ -468,6 +468,104 @@ a:hover {
   100% { transform: translateX(-50%); }
 }
 
+/* ── Past Events coverflow (the whole slide, when nothing is upcoming) ──────── */
+
+/* Lets the coverflow take the height left under the section's top padding. */
+#gallery:has(.past-cf-wrap) {
+  display: flex;
+  flex-direction: column;
+}
+
+.past-cf-wrap {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  /* Centre card width: the posters are 4:5, so this also sets the height. */
+  --cf-w: min(64vw, 44vh, 400px);
+}
+@supports (height: 1dvh) {
+  .past-cf-wrap {
+    --cf-w: min(64vw, 44dvh, 400px);
+  }
+}
+
+.past-cf {
+  position: relative;
+  height: calc(var(--cf-w) * 1.25 + 3rem);
+  perspective: 1400px;
+  overflow-x: clip;
+  touch-action: pan-y;
+}
+
+.past-cf__card {
+  position: absolute;
+  top: 1.5rem;
+  left: 50%;
+  width: var(--cf-w);
+  aspect-ratio: 4 / 5;
+  margin-left: calc(var(--cf-w) / -2);
+  display: block;
+  border-radius: 20px;
+  overflow: hidden;
+  background: #0b2a0a;
+  border: 1px solid rgba(155, 202, 59, 0.12);
+  box-shadow: 0 18px 40px -18px rgba(0, 0, 0, 0.7);
+  transform-origin: 50% 50%;
+  transition:
+    transform 0.7s cubic-bezier(0.22, 0.61, 0.36, 1),
+    opacity 0.7s ease,
+    box-shadow 0.7s ease,
+    border-color 0.7s ease;
+  will-change: transform;
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* Side cards sink back into the dark; --cf-dim is set per card. */
+.past-cf__card::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: #021c01;
+  opacity: var(--cf-dim, 0);
+  transition: opacity 0.7s ease;
+  pointer-events: none;
+}
+
+.past-cf__card img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  user-select: none;
+  -webkit-user-drag: none;
+}
+
+.past-cf__card.is-active {
+  border-color: rgba(155, 202, 59, 0.35);
+  box-shadow:
+    0 34px 70px -22px rgba(0, 0, 0, 0.85),
+    0 0 0 1px rgba(155, 202, 59, 0.12);
+}
+
+.past-cf__card:focus-visible {
+  outline: 2px solid #9bca3b;
+  outline-offset: 4px;
+}
+
+.past-cf__card--instant,
+.past-cf__card--instant::after {
+  transition: none;
+}
+
+/* The fan-out when the slide is first shown: a little slower, with a slight
+   overshoot, each card staggered by an inline transition-delay. */
+.past-cf--entering .past-cf__card {
+  transition-duration: 1s;
+  transition-timing-function: cubic-bezier(0.34, 1.36, 0.64, 1);
+}
+
 .hero-quote {
   position: absolute;
   inset: 0;
