@@ -1,6 +1,8 @@
+import { safeNextPath } from "../../../lib/next-path.js";
+
 export async function GET({ request, redirect }) {
   const url = new URL(request.url);
-  const next = url.searchParams.get("next") || "/account";
+  const next = safeNextPath(url.searchParams.get("next"));
 
   const state = Buffer.from(JSON.stringify({ next })).toString("base64");
 

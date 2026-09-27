@@ -1,3 +1,5 @@
+import { safeNextPath } from "../../../../lib/next-path.js";
+
 export async function GET({ request, redirect, cookies }) {
   const url = new URL(request.url);
   const code = url.searchParams.get("code");
@@ -11,7 +13,8 @@ export async function GET({ request, redirect, cookies }) {
   let next = "/account";
   try {
     const stateData = JSON.parse(Buffer.from(stateParam || "", "base64").toString());
-    if (stateData.next) next = stateData.next;
+    // state round-trips through Google unsigned, so it is re-checked here.
+    next = safeNextPath(stateData.next);
   } catch {}
 
   // Exchange auth code for access token

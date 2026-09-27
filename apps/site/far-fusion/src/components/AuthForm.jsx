@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef } from "react";
 import { getUser, setUser, getKnownAccount } from "../lib/auth.js";
+import { safeNextPath } from "../lib/next-path.js";
 
 function Field({ label, hint, error, children }) {
   return (
@@ -213,7 +214,7 @@ export default function AuthForm() {
 
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
-    const dest = params.get("next") || "/account";
+    const dest = safeNextPath(params.get("next"));
     setNext(dest);
     if (getUser()) window.location.replace(dest);
 
