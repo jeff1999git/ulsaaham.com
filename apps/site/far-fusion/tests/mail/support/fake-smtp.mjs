@@ -96,11 +96,11 @@ export async function startFakeSmtp(options = {}) {
             reply("334 " + b64("Username:"));
           }
         } else if (command === "MAIL") {
-          envelopeFrom = (argument.match(/<([^>]*)>/) || [, ""])[1];
+          envelopeFrom = argument.match(/<([^>]*)>/)?.[1] ?? "";
           recipients = [];
           reply("250 2.1.0 Ok");
         } else if (command === "RCPT") {
-          const address = (argument.match(/<([^>]*)>/) || [, ""])[1];
+          const address = argument.match(/<([^>]*)>/)?.[1] ?? "";
           if (options.rejectRecipient && options.rejectRecipient.test(address)) {
             reply("550 5.1.1 Recipient rejected");
           } else {

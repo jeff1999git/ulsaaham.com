@@ -418,10 +418,15 @@ const heroPoster = ({ id, width }) => `${CLD_VIDEO}/so_1,f_auto,q_auto,w_${width
           if (box.scrollLeft) box.scrollLeft = 0;
         }, { passive: true });
       });
+      // Only focus landing on another slide moves the pager. A tap or click
+      // on a link (#gallery…) focuses it on the slide already on screen, and
+      // its click then changes slide before the next frame; going back to
+      // the focused link's slide there would undo that.
       wrap.addEventListener("focusin", function (e) {
         var i = sections.findIndex(function (s) { return s.contains(e.target); });
-        if (i < 0) return;
-        requestAnimationFrame(function () { goTo(i); });
+        if (i < 0 || i === current) return;
+        var from = current;
+        requestAnimationFrame(function () { if (current === from) goTo(i); });
       });
     });
   </script>

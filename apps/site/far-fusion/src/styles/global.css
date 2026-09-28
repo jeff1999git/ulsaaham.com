@@ -977,6 +977,15 @@ a:hover {
   text-transform: uppercase;
   color: #9bca3b;
 }
+/* One line on narrow screens, where every card gets a row of its own. */
+@media (max-width: 767px) {
+  .home-events-more {
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: 0.25rem 0.75rem;
+    padding: 0.7rem 1.1rem;
+  }
+}
 
 /* The #gallery slide (Our Events + Past Events) is a fixed 100dvh pagination
    section with no scroll — on shorter windows its combined content can run

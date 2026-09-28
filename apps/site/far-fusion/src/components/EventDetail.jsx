@@ -76,7 +76,9 @@ function ImageGallery({ images, alt }) {
 
   return (
     <>
-      <div className="event-detail__poster" style={{ position: "relative" }}>
+      {/* Positioned by global.css: relative, and sticky beside the details
+          from 900 px. An inline position here would undo the sticky. */}
+      <div className="event-detail__poster">
         <div style={{ cursor: "zoom-in" }} onClick={() => setOpen(true)}>
           <img
             src={optimizeCloudinary(src, 900)}

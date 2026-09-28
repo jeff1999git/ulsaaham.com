@@ -14,6 +14,9 @@ export default function HomeEvents({ onResult, fitKey }) {
   const [error, setError] = useState(null);
   // How many cards the slide has room for; the rest become a "+N more" tile.
   const [shown, setShown] = useState(Infinity);
+  // Counts window resizes, so the fit runs again even when every card was
+  // showing (shown is then already Infinity and resetting it changes nothing).
+  const [sizeKey, setSizeKey] = useState(0);
   const rootRef = useRef(null);
 
   const load = useCallback(() => {
@@ -45,7 +48,7 @@ export default function HomeEvents({ onResult, fitKey }) {
     const count = Math.min(shown, events.length);
     if (!slide || count <= 1) return;
     if (slide.scrollHeight - slide.clientHeight > 1) setShown(count - 1);
-  }, [events, shown, fitKey]);
+  }, [events, shown, fitKey, sizeKey]);
 
   // A new window size (a phone turned round) starts the fit again from every card.
   useEffect(() => {
@@ -56,7 +59,10 @@ export default function HomeEvents({ onResult, fitKey }) {
       if (next === size) return;
       size = next;
       cancelAnimationFrame(frame);
-      frame = requestAnimationFrame(() => setShown(Infinity));
+      frame = requestAnimationFrame(() => {
+        setShown(Infinity);
+        setSizeKey((k) => k + 1);
+      });
     };
     window.addEventListener("resize", onResize);
     return () => {
@@ -78,9 +84,11 @@ export default function HomeEvents({ onResult, fitKey }) {
           <h2 className="section-title">Our Events</h2>
           <p className="section-subtitle max-w-xl">Upcoming events you can be part of.</p>
         </div>
+        {/* Stacked under the title on narrow screens; there the "+N more"
+            tile, when shown, already leads to the same page and needs the room. */}
         <a
           href="/events"
-          className="inline-flex items-center rounded-full px-6 py-3 text-sm font-semibold uppercase tracking-[0.3em] text-light/80 transition hover:text-light hover:border-white/30"
+          className={`${more > 0 ? "hidden md:inline-flex" : "inline-flex"} items-center rounded-full px-6 py-3 text-sm font-semibold uppercase tracking-[0.3em] text-light/80 transition hover:text-light hover:border-white/30`}
           style={{ background: "rgba(255,255,255,0.08)", border: "1px solid rgba(255,255,255,0.18)" }}
         >
           View All Events

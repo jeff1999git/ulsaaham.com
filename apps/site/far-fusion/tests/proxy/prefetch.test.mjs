@@ -19,6 +19,7 @@ const { edgePolicy } = await loadSource("src/lib/edge-cache.js");
 const read = (rel) => fs.readFileSync(appPath(rel), "utf8");
 
 // ─── A browser stand-in for api.js ───
+/* global window -- the stand-in beforeEach puts on globalThis */
 let calls = [];
 let reply = () => new Response(JSON.stringify({ success: true, from: "network" }), { status: 200 });
 const realFetch = globalThis.fetch;

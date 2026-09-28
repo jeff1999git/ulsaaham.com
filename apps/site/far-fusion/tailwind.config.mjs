@@ -1,6 +1,7 @@
-import { type Config } from "tailwindcss";
 import defaultTheme from "tailwindcss/defaultTheme";
 
+// Plain JavaScript (typed through JSDoc), so node and ESLint can read it too.
+/** @type {import("tailwindcss").Config} */
 export default {
   content: ["./src/**/*.{astro,html,md,mdx,js,ts,jsx,tsx}"],
   theme: {
@@ -25,5 +26,5 @@ export default {
     }
   },
   plugins: []
-} satisfies Config;
+};
 
