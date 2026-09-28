@@ -1,29 +1,31 @@
-import { defineConfig } from "astro/config";
+import { defineConfig, passthroughImageService } from "astro/config";
 import react from "@astrojs/react";
 import tailwind from "@astrojs/tailwind";
 import vercel from "@astrojs/vercel";
+import { readOnlyProxy } from "./scripts/dev-proxy.mjs";
 
 export default defineConfig({
+  site: "https://www.ulsaaham.com",
   output: "server",
-  adapter: vercel(),
+  // A ceiling for the server routes: the /api/public proxy gives up on reads
+  // after 8 s, and nothing here should run for the platform's default minutes.
+  adapter: vercel({ maxDuration: 60 }),
   integrations: [
     react(),
     tailwind({ applyBaseStyles: false }),
   ],
+  // Nothing uses astro:assets: images are sized by Cloudinary URL transforms
+  // (src/lib/image.js). The passthrough service, with no remote patterns, keeps
+  // /_image from fetching and re-encoding outside images with sharp.
   image: {
-    remotePatterns: [
-      { protocol: "https", hostname: "images.unsplash.com" },
-      { protocol: "https", hostname: "res.cloudinary.com" },
-    ],
+    service: passthroughImageService(),
   },
   vite: {
     server: {
       proxy: {
-        "/api/public": {
-          target: "https://ulsaham-admin-panel.vercel.app",
-          changeOrigin: true,
-          secure: true,
-        },
+        // `astro dev` reads live data from the production admin panel. Only
+        // GET and HEAD are forwarded; anything that writes gets a local 403.
+        "/api/public": readOnlyProxy("https://ulsaham-admin-panel.vercel.app"),
       },
     },
   },

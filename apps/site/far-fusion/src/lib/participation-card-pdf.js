@@ -1,17 +1,53 @@
-import { jsPDF } from "jspdf";
-
 const GREEN = "#014421";
+
+// jsPDF is about 130 KB gzip and only needed on a download click, so it is a
+// separate chunk fetched on first use instead of part of the page's island.
+// Resolves to the jsPDF class (the browser build's default export). A failed
+// load is not kept here, but the browser may keep failing the same chunk until
+// the page is refreshed, which is what the error below asks for.
+let jsPdfLoad = null;
+function loadJsPdf() {
+  jsPdfLoad ??= import("jspdf").then(
+    (mod) => mod.default,
+    (err) => {
+      jsPdfLoad = null;
+      throw err;
+    }
+  );
+  return jsPdfLoad;
+}
+
+/**
+ * Starts fetching jsPDF while a competition ticket is on screen, so the
+ * download click rarely waits. A failure here is ignored: the click retries
+ * and reports it.
+ */
+export function warmParticipationCardPdf() {
+  loadJsPdf().catch(() => {});
+}
 
 /**
  * Generates the competition participation card as a plain-document PDF:
  * chest number + participant/event details written out, followed by the
  * competition instructions/notes when present. No ticket artwork.
+ *
+ * If jsPDF's chunk cannot be fetched (typically a deploy replaced it while
+ * this page was open), the error carries `chunkLoad: true` and a message
+ * asking for a refresh.
  */
-export function downloadParticipationCardPdf(
+export async function downloadParticipationCardPdf(
   { chestNumber, participantName, eventName, eventDate, eventVenue, numberOfParticipants, ticketCode, instructions, notes },
   filename
 ) {
-  const doc = new jsPDF({ unit: "mm", format: "a4" });
+  let JsPdf;
+  try {
+    JsPdf = await loadJsPdf();
+  } catch {
+    const err = new Error("Could not load the participation card maker. Please refresh the page and try again.");
+    err.chunkLoad = true;
+    throw err;
+  }
+  const doc = new JsPdf({ unit: "mm", format: "a4" });
   const pageW = 210;
   const pageH = 297;
   const margin = 18;

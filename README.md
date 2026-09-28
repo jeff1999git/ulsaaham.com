@@ -1,6 +1,6 @@
 # Ulsaaham Celebrations — Web App
 
-Official website for **Ulsaaham Celebrations**, a luxury event planning company. Built as a Bun-powered monorepo with Astro, React, Three.js, and Tailwind CSS, deployed on Vercel.
+Official website for **Ulsaaham Celebrations**, a luxury event planning company. Built as a Bun-powered monorepo with Astro, React and Tailwind CSS, deployed on Vercel.
 
 ---
 
@@ -10,7 +10,6 @@ Official website for **Ulsaaham Celebrations**, a luxury event planning company.
 |---|---|
 | Framework | [Astro 5](https://astro.build/) |
 | UI Library | [React 19](https://react.dev/) (islands) |
-| 3D / WebGL | [Three.js 0.169](https://threejs.org/) |
 | Styling | [Tailwind CSS 3.4](https://tailwindcss.com/) |
 | Package Manager | [Bun 1.3.1](https://bun.sh/) |
 | Monorepo | [Turbo 2.6](https://turbo.build/) |
@@ -26,8 +25,7 @@ web-app/                        # Monorepo root
 │   └── site/
 │       └── far-fusion/         # Main Astro site
 │           ├── src/
-│           │   ├── components/
-│           │   │   └── HeroScene.jsx       # Three.js 3D particle animation
+│           │   ├── components/             # React islands
 │           │   ├── layouts/
 │           │   │   └── BaseLayout.astro    # HTML shell, SEO meta tags
 │           │   ├── pages/
@@ -158,11 +156,15 @@ The project is pre-configured for Vercel via `vercel.json`:
 ```json
 {
   "framework": "astro",
-  "installCommand": "bun install",
-  "buildCommand": "bun run build",
-  "outputDirectory": "apps/site/far-fusion/dist"
+  "regions": ["bom1"],
+  "installCommand": "bun install --frozen-lockfile",
+  "buildCommand": "bun run build && mkdir -p .vercel/output && cp -r apps/site/far-fusion/.vercel/output/. .vercel/output/ && node apps/site/far-fusion/scripts/fix-vercel-routes.mjs .vercel/output/config.json"
 }
 ```
+
+The last step moves the adapter's long-cache rule for `/_astro/*` ahead of Vercel's filesystem check (where it otherwise never applies) and adds the security headers; it fails the build if the adapter stops writing that rule. The install fails if `bun.lock` is out of date: run `bun install` and commit the lockfile.
+
+Public event and partner data is cached at the site's edge, and nowhere else. The `/api/public` proxy lets Vercel's CDN keep the exact reads the pages make, and only their 200 responses: event detail for up to 1 minute, upcoming and featured lists for up to 5, past lists and partners for up to an hour (`src/lib/edge-cache.js`). Bookings, payments and ticket lookups always reach the admin panel. A redeploy empties the cache. To check a deployment, fetch the same list twice with GET, e.g. `curl -s -o /dev/null -D - "<site>/api/public/events?page=1&limit=8&upcoming=true"`. The `x-vercel-cache` header should read `MISS` and then `HIT` or `STALE`.
 
 To deploy manually with the Vercel CLI:
 
@@ -184,7 +186,9 @@ vercel --prod
 
 ## Environment & Image CDN
 
-Remote images are served from **Cloudinary** and **Unsplash**. These origins are already whitelisted in `astro.config.mjs`. No additional `.env` setup is required to run the site locally.
+Remote images are served from **Cloudinary** and sized through its URL transforms (`src/lib/image.js`). Astro's own image service is switched off (passthrough), so `/_image` does not fetch remote images.
+
+Copy `apps/site/far-fusion/.env.example` to `.env` for local work. Under `astro dev`, the browser's `/api/public` calls go to the production admin panel through a read-only proxy: GET and HEAD only, anything that writes gets a 403. Server-side code uses `BACKEND_URL`, which defaults to `http://localhost:3000` outside a production build.
 
 ---
 

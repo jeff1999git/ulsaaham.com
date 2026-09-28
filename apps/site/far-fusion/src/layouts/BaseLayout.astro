@@ -1,11 +1,27 @@
 ---
 import "../styles/global.css";
+// The body font, preloaded so it arrives with the HTML rather than after the
+// stylesheet. Same hashed file as the @font-face in global.css.
+import jakartaFont from "../assets/fonts/plus-jakarta-sans-var.woff2?url";
 
 const {
   title = "Ulsaham Entertainments",
   description = "Celebrate life's biggest milestones with immersive, bespoke event experiences.",
-  image = "/meta-share.jpg"
+  image = "/meta-share.jpg",
+  // Emit <link rel="canonical"> and og:url for this page's own path. Only for
+  // pages whose path alone names their content: /events/detail is one static
+  // shell for every event (?slug=), so a canonical there would fold every
+  // event into a single URL.
+  canonical = false,
+  // Keeps sign-in, account and similar pages out of search results.
+  noindex = false
 } = Astro.props;
+
+// Crawlers and link previews need absolute URLs; Astro.site is `site` in
+// astro.config.mjs. Prerendered pages report "/events/"; the site links to
+// "/events", so the trailing slash is dropped (except on the home page).
+const imageUrl = new URL(image, Astro.site).href;
+const pageUrl = canonical ? new URL(Astro.url.pathname.replace(/(.)\/+$/, "$1"), Astro.site).href : null;
 ---
 
 <!DOCTYPE html>
@@ -14,42 +30,37 @@ const {
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="description" content={description} />
+    {noindex && <meta name="robots" content="noindex" />}
+    {pageUrl && <link rel="canonical" href={pageUrl} />}
     <meta property="og:title" content={title} />
     <meta property="og:description" content={description} />
-    <meta property="og:image" content={image} />
+    <meta property="og:image" content={imageUrl} />
+    {pageUrl && <meta property="og:url" content={pageUrl} />}
     <meta property="og:type" content="website" />
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:title" content={title} />
     <meta name="twitter:description" content={description} />
-    <meta name="twitter:image" content={image} />
+    <meta name="twitter:image" content={imageUrl} />
     <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png" />
     <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16.png" />
     <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
     <link rel="icon" type="image/png" sizes="192x192" href="/favicon-192.png" />
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link rel="preconnect" href="https://res.cloudinary.com" />
     <link rel="dns-prefetch" href="//checkout.razorpay.com" />
-    <link rel="preload" as="image" href="/brand_logo.avif" type="image/avif" />
+    <link rel="preload" as="font" type="font/woff2" href={jakartaFont} crossorigin />
     <meta name="theme-color" content="#023301" />
-    <!-- Non-blocking async font load — only 2 families, 2 weights each -->
-    <link
-      href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Plus+Jakarta+Sans:wght@400;600;700&display=swap"
-      rel="stylesheet"
-      media="print"
-      onload="this.media='all'"
-    />
-    <noscript>
-      <link
-        href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Plus+Jakarta+Sans:wght@400;600;700&display=swap"
-        rel="stylesheet"
-      />
-    </noscript>
+    {/* Page-specific head tags, e.g. the home hero's poster preloads. */}
+    <slot name="head" />
     <title>{title}</title>
-    <script>
-      window.si = window.si || function () { (window.siq = window.siq || []).push(arguments); };
-    </script>
-    <script defer src="/_vercel/speed-insights/script.js"></script>
+    {/* Speed Insights is served by Vercel only; locally it would just 404. */}
+    {import.meta.env.PROD && (
+      <>
+        <script is:inline>
+          window.si = window.si || function () { (window.siq = window.siq || []).push(arguments); };
+        </script>
+        <script is:inline defer src="/_vercel/speed-insights/script.js"></script>
+      </>
+    )}
   </head>
   <body class="antialiased">
     <main class="relative font-sans" style="overflow-x: clip;">

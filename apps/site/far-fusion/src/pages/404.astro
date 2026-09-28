@@ -1,0 +1,24 @@
+---
+// Prerendered, so the adapter serves /404.html for unknown paths straight from
+// the CDN (@astrojs/vercel adds the catch-all route when this page exists).
+export const prerender = true;
+import BaseLayout from "../layouts/BaseLayout.astro";
+---
+
+<BaseLayout title="Page Not Found — Ulsaham Entertainments" description="This page could not be found." noindex>
+  <div class="min-h-screen bg-primary text-light flex items-center justify-center px-4 sm:px-6">
+    <div class="max-w-md text-center">
+      <p class="text-sm font-bold uppercase tracking-[0.4em] text-accent">404</p>
+      <h1 class="section-title text-3xl mt-6">Page not found</h1>
+      <p class="section-subtitle">The page you were looking for has moved or never existed.</p>
+      <div class="mt-10 flex flex-col items-center justify-center gap-4 sm:flex-row">
+        <a href="/" class="inline-flex items-center justify-center rounded-full bg-accent px-8 py-3 text-base font-semibold text-primary hover:text-primary">
+          Back to home
+        </a>
+        <a href="/events" class="inline-flex items-center justify-center rounded-full border border-accent/40 px-8 py-3 text-base font-semibold text-accent">
+          Browse events
+        </a>
+      </div>
+    </div>
+  </div>
+</BaseLayout>

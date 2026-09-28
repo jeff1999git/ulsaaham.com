@@ -1,6 +1,7 @@
 {
   "$schema": "https://openapi.vercel.sh/vercel.json",
   "framework": "astro",
-  "installCommand": "bun install",
-  "buildCommand": "bun run build && mkdir -p .vercel/output && cp -r apps/site/far-fusion/.vercel/output/. .vercel/output/"
+  "regions": ["bom1"],
+  "installCommand": "bun install --frozen-lockfile",
+  "buildCommand": "bun run build && mkdir -p .vercel/output && cp -r apps/site/far-fusion/.vercel/output/. .vercel/output/ && node apps/site/far-fusion/scripts/fix-vercel-routes.mjs .vercel/output/config.json"
 }

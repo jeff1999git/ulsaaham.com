@@ -28,10 +28,6 @@ export function getEventStartDateTime(event) {
   return istInstantOn(event.date, start.hours, start.minutes);
 }
 
-export function hasEventStarted(event) {
-  return getEventStartDateTime(event) <= new Date();
-}
-
 // The real UTC instant the event ends. endTime is "hh:mm AM/PM" IST on the same
 // calendar day as `date`, except for events that run past midnight (end at or
 // before start), which finish on the following day. A missing or unparsable

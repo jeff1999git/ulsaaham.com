@@ -1,11 +1,16 @@
 import { optimizeCloudinary } from "../lib/image.js";
 import { hasEventEnded } from "../lib/event-time.js";
 import { isBookingOpen } from "../lib/event-status.js";
+import { formatDateShort } from "../lib/format-date.js";
 
-export default function EventCard({ event, linkable = true, index = 0, layout = "vertical" }) {
-  const date = new Intl.DateTimeFormat("en-IN", {
-    day: "numeric", month: "short", year: "numeric",
-  }).format(new Date(event.date));
+/**
+ * imgWidth: poster width to request, sized to the card's slot.
+ * eager: load the poster straight away (cards likely above the fold).
+ * priority: also fetch it at high priority; implies eager. Meant for the one
+ * poster that is likely the page's largest paint.
+ */
+export default function EventCard({ event, linkable = true, layout = "vertical", imgWidth = 600, eager = false, priority = false }) {
+  const date = formatDateShort(event.date);
 
   // Booking runs right up to the event's end time, so an event only stops being
   // "upcoming" once it is over.
@@ -22,10 +27,10 @@ export default function EventCard({ event, linkable = true, index = 0, layout = 
       <div className="event-card__image">
         {event.bannerImageUrl ? (
           <img
-            src={optimizeCloudinary(event.bannerImageUrl, 600)}
+            src={optimizeCloudinary(event.bannerImageUrl, imgWidth)}
             alt={event.name}
-            loading={index < 2 ? "eager" : "lazy"}
-            fetchPriority={index < 2 ? "high" : "auto"}
+            loading={eager || priority ? "eager" : "lazy"}
+            fetchPriority={priority ? "high" : "auto"}
             decoding="async"
             width="480"
             height="600"

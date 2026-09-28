@@ -1,3 +1,5 @@
+import { optimizeCloudinary } from "./image.js";
+
 function drawRoundRect(ctx, x, y, w, h, r) {
   ctx.beginPath();
   ctx.moveTo(x + r, y);
@@ -63,7 +65,8 @@ async function loadSvgAsImage(svgEl) {
 export async function generateTicketCanvas(svgEl, opts) {
   const [qrImg, posterImg, logoImg] = await Promise.all([
     loadSvgAsImage(svgEl),
-    opts.bannerImageUrl ? loadImage(opts.bannerImageUrl) : Promise.resolve(null),
+    // Drawn into a 402 px box, so twice that is plenty; not the full upload.
+    opts.bannerImageUrl ? loadImage(optimizeCloudinary(opts.bannerImageUrl, 804)) : Promise.resolve(null),
     loadImage("/brand_logo.avif"),
   ]);
 
@@ -210,6 +213,8 @@ export function downloadCanvasAsPng(canvas, filename) {
     document.body.appendChild(a);
     a.click();
     document.body.removeChild(a);
-    URL.revokeObjectURL(url);
+    // Revoked a moment later: revoking in the same task as click() can cancel
+    // the download in some browsers.
+    setTimeout(() => URL.revokeObjectURL(url), 1000);
   }, "image/png");
 }

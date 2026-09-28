@@ -1,0 +1,34 @@
+---
+// Starts a page's first /api/public reads while its HTML is still parsing, so
+// they overlap the island JS download instead of waiting for hydration.
+// src/lib/api.js hands each result to the first call for the same path, once.
+//
+// Use it in the layout's head slot: an inline script placed after the
+// stylesheet would wait for the CSS before running.
+//
+// paths: request paths from src/lib/page-data.js.
+// eventSlug: also fetch /events/<slug> for the ?slug= in the address, the
+// way EventDetail.jsx asks for it.
+const { paths = [], eventSlug = false } = Astro.props;
+---
+
+<script is:inline define:vars={{ paths, eventSlug }}>
+  var store = (window.__ulsPre = window.__ulsPre || {});
+  function early(path) {
+    store[path] = fetch("/api/public" + path)
+      .then(function (r) {
+        if (r.status === 429) return { status: 429 };
+        return r.json().then(function (d) {
+          return { ok: r.ok, status: r.status, data: d };
+        });
+      })
+      .catch(function () {
+        return null;
+      });
+  }
+  paths.forEach(early);
+  if (eventSlug) {
+    var slug = new URLSearchParams(location.search).get("slug");
+    if (slug) early("/events/" + encodeURIComponent(slug));
+  }
+</script>

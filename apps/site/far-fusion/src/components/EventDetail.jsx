@@ -3,6 +3,8 @@ import { getEvent } from "../lib/api.js";
 import RegistrationForm from "./RegistrationForm.jsx";
 import { optimizeCloudinary } from "../lib/image.js";
 import { hasEventEnded } from "../lib/event-time.js";
+import { isBookingOpen } from "../lib/event-status.js";
+import { formatDateFull } from "../lib/format-date.js";
 
 function isTypingTarget(el) {
   if (!el) return false;
@@ -74,7 +76,9 @@ function ImageGallery({ images, alt }) {
 
   return (
     <>
-      <div className="event-detail__poster" style={{ position: "relative" }}>
+      {/* Positioned by global.css: relative, and sticky beside the details
+          from 900 px. An inline position here would undo the sticky. */}
+      <div className="event-detail__poster">
         <div style={{ cursor: "zoom-in" }} onClick={() => setOpen(true)}>
           <img
             src={optimizeCloudinary(src, 900)}
@@ -202,9 +206,13 @@ export default function EventDetail() {
     </div>
   );
 
-  const date = new Intl.DateTimeFormat("en-IN", { dateStyle: "full" }).format(new Date(event.date));
+  const date = formatDateFull(event.date);
   const isPast = hasEventEnded(event);
-  const spotsLeft = event.capacity ? event.capacity - event.registeredCount : null;
+  // Seats left only mean something while booking is open; once it has closed
+  // (full, closed, cancelled, not yet published or over) the form below says
+  // so instead. Never below zero, even when an event is oversold.
+  const spotsLeft = event.capacity != null ? Math.max(0, event.capacity - (event.registeredCount || 0)) : null;
+  const showSpots = spotsLeft !== null && !isPast && isBookingOpen(event);
 
   const isCompetition = !!event.isCompetition;
   const participationType = event.participationType || "INDIVIDUAL";
@@ -259,13 +267,9 @@ export default function EventDetail() {
                 <p>🎟 ₹{event.amount} per person</p>
               )
             )}
-            {event.capacity != null && (
-              <p className={event.isFull || spotsLeft <= 20 ? "text-red-400" : "text-light/50"}>
-                🔢 {event.isFull
-                  ? "Booking closed — event is full"
-                  : spotsLeft === null
-                  ? "Unlimited capacity"
-                  : `${spotsLeft} spot${spotsLeft !== 1 ? "s" : ""} remaining`}
+            {showSpots && (
+              <p className={spotsLeft <= 20 ? "text-red-400" : "text-light/50"}>
+                🔢 {spotsLeft} spot{spotsLeft !== 1 ? "s" : ""} remaining
               </p>
             )}
           </div>

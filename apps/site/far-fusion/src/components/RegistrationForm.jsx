@@ -5,7 +5,8 @@ import { getUser, setUser as persistUser, addTicket } from "../lib/auth.js";
 import { optimizeCloudinary } from "../lib/image.js";
 import { getBookingClosedReason, getBookingClosedDetail } from "../lib/event-status.js";
 import { generateTicketCanvas, downloadCanvasAsPng } from "../lib/generate-ticket.js";
-import { downloadParticipationCardPdf } from "../lib/participation-card-pdf.js";
+import { downloadParticipationCardPdf, warmParticipationCardPdf } from "../lib/participation-card-pdf.js";
+import { formatDateShort, formatDateFull } from "../lib/format-date.js";
 
 const GST_RATE = 0.18;
 const PLATFORM_FEE_RATE = 0.02;
@@ -80,16 +81,22 @@ function TicketSuccess({ ticket, event, emailStatus, onResendEmail }) {
   const isEntryCard = ticket.competitionNumber != null;
   const instructions = event?.competitionInstructions || null;
   const notes = event?.competitionNotes || null;
+  // The booking response carries no banner; the event on this page has it.
+  const banner = ticket.bannerImageUrl || event?.bannerImageUrl || null;
 
-  const eventDateShort = new Intl.DateTimeFormat("en-IN", { day: "numeric", month: "short", year: "numeric" }).format(new Date(ticket.eventDate));
-  const eventDateFull = new Intl.DateTimeFormat("en-IN", { dateStyle: "full" }).format(new Date(ticket.eventDate));
+  const eventDateShort = formatDateShort(ticket.eventDate);
+  const eventDateFull = formatDateFull(ticket.eventDate);
+
+  useEffect(() => {
+    if (isEntryCard) warmParticipationCardPdf();
+  }, [isEntryCard]);
 
   const handleDownload = async () => {
     setDlLoading(true);
     try {
       if (isEntryCard) {
         // Competition participation card: plain details PDF, no ticket art / QR
-        downloadParticipationCardPdf(
+        await downloadParticipationCardPdf(
           {
             chestNumber: ticket.competitionNumber,
             participantName: ticket.participantName,
@@ -106,8 +113,12 @@ function TicketSuccess({ ticket, event, emailStatus, onResendEmail }) {
         return;
       }
 
-      const svgEl = qrRef.current?.querySelector("svg");
-      if (!svgEl) return;
+      // The on-screen QR, copied at the ticket's 260 px so it stays sharp.
+      const shown = qrRef.current?.querySelector("svg");
+      if (!shown) throw new Error("QR code not rendered");
+      const svgEl = shown.cloneNode(true);
+      svgEl.setAttribute("width", "260");
+      svgEl.setAttribute("height", "260");
       const canvas = await generateTicketCanvas(svgEl, {
         ticketCode: ticket.ticketCode,
         participantName: ticket.participantName,
@@ -115,11 +126,11 @@ function TicketSuccess({ ticket, event, emailStatus, onResendEmail }) {
         eventDate: eventDateShort,
         eventVenue: ticket.eventVenue,
         numberOfParticipants: ticket.numberOfParticipants,
-        bannerImageUrl: ticket.bannerImageUrl || null,
+        bannerImageUrl: banner,
       });
       downloadCanvasAsPng(canvas, `ticket-${ticket.ticketCode}.png`);
-    } catch {
-      alert(`Failed to generate ${isEntryCard ? "participation card" : "ticket"}. Please try again.`);
+    } catch (err) {
+      alert(err?.chunkLoad ? err.message : `Failed to generate ${isEntryCard ? "participation card" : "ticket"}. Please try again.`);
     } finally {
       setDlLoading(false);
     }
@@ -127,9 +138,9 @@ function TicketSuccess({ ticket, event, emailStatus, onResendEmail }) {
 
   return (
     <div className="my-ticket">
-      {ticket.bannerImageUrl && (
+      {banner && (
         <img
-          src={optimizeCloudinary(ticket.bannerImageUrl, 600)}
+          src={optimizeCloudinary(banner, 600)}
           alt={ticket.eventName}
           loading="lazy"
           decoding="async"
@@ -147,23 +158,14 @@ function TicketSuccess({ ticket, event, emailStatus, onResendEmail }) {
         </p>
       </div>
 
-      {/* Hidden QR SVG — used only by canvas generator (not needed for participation cards) */}
-      {!isEntryCard && (
-        <div ref={qrRef} style={{ position: "fixed", left: -9999, top: -9999, pointerEvents: "none" }}>
-          <QRCode value={ticket.ticketCode} size={260} />
-        </div>
-      )}
-
       <div style={{ padding: "12px 16px", borderTop: "1px solid rgba(255,255,255,0.06)" }}>
         {isEntryCard ? (
           <div style={{ background: "#fff", borderRadius: 8, padding: "12px 24px", width: "fit-content", margin: "0 auto 8px", textAlign: "center" }}>
             <p style={{ fontSize: 10, fontWeight: 700, letterSpacing: "0.18em", color: "#666", margin: 0 }}>CHEST NO</p>
             <p style={{ fontSize: 44, fontWeight: 700, color: "#014421", margin: 0, lineHeight: 1.15 }}>{ticket.competitionNumber}</p>
           </div>
-        ) : ticket.qrCodeUrl ? (
-          <img src={ticket.qrCodeUrl} alt="QR code" style={{ width: "100%", maxWidth: 150, display: "block", margin: "0 auto 8px" }} />
         ) : (
-          <div style={{ background: "#fff", padding: 8, width: "fit-content", margin: "0 auto 8px", borderRadius: 6 }}>
+          <div ref={qrRef} style={{ background: "#fff", padding: 8, width: "fit-content", margin: "0 auto 8px", borderRadius: 6 }}>
             <QRCode value={ticket.ticketCode} size={130} />
           </div>
         )}

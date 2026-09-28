@@ -14,18 +14,23 @@
     "@astrojs/tailwind": "^5.1.2",
     "@astrojs/vercel": "^8.0.0",
     "@vercel/speed-insights": "^2.0.0",
-    "astro": "^5.15.4",
+    "astro": "^5.18.2",
     "jspdf": "^4.2.1",
     "nodemailer": "^6.9.16",
     "qrcode": "^1.5.4",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
-    "react-qr-code": "^2.0.21",
-    "three": "^0.169.0"
+    "react-qr-code": "^2.0.21"
   },
   "devDependencies": {
+    "@eslint/js": "^9.39.4",
     "@types/nodemailer": "^6.4.17",
+    "@typescript-eslint/parser": "^8.70.1",
     "autoprefixer": "^10.4.20",
+    "eslint": "^9.39.4",
+    "eslint-plugin-astro": "^1.7.0",
+    "eslint-plugin-react-hooks": "^7.1.1",
+    "globals": "^16.5.0",
     "tailwindcss": "^3.4.14"
   }
 }
