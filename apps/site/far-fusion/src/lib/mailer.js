@@ -44,6 +44,12 @@ export function isMailConfigured() {
   return Boolean(ENV.SMTP_HOST && ENV.SMTP_USER && ENV.SMTP_PASS);
 }
 
+// A recipient the visitor typed. One @ and a dot in the domain, as before, and
+// none of the characters an address parser reads as structure (comments,
+// groups, quoting, lists, domain literals), so the mailer can only ever see a
+// single plain address. Apostrophes and plus tags still pass.
+export const EMAIL_RE = /^[^\s@()<>,;:"[\]\\]+@[^\s@()<>,;:"[\]\\]+\.[^\s@()<>,;:"[\]\\]+$/;
+
 function fromAddress(sender) {
   if (!Object.hasOwn(SENDERS, sender)) throw new Error(`Unknown mail sender "${sender}"`);
   return SENDERS[sender];
@@ -62,7 +68,9 @@ function createTransporter() {
     // message. Timeouts keep a stalled server from hanging the request until
     // the platform kills it.
     pool: true,
-    maxConnections: 1,
+    // Several sends can share one warm instance; with a single connection
+    // they would queue behind each other's SMTP exchange.
+    maxConnections: 3,
     maxMessages: 50,
     connectionTimeout: 10000,
     greetingTimeout: 10000,

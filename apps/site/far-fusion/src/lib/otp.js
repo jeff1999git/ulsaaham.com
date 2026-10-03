@@ -80,10 +80,14 @@ export function currentSendWindow(session, now) {
   return { firstSentAt: session.firstSentAt, sendCount: Number(session.sendCount) || 0 };
 }
 
+// Only the two sign-in routes read the session, so no other request carries it.
+// Every set and delete must name this path, or the browser keeps a second copy.
+export const COOKIE_PATH = "/api/auth";
+
 export const COOKIE_OPTS = (maxAgeSeconds) => ({
   httpOnly: true,
   secure: import.meta.env.PROD,
   sameSite: "lax",
   maxAge: maxAgeSeconds,
-  path: "/",
+  path: COOKIE_PATH,
 });

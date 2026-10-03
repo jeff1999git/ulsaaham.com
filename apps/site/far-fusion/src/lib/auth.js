@@ -1,39 +1,47 @@
 const KEY = "ulsaham_user";
-// Persists through logout so returning users are routed correctly
+// Persists through logout so a returning visitor is sent to the sign-in method
+// they used. It holds one flag per email and nothing else: on a shared phone,
+// the next person must not find earlier visitors' names, phones or ages here.
 const ACCOUNTS_KEY = "ulsaham_accounts";
 
 export function getUser() {
   try { return JSON.parse(localStorage.getItem(KEY) || "null"); } catch { return null; }
 }
 
+// The addresses that sign in with Google. Read this way, a profile an older
+// version stored alongside is never used, and the next write drops it.
+function googleFlags() {
+  const flags = {};
+  try {
+    const map = JSON.parse(localStorage.getItem(ACCOUNTS_KEY) || "{}");
+    for (const email in map) if (map[email]?.hasGoogle === true) flags[email] = { hasGoogle: true };
+  } catch {}
+  return flags;
+}
+
 export function setUser(user) {
   localStorage.setItem(KEY, JSON.stringify(user));
   if (user.email) {
     try {
-      const map = JSON.parse(localStorage.getItem(ACCOUNTS_KEY) || "{}");
-      map[user.email.toLowerCase()] = {
-        name: user.name,
-        phone: user.phone,
-        age: user.age,
-        passwordHash: user.passwordHash,
-        hasGoogle: !!user.googleId,
-        googleId: user.googleId,
-      };
-      localStorage.setItem(ACCOUNTS_KEY, JSON.stringify(map));
+      const flags = googleFlags();
+      const email = user.email.toLowerCase();
+      if (user.hasGoogle || user.googleId) flags[email] = { hasGoogle: true };
+      else delete flags[email];
+      localStorage.setItem(ACCOUNTS_KEY, JSON.stringify(flags));
     } catch {}
   }
 }
 
 export function clearUser() {
   localStorage.removeItem(KEY);
-  // Intentionally keep ACCOUNTS_KEY so re-login routing works after logout
+  // The flags stay so re-login routing works after logout; rewriting them
+  // also clears any profile an older version kept alongside.
+  try { localStorage.setItem(ACCOUNTS_KEY, JSON.stringify(googleFlags())); } catch {}
 }
 
+/** `{ hasGoogle: true }` for an address that signs in with Google, else null. */
 export function getKnownAccount(email) {
-  try {
-    const map = JSON.parse(localStorage.getItem(ACCOUNTS_KEY) || "{}");
-    return map[email.toLowerCase()] || null;
-  } catch { return null; }
+  return googleFlags()[String(email).toLowerCase()] || null;
 }
 
 export function addTicket(ticket) {

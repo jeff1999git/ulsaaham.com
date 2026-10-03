@@ -136,13 +136,22 @@ function OtpStep({ email, next, knownAccount }) {
     setSubmitting(true);
     setError("");
 
-    const res = await fetch("/api/auth/verify-otp", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ email, otp: otp.trim() }),
-    });
-    const data = await res.json().catch(() => ({}));
-    setSubmitting(false);
+    // A dropped connection rejects the fetch. Without the catch the button
+    // stayed on "Verifying…" for good; now it comes back with a message.
+    let res, data;
+    try {
+      res = await fetch("/api/auth/verify-otp", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email, otp: otp.trim() }),
+      });
+      data = await res.json().catch(() => ({}));
+    } catch {
+      setError("Network error. Check your connection and try again.");
+      return;
+    } finally {
+      setSubmitting(false);
+    }
 
     if (!res.ok) {
       setError(data.error || "Verification failed. Please try again.");
@@ -150,7 +159,9 @@ function OtpStep({ email, next, knownAccount }) {
       return;
     }
 
-    // Merge profile data from known account (returning user re-login via OTP)
+    // The server returns only the proven address. A profile this device still
+    // holds for it is kept; after a logout there is none, and the booking form
+    // asks for the rest.
     const userData = knownAccount ? { ...knownAccount, ...data.data } : data.data;
     setUser(userData);
     window.location.replace(next);
@@ -221,7 +232,9 @@ export default function AuthForm() {
     const err = params.get("error");
     if (err === "google_denied") setGoogleError("Google sign-in was cancelled.");
     else if (err === "google_token" || err === "google_profile") setGoogleError("Google sign-in failed. Please try again.");
-    else if (err === "auth_failed") setGoogleError("Sign-in failed. Please try again.");
+    else if (err === "google_state") setGoogleError("That Google sign-in expired or was started in another browser. Please try again.");
+    else if (err === "google_unverified") setGoogleError("Your Google account's email address is not verified. Verify it with Google, or continue with email below.");
+    else if (err === "auth_failed" || err === "no_auth_result") setGoogleError("Sign-in failed. Please try again.");
   }, []);
 
   const sendOtp = async (emailVal, known = null) => {
@@ -263,8 +276,9 @@ export default function AuthForm() {
 
       <EmailStep
         onReturning={(user) => {
-          // Google-only accounts must use Google OAuth
-          if (user.googleId && !user.passwordHash) {
+          // Addresses that signed in with Google go back through Google. After
+          // a logout only the hasGoogle flag is left to say so.
+          if (user.hasGoogle || user.googleId) {
             window.location.href = `/api/auth/google?next=${encodeURIComponent(next)}`;
             return;
           }

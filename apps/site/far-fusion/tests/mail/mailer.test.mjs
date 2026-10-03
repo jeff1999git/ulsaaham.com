@@ -85,7 +85,7 @@ test("connection pooling and timeouts survive the move", async () => {
   await mailer.sendMail(MESSAGE, "otp");
 
   assert.equal(created[0].pool, true);
-  assert.equal(created[0].maxConnections, 1);
+  assert.equal(created[0].maxConnections, 3);
   assert.equal(created[0].maxMessages, 50);
   assert.equal(created[0].connectionTimeout, 10000);
   assert.equal(created[0].greetingTimeout, 10000);

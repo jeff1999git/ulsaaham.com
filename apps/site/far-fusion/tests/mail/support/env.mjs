@@ -30,6 +30,10 @@ export function setTestEnv(overrides = {}) {
     TICKET_EMAIL_FROM: "Tickets Ulsaham <tickets@ulsaaham.com>",
     OTP_SECRET: makeSecret("otp-secret"),
     SITE_URL: "https://www.ulsaaham.com",
+    // Port 9 (discard) on the loopback refuses at once, so a request a test
+    // forgot to stub fails fast and never reaches the live admin panel, which
+    // is where an unset BACKEND_URL points in a production build.
+    BACKEND_URL: "http://127.0.0.1:9/api/public",
     PROXY_SHARED_SECRET: makeSecret("proxy-secret"),
     ...overrides,
   };
