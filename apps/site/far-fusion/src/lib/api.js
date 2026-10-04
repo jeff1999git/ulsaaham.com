@@ -2,6 +2,59 @@ const BASE = "/api/public";
 
 const tooMany = () => ({ ok: false, status: 429, data: { success: false, error: "Too many requests. Please try again in a moment." } });
 
+// Offline, aborted, timed out, or an answer that is not JSON: all of them read
+// as a lost connection, status 0, which the payment screens treat as "try again".
+const networkError = () => ({ ok: false, status: 0, data: { success: false, error: "Network error. Please try again." } });
+
+// How long the browser waits on each payment call before treating it as lost.
+// The proxy gives up on the admin panel after 25 s; a verification abandoned
+// here may still finish there, which is fine because verify is safe to repeat.
+export const ORDER_TIMEOUT_MS = 25000;
+export const VERIFY_TIMEOUT_MS = 20000;
+const STATUS_TIMEOUT_MS = 10000;
+
+/**
+ * A signal that aborts after `ms`, or as soon as the caller's own `signal`
+ * does. Built on a timer rather than AbortSignal.timeout/any, which older
+ * phones lack.
+ */
+function deadline(ms, signal) {
+  if (!ms && !signal) return { signal: undefined, done() {} };
+  const controller = new AbortController();
+  const abort = () => controller.abort();
+  const timer = ms ? setTimeout(abort, ms) : null;
+  if (signal?.aborted) abort();
+  else signal?.addEventListener("abort", abort, { once: true });
+  return {
+    signal: controller.signal,
+    done() {
+      clearTimeout(timer);
+      signal?.removeEventListener("abort", abort);
+    },
+  };
+}
+
+/** A JSON POST through the proxy. `limited` is the message shown on a 429. */
+async function postJson(path, body, { timeoutMs = 0, signal, limited = "Too many requests. Please try again later." } = {}) {
+  const limit = deadline(timeoutMs, signal);
+  try {
+    const res = await fetch(`${BASE}${path}`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(body),
+      signal: limit.signal,
+    });
+    if (res.status === 429) {
+      return { ok: false, status: 429, data: { success: false, error: limited } };
+    }
+    return { ok: res.ok, status: res.status, data: await res.json() };
+  } catch {
+    return networkError();
+  } finally {
+    limit.done();
+  }
+}
+
 /**
  * The response an inline page script already requested for this path
  * (src/components/ApiPrefetch.astro), handed out once: a later call, such as
@@ -31,7 +84,7 @@ async function apiFetch(path, init) {
     const data = await res.json();
     return { ok: res.ok, status: res.status, data };
   } catch {
-    return { ok: false, status: 0, data: { success: false, error: "Network error. Please try again." } };
+    return networkError();
   }
 }
 
@@ -67,91 +120,59 @@ export function getBrandPartners() {
   return apiFetch(BRAND_PARTNERS_PATH);
 }
 
-export async function registerForEvent(slug, body) {
-  try {
-    const res = await fetch(`${BASE}/events/${encodeURIComponent(slug)}/register`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(body),
-    });
-    if (res.status === 429) {
-      return { ok: false, status: 429, data: { success: false, error: "Too many requests. Please try again later." } };
-    }
-    return { ok: res.ok, status: res.status, data: await res.json() };
-  } catch {
-    return { ok: false, status: 0, data: { success: false, error: "Network error. Please try again." } };
-  }
+/**
+ * A free or complimentary booking. `requestId` names this attempt: sending the
+ * same one again (a retry after a lost answer) returns the booking it already
+ * made instead of a second one.
+ */
+export function registerForEvent(slug, body, { requestId } = {}) {
+  return postJson(`/events/${encodeURIComponent(slug)}/register`, requestId ? { ...body, requestId } : body);
 }
 
-export async function createPaymentOrder(slug, body) {
-  try {
-    const res = await fetch(`${BASE}/events/${encodeURIComponent(slug)}/payment/order`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(body),
-    });
-    if (res.status === 429) {
-      return { ok: false, status: 429, data: { success: false, error: "Too many attempts. Please wait before trying again." } };
-    }
-    return { ok: res.ok, status: res.status, data: await res.json() };
-  } catch {
-    return { ok: false, status: 0, data: { success: false, error: "Network error. Please try again." } };
-  }
+const PAYMENT_LIMITED = "Too many attempts. Please wait before trying again.";
+
+/** A timeout (ORDER_TIMEOUT_MS unless given) answers status 0, like a lost connection. */
+export function createPaymentOrder(slug, body, { signal, timeoutMs = ORDER_TIMEOUT_MS } = {}) {
+  return postJson(`/events/${encodeURIComponent(slug)}/payment/order`, body, { signal, timeoutMs, limited: PAYMENT_LIMITED });
 }
 
-export async function verifyPayment(slug, body) {
-  try {
-    const res = await fetch(`${BASE}/events/${encodeURIComponent(slug)}/payment/verify`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(body),
-    });
-    if (res.status === 429) {
-      return { ok: false, status: 429, data: { success: false, error: "Too many attempts. Please wait before trying again." } };
-    }
-    return { ok: res.ok, status: res.status, data: await res.json() };
-  } catch {
-    return { ok: false, status: 0, data: { success: false, error: "Network error. Please try again." } };
-  }
+/**
+ * Safe to repeat: the admin panel answers a payment it has already recorded
+ * with the same booking. A timeout (VERIFY_TIMEOUT_MS unless given) answers
+ * status 0, like a lost connection.
+ */
+export function verifyPayment(slug, body, { signal, timeoutMs = VERIFY_TIMEOUT_MS } = {}) {
+  return postJson(`/events/${encodeURIComponent(slug)}/payment/verify`, body, { signal, timeoutMs, limited: PAYMENT_LIMITED });
 }
 
-export async function validateCode(slug, code) {
-  try {
-    const res = await fetch(`${BASE}/events/${encodeURIComponent(slug)}/apply-coupon`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ couponCode: code }),
-    });
-    if (res.status === 429) {
-      return { ok: false, status: 429, data: { success: false, error: "Too many requests. Please try again later." } };
-    }
-    return { ok: res.ok, status: res.status, data: await res.json() };
-  } catch {
-    return { ok: false, status: 0, data: { success: false, error: "Network error. Please try again." } };
-  }
+/**
+ * Whether the booking for a Razorpay order exists yet, for a payment whose
+ * answer never reached this page. data.data is the ticket once it does;
+ * data.pending is true until then, and also when the phone is not the one on
+ * the booking.
+ */
+export function getPaymentStatus(slug, { orderId, phone }, { signal, timeoutMs = STATUS_TIMEOUT_MS } = {}) {
+  return postJson(`/events/${encodeURIComponent(slug)}/payment/status`, { orderId, phone }, {
+    signal,
+    timeoutMs,
+    limited: "Too many requests. Please try again in a moment.",
+  });
 }
 
-export async function fetchMyTickets(ticketCodes) {
-  try {
-    const res = await fetch(`${BASE}/participants/my-tickets`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ ticketCodes }),
-    });
-    if (res.status === 429) {
-      return { ok: false, status: 429, data: { success: false, error: "Too many requests. Please try again later." } };
-    }
-    return { ok: res.ok, status: res.status, data: await res.json() };
-  } catch {
-    return { ok: false, status: 0, data: { success: false, error: "Network error. Please try again." } };
-  }
+export function validateCode(slug, code) {
+  return postJson(`/events/${encodeURIComponent(slug)}/apply-coupon`, { couponCode: code });
+}
+
+export function fetchMyTickets(ticketCodes) {
+  return postJson("/participants/my-tickets", { ticketCodes });
 }
 
 /**
  * Ask the site to email a booking. Only the code and the recipient travel —
- * the mail itself is built on the server from the booking the backend holds.
+ * the mail itself, Payment ID included, is built on the server from the
+ * booking the backend holds.
  */
-export async function sendTicketEmail({ ticketCode, email, paymentId = null }) {
+export async function sendTicketEmail({ ticketCode, email }) {
   if (!ticketCode || !email) {
     return { ok: false, status: 0, data: { success: false, error: "Add an email address to receive your ticket." } };
   }
@@ -159,12 +180,14 @@ export async function sendTicketEmail({ ticketCode, email, paymentId = null }) {
     const res = await fetch("/api/send-ticket", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ ticketCode, email, paymentId }),
+      body: JSON.stringify({ ticketCode, email }),
+      // The visitor may leave the success screen at once; the send still goes.
+      keepalive: true,
     });
     const data = await res.json().catch(() => ({}));
     return { ok: res.ok, status: res.status, data };
   } catch {
-    return { ok: false, status: 0, data: { success: false, error: "Network error. Please try again." } };
+    return networkError();
   }
 }
 

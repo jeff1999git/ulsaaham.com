@@ -1,41 +1,41 @@
 import { useState, useEffect, useRef } from "react";
 import QRCode from "react-qr-code";
-import { registerForEvent, createPaymentOrder, verifyPayment, validateCode, sendTicketEmail } from "../lib/api.js";
+import { registerForEvent, createPaymentOrder, verifyPayment, getPaymentStatus, validateCode, sendTicketEmail } from "../lib/api.js";
 import { getUser, setUser as persistUser, addTicket } from "../lib/auth.js";
 import { optimizeCloudinary } from "../lib/image.js";
 import { getBookingClosedReason, getBookingClosedDetail } from "../lib/event-status.js";
 import { generateTicketCanvas, downloadCanvasAsPng } from "../lib/generate-ticket.js";
 import { downloadParticipationCardPdf, warmParticipationCardPdf } from "../lib/participation-card-pdf.js";
 import { formatDateShort, formatDateFull } from "../lib/format-date.js";
+import { SUPPORT_EMAIL } from "../lib/contact.js";
+import { calcFees } from "../lib/fees.js";
+import { loadRazorpay } from "../lib/razorpay.js";
+import {
+  orderKey,
+  keepOrder,
+  reusableOrder,
+  verifyWithRetry,
+  isFinalAnswer,
+  verifyFailureMessage,
+  bookingErrorAction,
+  newRequestId,
+} from "../lib/payment-flow.js";
+import {
+  savePendingPayment,
+  readPendingPayment,
+  updatePendingPayment,
+  clearPendingPayment,
+  isRecoverable,
+} from "../lib/pending-payment.js";
+import VerifyFailed from "./VerifyFailed.jsx";
 
-const GST_RATE = 0.18;
-const PLATFORM_FEE_RATE = 0.02;
+// The admin panel takes at most this many people on one booking.
+const MAX_PARTICIPANTS = 10;
+// A payment whose answer never arrived is looked up this often, for this long.
+const CHECK_EVERY_MS = 3000;
+const CHECK_FOR_MS = 60_000;
 
-function calcFees(event, quantity, couponDiscount = 0) {
-  const price = event.effectiveAmount ?? event.amount;
-  // Competition group pricing: first member pays the entry price, each extra
-  // member adds groupExtraAmount (falls back to the entry price if unset).
-  const base = event.isCompetition
-    ? price + (event.groupExtraAmount ?? price) * Math.max(0, quantity - 1)
-    : price * quantity;
-  const discountApplied = Math.min(couponDiscount, base);
-  const discountedBase = Math.max(0, base - discountApplied);
-  const gst = event.gstEnabled ? Math.round(discountedBase * GST_RATE * 100) / 100 : 0;
-  const platformFee = event.platformFeeEnabled !== false ? Math.round(discountedBase * PLATFORM_FEE_RATE * 100) / 100 : 0;
-  const total = Math.round((discountedBase + gst + platformFee) * 100) / 100;
-  return { base, discount: discountApplied, discountedBase, gst, platformFee, total };
-}
-
-function loadRazorpay() {
-  return new Promise((resolve) => {
-    if (window.Razorpay) { resolve(true); return; }
-    const s = document.createElement("script");
-    s.src = "https://checkout.razorpay.com/v1/checkout.js";
-    s.onload = () => resolve(true);
-    s.onerror = () => resolve(false);
-    document.body.appendChild(s);
-  });
-}
+const priceNotice = { background: "rgba(234,179,8,0.12)", borderColor: "rgba(234,179,8,0.45)", color: "#fde68a" };
 
 const confirmedBadge = { padding: "2px 9px", borderRadius: 4, fontSize: 11, fontWeight: 700, letterSpacing: "0.06em", display: "inline-block", background: "#064e3b", color: "#6ee7b7" };
 
@@ -245,7 +245,7 @@ function CompleteProfileStep({ user, onComplete }) {
   );
 }
 
-export default function RegistrationForm({ event }) {
+export default function RegistrationForm({ event, onEventStale }) {
   // Competition entry rules: 1 person = individual entry, 2+ = group entry
   const isCompetitionEvent = !!event.isCompetition;
   const participationType = event.participationType || "INDIVIDUAL";
@@ -256,12 +256,21 @@ export default function RegistrationForm({ event }) {
   const [authStatus, setAuthStatus] = useState("loading"); // "loading" | "guest" | "user"
   const [user, setUser] = useState(null);
   const [form, setForm] = useState({ name: "", phone: "", email: "", age: "", numberOfParticipants: String(minMembers) });
-  const [phase, setPhase] = useState("form"); // "form" | "breakdown" | "paying" | "verifying" | "success"
+  // "form" | "breakdown" | "paying" | "verifying" | "verify-failed" | "success"
+  const [phase, setPhase] = useState("form");
   const [ticket, setTicket] = useState(null);
   // null | { state: "sending" | "sent" | "failed", email, error? }
   const [emailStatus, setEmailStatus] = useState(null);
   const [fieldErrors, setFieldErrors] = useState({});
   const [globalError, setGlobalError] = useState(null);
+  // A payment Razorpay took whose booking could not be confirmed:
+  // { message, paymentId, vBody }, vBody being what Retry sends to verify.
+  const [failure, setFailure] = useState(null);
+  // The server's order, when its total differs from the one this page showed.
+  const [quote, setQuote] = useState(null);
+  // The look for an earlier payment's booking: null | { state: "checking" |
+  // "none", panel?, paymentId? }. A panel replaces the form while it checks.
+  const [recovery, setRecovery] = useState(null);
 
   // Promo code state — appliedCode: null | { type:"coupon"|"complimentary", code, discount?, remainingUses? }
   const [promoInput, setPromoInput] = useState("");
@@ -269,6 +278,123 @@ export default function RegistrationForm({ event }) {
   const [promoError, setPromoError] = useState(null);
   const [promoLoading, setPromoLoading] = useState(false);
   const [promoOpen, setPromoOpen] = useState(false);
+
+  // { key, order, at }: the Razorpay order the next Pay reuses (payment-flow.js).
+  const orderRef = useRef(null);
+  // Bumped by every Pay and by Cancel; an answer for an older attempt is ignored.
+  const attemptRef = useRef(0);
+  // { key, id }: the request id of a free booking, kept while its details stay the same.
+  const requestRef = useRef(null);
+  // The payment status check in progress, if any.
+  const checkRef = useRef(null);
+  const phaseRef = useRef(phase);
+
+  useEffect(() => {
+    phaseRef.current = phase;
+  }, [phase]);
+
+  // checkout.js downloads while the visitor reads the order summary.
+  useEffect(() => {
+    if (phase === "breakdown") loadRazorpay();
+  }, [phase]);
+
+  // Any change to what is being booked means the next Pay needs a new order.
+  useEffect(() => {
+    orderRef.current = null;
+  }, [form, appliedCode]);
+
+  // Sends the ticket email without holding up the success screen, and records
+  // how it went so the visitor can retry a failed send instead of never
+  // learning it failed. Defined above the early returns so the success screen
+  // can call it again. The Payment ID in the mail comes from the booking the
+  // server holds, so none is sent from here.
+  const deliverTicketEmail = (ticketData, to = form.email.trim()) => {
+    if (!ticketData?.ticketCode) {
+      setEmailStatus(null);
+      return;
+    }
+    // The email field is optional, so say plainly that nothing was sent rather
+    // than leaving the visitor to wonder.
+    if (!to) {
+      setEmailStatus({ state: "skipped" });
+      return;
+    }
+    setEmailStatus({ state: "sending", email: to });
+    sendTicketEmail({ ticketCode: ticketData.ticketCode, email: to })
+      .then(({ ok, data }) =>
+        setEmailStatus({ state: ok ? "sent" : "failed", email: to, error: ok ? null : data?.error })
+      )
+      .catch(() => setEmailStatus({ state: "failed", email: to }));
+  };
+
+  // The booking exists: keep it on this device, email it and show it. `email`
+  // is given when the booking was found after a reload, before the form is filled.
+  const showTicket = (ticketData, email) => {
+    orderRef.current = null;
+    addTicket({ ...ticketData, registeredAt: new Date().toISOString() });
+    deliverTicketEmail(ticketData, email);
+    setTicket(ticketData);
+    setPhase("success");
+  };
+
+  const stopCheck = () => {
+    clearTimeout(checkRef.current?.timer);
+    checkRef.current = null;
+  };
+
+  // Asks every 3 s, for about a minute, whether `record`'s order has its
+  // booking yet (verify or the Razorpay webhook may have made it while this
+  // page was not listening). Defined above the early returns, like the
+  // functions it calls, because the mount effect starts it.
+  const startCheck = (record, panel) => {
+    stopCheck();
+    const check = { until: Date.now() + CHECK_FOR_MS, timer: null };
+    checkRef.current = check;
+    setRecovery({ state: "checking", panel });
+    const ask = async () => {
+      const { ok, status, data } = await getPaymentStatus(record.slug, { orderId: record.orderId, phone: record.phone });
+      if (checkRef.current !== check) return;
+      if (ok && data?.data?.ticketCode) {
+        checkRef.current = null;
+        clearPendingPayment(record.orderId);
+        setRecovery(null);
+        showTicket(data.data, record.email || "");
+        return;
+      }
+      // 400 and 404: a record the server cannot match, or an event that is
+      // gone; asking again changes nothing.
+      if (status === 400 || status === 404) {
+        checkRef.current = null;
+        clearPendingPayment(record.orderId);
+        setRecovery(null);
+        return;
+      }
+      if (Date.now() >= check.until) {
+        checkRef.current = null;
+        updatePendingPayment(record.orderId, { checkedAt: Date.now() });
+        setRecovery({ state: "none", paymentId: record.paymentId || null });
+        return;
+      }
+      check.timer = setTimeout(ask, CHECK_EVERY_MS);
+    };
+    ask();
+  };
+
+  // Confirms a payment Razorpay reported, asking again after a lost answer or a
+  // server error (it is safe to repeat). The verify-failed panel's Retry runs
+  // it too. The pending record goes once the server has given a final answer.
+  const confirmPayment = async (vBody) => {
+    setPhase("verifying");
+    const result = await verifyWithRetry(() => verifyPayment(event.slug, vBody));
+    if (result.ok) {
+      clearPendingPayment(vBody.razorpay_order_id);
+      showTicket(result.data.data);
+      return;
+    }
+    if (isFinalAnswer(result.status)) clearPendingPayment(vBody.razorpay_order_id);
+    setFailure({ message: verifyFailureMessage(result), paymentId: vBody.razorpay_payment_id, vBody });
+    setPhase("verify-failed");
+  };
 
   useEffect(() => {
     const u = getUser();
@@ -282,36 +408,58 @@ export default function RegistrationForm({ event }) {
       age: u.age ? String(u.age) : "",
       numberOfParticipants: String(minMembers),
     });
+
+    // A payment opened here in the last half hour that never reported back.
+    // Unless an earlier check already came up empty, the form waits for this
+    // one: after a reload a new Pay would make a second order, and a second charge.
+    const record = readPendingPayment();
+    if (isRecoverable(record, event.slug)) startCheck(record, !record.checkedAt || !!record.paymentId);
+
+    // Back from a UPI app or another tab: look again, beside the form.
+    const onVisible = () => {
+      if (document.hidden || checkRef.current || !["form", "breakdown"].includes(phaseRef.current)) return;
+      const latest = readPendingPayment();
+      if (isRecoverable(latest, event.slug)) startCheck(latest, false);
+    };
+    document.addEventListener("visibilitychange", onVisible);
+    return () => {
+      document.removeEventListener("visibilitychange", onVisible);
+      stopCheck();
+    };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  // Sends the ticket email without holding up the success screen, and records
-  // how it went so the visitor can retry a failed send instead of never
-  // learning it failed. Defined above the early returns so the success screen
-  // can call it again.
-  const deliverTicketEmail = (ticketData, paymentId = null) => {
-    const to = form.email.trim();
-    if (!ticketData?.ticketCode) {
-      setEmailStatus(null);
-      return;
-    }
-    // The email field is optional, so say plainly that nothing was sent rather
-    // than leaving the visitor to wonder.
-    if (!to) {
-      setEmailStatus({ state: "skipped" });
-      return;
-    }
-    setEmailStatus({ state: "sending", email: to });
-    sendTicketEmail({
-      ticketCode: ticketData.ticketCode,
-      email: to,
-      paymentId: paymentId ?? ticketData.paymentId ?? null,
-    })
-      .then(({ ok, data }) =>
-        setEmailStatus({ state: ok ? "sent" : "failed", email: to, error: ok ? null : data?.error })
-      )
-      .catch(() => setEmailStatus({ state: "failed", email: to }));
-  };
+  // A payment in progress or settled is shown even if booking has closed since:
+  // the money has moved, and the visitor needs the ticket or the Payment ID.
+  if (phase === "success")
+    return (
+      <TicketSuccess
+        ticket={ticket}
+        event={event}
+        emailStatus={emailStatus}
+        onResendEmail={() => deliverTicketEmail(ticket, emailStatus?.email || form.email.trim())}
+      />
+    );
+
+  if (phase === "verify-failed") {
+    return (
+      <div className="reg-form">
+        <VerifyFailed message={failure.message} paymentId={failure.paymentId} onRetry={() => confirmPayment(failure.vBody)} />
+      </div>
+    );
+  }
+
+  if (phase === "verifying" || (phase === "form" && recovery?.state === "checking" && recovery.panel)) {
+    return (
+      <div className="reg-form" role="status" style={{ minHeight: "160px", alignItems: "center", justifyContent: "center", textAlign: "center" }}>
+        <div className="spinner" />
+        <p className="text-light/40 text-sm mt-4">
+          {phase === "verifying" ? "Confirming your payment…" : "Checking your last payment…"}
+        </p>
+        {phase !== "verifying" && <p className="text-light/30 text-xs">This takes up to a minute. Please don&apos;t pay again meanwhile.</p>}
+      </div>
+    );
+  }
 
   // Closed because the admin closed it, the event is over or cancelled, or
   // every seat is taken — the visitor sees one consistent "Booking Closed".
@@ -343,16 +491,6 @@ export default function RegistrationForm({ event }) {
       </div>
     );
   }
-
-  if (phase === "success")
-    return (
-      <TicketSuccess
-        ticket={ticket}
-        event={event}
-        emailStatus={emailStatus}
-        onResendEmail={() => deliverTicketEmail(ticket)}
-      />
-    );
 
   const needsProfile = !user?.name?.trim() || !user?.phone?.trim() || !user?.age;
   if (needsProfile) {
@@ -391,11 +529,14 @@ export default function RegistrationForm({ event }) {
     : "per person";
 
   // ── Field setter with inline participants validation ─────────────────────────
+  // A change also drops a repriced order's figures; the order itself goes in
+  // the effect above.
   const set = (field) => (e) => {
     const value = e.target.value;
     setForm((f) => ({ ...f, [field]: value }));
     setFieldErrors((fe) => { const n = { ...fe }; delete n[field]; return n; });
     setGlobalError(null);
+    setQuote(null);
     if (field === "numberOfParticipants" && isComplimentary && appliedCode.remainingUses != null) {
       const n = Number(value);
       if (n > appliedCode.remainingUses) {
@@ -413,6 +554,11 @@ export default function RegistrationForm({ event }) {
     const age = Number(form.age);
     if (!form.age.trim()) errors.age = ["Age is required."];
     else if (!Number.isInteger(age) || age < 1 || age > 120) errors.age = ["Enter a valid age between 1 and 120."];
+    // A whole number in range, so the total shown is never negative or fractional.
+    const people = Number(form.numberOfParticipants);
+    if (!individualOnly && (!Number.isInteger(people) || people < minMembers || people > MAX_PARTICIPANTS)) {
+      errors.numberOfParticipants = [`Enter a whole number from ${minMembers} to ${MAX_PARTICIPANTS}.`];
+    }
     if (isComplimentary && appliedCode.remainingUses != null && count > appliedCode.remainingUses) {
       errors.numberOfParticipants = ["This code doesn't cover that many participants."];
     }
@@ -441,13 +587,17 @@ export default function RegistrationForm({ event }) {
     if (!code) return;
     setPromoLoading(true);
     setPromoError(null);
+    setQuote(null);
 
-    const { ok, data } = await validateCode(event.slug, code);
+    const { ok, status, data } = await validateCode(event.slug, code);
     setPromoLoading(false);
 
     if (!ok) {
       setAppliedCode(null);
       setPromoError(data?.error || "Invalid code.");
+      // 410: booking closed or the event was cancelled since this page loaded;
+      // the fresh event replaces the form with the reason.
+      if (status === 410) onEventStale?.();
       return;
     }
 
@@ -462,6 +612,29 @@ export default function RegistrationForm({ event }) {
     setAppliedCode(null);
     setPromoInput("");
     setPromoError(null);
+    setQuote(null);
+  };
+
+  // ── A refused order or registration (payment-flow.js bookingErrorAction) ─────
+  const applyBookingError = (res) => {
+    const action = bookingErrorAction(res, { hasCode: !!appliedCode });
+    if (action.kind === "fields") {
+      setFieldErrors(action.fieldErrors);
+      setGlobalError("Please check the details below.");
+      setPhase("form");
+      return;
+    }
+    if (action.kind === "coupon") {
+      setAppliedCode(null);
+      setPromoInput("");
+      setPromoError(action.message || "Code is no longer valid. Please try again without it.");
+      setGlobalError("Promo code rejected. Please review and try again.");
+      return;
+    }
+    // Closed, full, or switched between free and paid since this page loaded:
+    // the fresh event re-renders the form (or Booking Closed) to match.
+    if (action.kind === "stale") onEventStale?.();
+    setGlobalError(action.message || "Something went wrong. Please try again.");
   };
 
   // ── Free / complimentary registration (no payment) ───────────────────────────
@@ -473,21 +646,19 @@ export default function RegistrationForm({ event }) {
     setFieldErrors({});
     setGlobalError(null);
 
-    const { ok, status, data } = await registerForEvent(event.slug, buildBody());
-    if (ok) {
-      const ticketData = data.data;
-      addTicket({ ...ticketData, registeredAt: new Date().toISOString() });
-      deliverTicketEmail(ticketData);
-      setTicket(ticketData);
-      setPhase("success");
+    // One id per submit, kept while the details stay the same: pressing the
+    // button again after a lost answer returns that booking, not a second one.
+    const body = buildBody();
+    const key = orderKey(event.slug, body);
+    if (requestRef.current?.key !== key) requestRef.current = { key, id: newRequestId() };
+    const res = await registerForEvent(event.slug, body, { requestId: requestRef.current.id });
+    if (res.ok) {
+      requestRef.current = null;
+      showTicket(res.data.data);
       return;
     }
     setPhase("form");
-    if (status === 400 && data.fieldErrors) { setFieldErrors(data.fieldErrors); return; }
-    if (status === 409) { setGlobalError(data?.error || "This booking could not be completed. Please try again or contact support."); return; }
-    if (status === 410) { setGlobalError(data?.error || "This event is now full."); return; }
-    if (status === 429) { setGlobalError("Too many requests. Please try again in a moment."); return; }
-    setGlobalError(data?.error || "Something went wrong. Please try again.");
+    applyBookingError(res);
   };
 
   // ── Paid event: show breakdown before Razorpay ───────────────────────────────
@@ -500,95 +671,149 @@ export default function RegistrationForm({ event }) {
     setPhase("breakdown");
   };
 
+  // The script and the order load together. The same request within 15
+  // minutes reuses its order, so closing the payment window and paying again
+  // neither makes a second order nor uses up the hourly limit.
   const handlePay = async () => {
+    const attempt = ++attemptRef.current;
+    stopCheck();
+    setRecovery(null);
     setGlobalError(null);
     setPhase("paying");
 
-    const loaded = await loadRazorpay();
+    const body = buildBody();
+    if (appliedCode?.type === "coupon") body.couponCode = appliedCode.code;
+    const key = orderKey(event.slug, body);
+    const saved = reusableOrder(orderRef.current, key);
+    const [loaded, res] = await Promise.all([
+      loadRazorpay(),
+      saved ? { ok: true, data: { data: saved } } : createPaymentOrder(event.slug, body),
+    ]);
+    // Kept even when this attempt was cancelled meanwhile: the next Pay uses it.
+    if (res.ok && !saved) orderRef.current = keepOrder(key, res.data.data);
+    if (attempt !== attemptRef.current) return;
+
+    if (!res.ok) {
+      setPhase("breakdown");
+      applyBookingError(res);
+      return;
+    }
     if (!loaded) {
       setGlobalError("Could not load the payment gateway. Please check your connection and try again.");
       setPhase("breakdown");
       return;
     }
 
-    const body = buildBody();
-    if (appliedCode?.type === "coupon") body.couponCode = appliedCode.code;
-    const { ok, status, data } = await createPaymentOrder(event.slug, body);
-    if (!ok) {
+    // The server prices from its own copy of the event. When that is not what
+    // this page showed, the visitor sees the server's total before paying it;
+    // the next Pay opens this same order.
+    const order = res.data.data;
+    if (order.amount !== (quote ? quote.amount : fees.totalPaise)) {
+      setQuote(order);
       setPhase("breakdown");
-      if (status === 410) { setGlobalError(data?.error || "This event is now full."); return; }
-      if (status === 404 && appliedCode) {
-        setAppliedCode(null);
-        setPromoError("Code is no longer valid. Please try again without it.");
-        setGlobalError("Promo code rejected. Please review and try again.");
-        return;
-      }
-      if (status === 429) { setGlobalError("Too many requests. Please try again in a moment."); return; }
-      setGlobalError(data?.error || "Could not initiate payment. Please try again.");
+      onEventStale?.();
       return;
     }
+    openCheckout(order, body);
+  };
 
-    const orderData = data.data;
+  const cancelOpening = () => {
+    attemptRef.current += 1;
+    setPhase("breakdown");
+  };
+
+  const openCheckout = (order, body) => {
+    // Written before the window opens: if this page never hears back (a UPI
+    // app switch, a tab the phone reloaded), the next visit looks for the booking.
+    savePendingPayment({
+      slug: event.slug,
+      orderId: order.orderId,
+      phone: body.phone,
+      total: order.amount / 100,
+      createdAt: Date.now(),
+      ...(body.email ? { email: body.email } : {}),
+    });
     const rzp = new window.Razorpay({
-      key: orderData.keyId,
-      amount: orderData.amount,
-      currency: orderData.currency,
+      key: order.keyId,
+      amount: order.amount,
+      currency: order.currency,
       name: "Ulsaham Entertainments",
       description: event.name,
-      order_id: orderData.orderId,
+      order_id: order.orderId,
       prefill: { name: form.name, email: form.email || "", contact: form.phone },
       theme: { color: "#014421" },
-      handler: async (response) => {
-        setPhase("verifying");
-        const vBody = { ...response, ...body };
-        const result = await verifyPayment(event.slug, vBody);
-        if (!result.ok) {
-          const pid = response.razorpay_payment_id;
-          setGlobalError(
-            `Payment was received but we couldn't confirm your registration. Please save your Payment ID: ${pid} and contact support@ulsaham.com.`
-          );
-          setPhase("form");
-          return;
-        }
-        const ticketData = result.data.data;
-        addTicket({ ...ticketData, registeredAt: new Date().toISOString() });
-        deliverTicketEmail(ticketData, response.razorpay_payment_id);
-        setTicket(ticketData);
-        setPhase("success");
+      handler: (response) => {
+        updatePendingPayment(order.orderId, { paymentId: response.razorpay_payment_id });
+        confirmPayment({ ...response, ...body });
       },
       modal: {
-        ondismiss: () => setPhase("breakdown"),
+        // Closed without a word from Razorpay. A UPI payment approved in the
+        // app may still have gone through, so its booking is looked for while
+        // the summary shows; paying again opens the same order.
+        ondismiss: () => {
+          setPhase("breakdown");
+          const record = readPendingPayment();
+          if (isRecoverable(record, event.slug)) startCheck(record, false);
+        },
       },
     });
     rzp.open();
   };
 
-  // ── Paying / Verifying spinner ───────────────────────────────────────────────
-  if (phase === "paying" || phase === "verifying") {
+  // ── Paying spinner ───────────────────────────────────────────────────────────
+  if (phase === "paying") {
     return (
       <div className="reg-form" style={{ minHeight: "160px", alignItems: "center", justifyContent: "center" }}>
         <div className="spinner" />
-        <p className="text-light/40 text-sm mt-4">
-          {phase === "verifying" ? "Confirming your payment…" : isComplimentary ? "Registering…" : "Opening payment gateway…"}
-        </p>
+        <p className="text-light/40 text-sm mt-4">{isFreeEntry ? "Registering…" : "Opening payment gateway…"}</p>
+        {!isFreeEntry && (
+          <button
+            type="button"
+            onClick={cancelOpening}
+            className="text-light/30 text-xs uppercase tracking-widest hover:text-light/60 transition"
+          >
+            Cancel
+          </button>
+        )}
       </div>
     );
   }
 
+  // Where the look for an earlier payment has got to, above the form or summary.
+  const recoveryNote = recovery && (
+    <p className="text-light/50 text-xs" role="status">
+      {recovery.state === "checking"
+        ? "Checking your last payment…"
+        : recovery.paymentId
+        ? `We could not find a booking for your last payment (Payment ID ${recovery.paymentId}) yet. If you were charged, please contact ${SUPPORT_EMAIL} with that ID before paying again.`
+        : "No completed payment found — you can book again."}
+    </p>
+  );
+
   // ── Breakdown: fee table before Razorpay ─────────────────────────────────────
   if (phase === "breakdown" && fees) {
-    const bd = fees;
+    // The server's own figures once it has priced the order differently.
+    const bd = quote?.breakdown ?? fees;
     return (
       <div className="reg-form">
         <h3 className="font-serif text-xl text-light mb-1">Order Summary</h3>
         <p className="text-light/40 text-sm mb-5">{event.name}</p>
 
+        {recoveryNote}
         {globalError && <div className="reg-error">{globalError}</div>}
+        {quote && (
+          <div className="reg-error" style={priceNotice}>
+            The price changed to ₹{(quote.amount / 100).toFixed(2)}. Please review.
+          </div>
+        )}
 
         <div className="fee-breakdown">
           <div className="fee-breakdown__row">
             <span>
-              {isCompetitionEvent && count > 1 ? (
+              {/* The page's unit price may be the old one until the event reloads. */}
+              {quote ? (
+                <>{count} participant{count !== 1 ? "s" : ""}</>
+              ) : isCompetitionEvent && count > 1 ? (
                 <>
                   ₹{effectivePrice} + {count - 1} × ₹{extraMemberPrice}
                   <span style={{ opacity: 0.6, fontSize: "11px", marginLeft: "4px" }}>group entry · {count} members</span>
@@ -677,6 +902,7 @@ export default function RegistrationForm({ event }) {
         {spotsLeft != null && !event.isFull ? <span> · {spotsLeft} spot{spotsLeft !== 1 ? "s" : ""} left</span> : ""}
       </p>
 
+      {recoveryNote}
       {globalError && <div className="reg-error">{globalError}</div>}
 
       <div className="reg-field">
@@ -717,7 +943,7 @@ export default function RegistrationForm({ event }) {
                 <span className="reg-field-hint">1 = individual · 2+ = group</span>
               )}
             </label>
-            <input type="number" value={form.numberOfParticipants} onChange={set("numberOfParticipants")} min={minMembers} max={isComplimentary && appliedCode.remainingUses != null ? appliedCode.remainingUses : 10} required />
+            <input type="number" value={form.numberOfParticipants} onChange={set("numberOfParticipants")} min={minMembers} max={isComplimentary && appliedCode.remainingUses != null ? appliedCode.remainingUses : MAX_PARTICIPANTS} step={1} required />
             {fieldErrors.numberOfParticipants && <span className="reg-field-error">{fieldErrors.numberOfParticipants[0]}</span>}
           </div>
         )}

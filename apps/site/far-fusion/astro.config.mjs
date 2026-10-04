@@ -7,6 +7,18 @@ import { readOnlyProxy } from "./scripts/dev-proxy.mjs";
 export default defineConfig({
   site: "https://www.ulsaaham.com",
   output: "server",
+  // Since Astro 5.18 an on-demand route trusts the Host and X-Forwarded-Host
+  // headers only for the hosts listed here; anything else turns the request
+  // URL into https://localhost. That sent Google sign-in back to localhost and
+  // made the ticket mailer's same-site check refuse every page of this site.
+  security: {
+    allowedDomains: [
+      { protocol: "https", hostname: "www.ulsaaham.com" },
+      { protocol: "https", hostname: "ulsaaham.com" },
+      // Vercel preview deployments of this project.
+      { protocol: "https", hostname: "**.vercel.app" },
+    ],
+  },
   // A ceiling for the server routes: the /api/public proxy gives up on reads
   // after 8 s, and nothing here should run for the platform's default minutes.
   adapter: vercel({ maxDuration: 60 }),
