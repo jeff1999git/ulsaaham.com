@@ -154,6 +154,58 @@ test("a request older or newer than five minutes is refused", async () => {
   assert.equal(result.status, 200);
 });
 
+test("the admin panel's own signature vectors are accepted, over the exact bytes sent", async () => {
+  // The fixed vectors in the admin panel's test/payment-routes.test.ts ("signs
+  // `${timestamp}.${rawBody}` with HMAC-SHA256 as lowercase hex"): the same
+  // secret, timestamp, bodies and signatures. The signing above is this file's
+  // own, so only these catch the two sides drifting apart.
+  const secret = "test-proxy-secret";
+  const timestamp = "1759572000000";
+  const vectors = [
+    ['{"ticketCode":"UE-TESTEV-ABC123"}', "601a41fb84cb83a92f4b720fa955774729fad837d10ea53cbcbf8219a93fa648"],
+    [
+      '{"ticketCode":"UE-TESTEV-ABC123","email":"buyer@example.test"}',
+      "e85ef5d5f927b0ecea057361ab09a556c7a0a44ee996d3813e8eafc7584f3072",
+    ],
+  ];
+  resetEnv({ PROXY_SHARED_SECRET: secret });
+  const realNow = Date.now;
+  try {
+    const { adminSignatureProblem } = await loadSource("src/lib/backend.js");
+    for (const [body, sig] of vectors) {
+      const at = Number(timestamp);
+      assert.equal(adminSignatureProblem({ timestamp, signature: sig, body: Buffer.from(body), now: at }), null, body);
+      assert.equal(adminSignatureProblem({ timestamp, signature: sig, body: Buffer.from(body), now: at + 5 * 60_000 }), null);
+      assert.equal(adminSignatureProblem({ timestamp, signature: sig, body: Buffer.from(body), now: at + 5 * 60_000 + 1 }), "stale");
+    }
+
+    // Through the route at that moment. The lookup answering 404 shows the
+    // signature passed: a refused one is a 401 before any lookup.
+    const { POST } = await loadRoute();
+    backendReply = { status: 404, body: { success: false, error: "Ticket code not found" } };
+    Date.now = () => Number(timestamp);
+    const before = backendCalls.length;
+    for (const [raw, sig] of vectors) {
+      const result = await readJson(await POST(adminRequest(undefined, { raw, timestamp, sig })));
+      assert.equal(result.status, 404, raw);
+    }
+    assert.equal(backendCalls.length - before, 2);
+    assert.match(backendCalls[before].url, /participants\/check\?ticketCode=UE-TESTEV-ABC123$/);
+
+    // The signature covers the bytes as sent, not the JSON they parse to: the
+    // same fields spaced differently need their own signature.
+    const spaced = '{ "ticketCode": "UE-TESTEV-ABC123" }';
+    const refused = await readJson(await POST(adminRequest(undefined, { raw: spaced, timestamp, sig: vectors[0][1] })));
+    assert.equal(refused.status, 401);
+    const own = createHmac("sha256", secret).update(`${timestamp}.${spaced}`).digest("hex");
+    const accepted = await readJson(await POST(adminRequest(undefined, { raw: spaced, timestamp, sig: own })));
+    assert.equal(accepted.status, 404);
+  } finally {
+    Date.now = realNow;
+    resetEnv();
+  }
+});
+
 test("a signed request mails the booking the admin panel holds", async () => {
   const { POST } = await loadRoute();
   backendReply = BOOKING();

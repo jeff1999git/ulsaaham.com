@@ -1,37 +1,18 @@
 import { useState, useEffect, useRef, useCallback } from "react";
 import QRCode from "react-qr-code";
 import { getUser, setUser, clearUser, addTicket } from "../lib/auth.js";
-import { fetchMyTickets, getTicketCodesByIdentifier, getEvent, createPaymentOrder, verifyPayment, sendTicketEmail } from "../lib/api.js";
+import { fetchMyTickets, getTicketCodesByIdentifier, createPaymentOrder, verifyPayment, sendTicketEmail } from "../lib/api.js";
 import { generateTicketCanvas, downloadCanvasAsPng } from "../lib/generate-ticket.js";
 import { downloadParticipationCardPdf, warmParticipationCardPdf } from "../lib/participation-card-pdf.js";
 import { optimizeCloudinary } from "../lib/image.js";
 import { hasEventEnded } from "../lib/event-time.js";
 import { formatDateShort, formatDateMedium } from "../lib/format-date.js";
-import { SUPPORT_EMAIL } from "../lib/contact.js";
+import { calcFees } from "../lib/fees.js";
+import { loadRazorpay } from "../lib/razorpay.js";
+import { orderKey, keepOrder, reusableOrder, verifyWithRetry, verifyFailureMessage } from "../lib/payment-flow.js";
+import VerifyFailed from "./VerifyFailed.jsx";
 
-function loadRazorpay() {
-  return new Promise((resolve) => {
-    if (window.Razorpay) { resolve(true); return; }
-    const s = document.createElement("script");
-    s.src = "https://checkout.razorpay.com/v1/checkout.js";
-    s.onload = () => resolve(true);
-    s.onerror = () => resolve(false);
-    document.body.appendChild(s);
-  });
-}
-
-function calcFees(event, count) {
-  const price = event.effectiveAmount ?? event.amount;
-  // Competition group pricing: first member pays the entry price, each extra
-  // member adds groupExtraAmount (falls back to the entry price if unset).
-  const base = event.isCompetition
-    ? price + (event.groupExtraAmount ?? price) * Math.max(0, count - 1)
-    : price * count;
-  const gst = event.gstEnabled ? Math.round(base * 0.18 * 100) / 100 : 0;
-  const platformFee = event.platformFeeEnabled !== false ? Math.round(base * 0.02 * 100) / 100 : 0;
-  const total = Math.round((base + gst + platformFee) * 100) / 100;
-  return { base, gst, platformFee, total };
-}
+const priceNotice = { background: "rgba(234,179,8,0.12)", borderColor: "rgba(234,179,8,0.45)", color: "#fde68a", marginTop: 12 };
 
 // My Bookings: the backend reads at most this many ticket codes per request.
 const MAX_CODES = 20;
@@ -71,26 +52,38 @@ function StatusBadge({ ticket }) {
 
 // ── Re-payment modal ──────────────────────────────────────────────────────────
 
-function RepayPanel({ ticket, user, onSuccess, onClose }) {
-  const [event, setEvent] = useState(null);
-  const [phase, setPhase] = useState("loading");
+// Priced from the event My Bookings already loaded with the ticket, so it opens
+// at once. The server charges its own current price; when that differs, its
+// figures are shown before anything is paid. A payment whose confirmation
+// failed is held by AccountPage (`issue`), so closing this panel keeps it.
+function RepayPanel({ ticket, user, issue, onPaid, onFailed, onRetryIssue, onClose }) {
+  const ev = ticket.event;
+  const count = ticket.numberOfParticipants;
+  // No price means nothing to pay here: a free event's unpaid booking waits on the organiser.
+  const fees = ev.isFree ? null : calcFees(ev, count);
+  const [phase, setPhase] = useState("breakdown"); // "breakdown" | "paying" | "verifying"
   const [error, setError] = useState(null);
+  // The server's order, when its total differs from the one shown.
+  const [quote, setQuote] = useState(null);
+  // { key, order, at }: reused by the next Pay for the same ticket (payment-flow.js).
+  const orderRef = useRef(null);
+  // Bumped by every Pay and when the panel closes; an older attempt's answer is ignored.
+  const attemptRef = useRef(0);
 
+  // checkout.js downloads while the price is on screen.
   useEffect(() => {
-    getEvent(ticket.event.slug)
-      .then(({ ok, data }) => {
-        if (!ok) throw new Error(data?.error || "Event not found.");
-        setEvent(data.data.event);
-        setPhase("breakdown");
-      })
-      .catch((err) => { setError(err.message); setPhase("error"); });
-  }, [ticket.event.slug]);
+    const attempts = attemptRef;
+    if (fees) loadRazorpay();
+    return () => {
+      attempts.current += 1;
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const handlePay = async () => {
+    const attempt = ++attemptRef.current;
     setError(null);
     setPhase("paying");
-    const loaded = await loadRazorpay();
-    if (!loaded) { setError("Could not load payment gateway."); setPhase("breakdown"); return; }
 
     // ticketCode tells the backend this payment settles THIS unpaid ticket
     // (rather than creating a new booking). The server uses the ticket's own
@@ -103,84 +96,115 @@ function RepayPanel({ ticket, user, onSuccess, onClose }) {
       ticketCode: ticket.ticketCode,
       ...(user.email ? { email: user.email } : {}),
     };
+    const key = orderKey(ev.slug, body);
+    const saved = reusableOrder(orderRef.current, key);
+    const [loaded, res] = await Promise.all([
+      loadRazorpay(),
+      saved ? { ok: true, data: { data: saved } } : createPaymentOrder(ev.slug, body),
+    ]);
+    if (res.ok && !saved) orderRef.current = keepOrder(key, res.data.data);
+    if (attempt !== attemptRef.current) return;
+    if (!res.ok) { setError(res.data?.error || "Could not initiate payment."); setPhase("breakdown"); return; }
+    if (!loaded) { setError("Could not load the payment gateway. Please check your connection and try again."); setPhase("breakdown"); return; }
 
-    const { ok, data } = await createPaymentOrder(ticket.event.slug, body);
-    if (!ok) { setError(data?.error || "Could not initiate payment."); setPhase("breakdown"); return; }
-
-    const ord = data.data;
+    const ord = res.data.data;
+    if (ord.amount !== (quote ? quote.amount : fees.totalPaise)) {
+      setQuote(ord);
+      setPhase("breakdown");
+      return;
+    }
     const rzp = new window.Razorpay({
       key: ord.keyId,
       amount: ord.amount,
       currency: ord.currency,
       name: "Ulsaham Entertainments",
-      description: event.name,
+      description: ev.name,
       order_id: ord.orderId,
       prefill: { name: user.name, email: user.email || "", contact: user.phone },
       theme: { color: "#014421" },
       handler: async (response) => {
         setPhase("verifying");
-        const result = await verifyPayment(ticket.event.slug, { ...response, ...body });
-        if (!result.ok) {
-          setError(`Payment received but confirmation failed. Save your Payment ID: ${response.razorpay_payment_id} and contact ${SUPPORT_EMAIL}.`);
-          setPhase("breakdown");
+        // Safe to repeat, so a lost answer or a server error is asked again.
+        const vBody = { ...response, ...body };
+        const result = await verifyWithRetry(() => verifyPayment(ev.slug, vBody));
+        if (result.ok) {
+          onPaid(ticket.ticketCode, result.data.data);
           return;
         }
-        addTicket({ ...result.data.data, registeredAt: new Date().toISOString() });
-        // Settling a booking later deserves the same ticket email as booking it
-        // outright. The card's own Email Ticket button covers a failure here.
-        if (user.email) {
-          sendTicketEmail({ ticketCode: ticket.ticketCode, email: user.email }).catch(() => {});
-        }
-        onSuccess();
+        onFailed({
+          ticketCode: ticket.ticketCode,
+          slug: ev.slug,
+          vBody,
+          paymentId: response.razorpay_payment_id,
+          message: verifyFailureMessage(result),
+        });
+        setPhase("breakdown");
       },
       modal: { ondismiss: () => setPhase("breakdown") },
     });
     rzp.open();
   };
 
+  const verifying = phase === "verifying";
+  const bd = quote?.breakdown ?? fees;
+  const price = fees?.effectiveAmount;
+  const extraPrice = ev.groupExtraAmount ?? price;
+
   return (
     <div style={{ position: "fixed", inset: 0, background: "rgba(0,0,0,0.75)", zIndex: 60, display: "flex", alignItems: "center", justifyContent: "center", padding: 16 }}>
       <div style={{ background: "#011a01", border: "1px solid rgba(155,202,59,0.2)", borderRadius: 12, padding: "28px 24px", maxWidth: 420, width: "100%" }}>
-        <button onClick={onClose} style={{ float: "right", background: "none", border: "none", color: "rgba(255,255,255,0.35)", cursor: "pointer", fontSize: 20, lineHeight: 1 }}>✕</button>
+        {/* Not while a payment is being confirmed: its outcome belongs on screen. */}
+        <button
+          onClick={onClose}
+          disabled={verifying}
+          aria-label="Close"
+          style={{ float: "right", background: "none", border: "none", color: "rgba(255,255,255,0.35)", cursor: verifying ? "not-allowed" : "pointer", opacity: verifying ? 0.4 : 1, fontSize: 20, lineHeight: 1 }}
+        >
+          ✕
+        </button>
         <h3 className="font-serif text-xl text-light mb-1">Complete Payment</h3>
 
-        {error && <div className="reg-error" style={{ marginTop: 12 }}>{error}</div>}
-
-        {phase === "loading" && <div className="spinner" style={{ margin: "32px auto" }} />}
-
-        {event && phase === "breakdown" && (() => {
-          const count = ticket.numberOfParticipants;
-          const price = event.effectiveAmount ?? event.amount;
-          const extraPrice = event.groupExtraAmount ?? price;
-          const fees = calcFees(event, count);
-          return (
-            <>
-              <p className="text-light/40 text-sm mb-4">{event.name}</p>
-              <div className="fee-breakdown">
-                <div className="fee-breakdown__row">
-                  <span>
-                    {event.isCompetition && count > 1
-                      ? `₹${price} + ${count - 1} × ₹${extraPrice} (group entry)`
-                      : event.isCompetition
-                      ? `₹${price} (individual entry)`
-                      : `₹${price} × ${count} person${count !== 1 ? "s" : ""}`}
-                  </span>
-                  <span>₹{fees.base.toFixed(2)}</span>
-                </div>
-                {fees.gst > 0 && <div className="fee-breakdown__row"><span>GST (18%)</span><span>₹{fees.gst.toFixed(2)}</span></div>}
-                {fees.platformFee > 0 && <div className="fee-breakdown__row"><span>Platform fee (2%)</span><span>₹{fees.platformFee.toFixed(2)}</span></div>}
-                <div className="fee-breakdown__divider" />
-                <div className="fee-breakdown__total"><span>Total</span><span>₹{fees.total.toFixed(2)}</span></div>
+        {issue ? (
+          <div style={{ marginTop: 12 }}>
+            <VerifyFailed message={issue.message} paymentId={issue.paymentId} onRetry={onRetryIssue} retrying={!!issue.retrying} accountLink={false} />
+          </div>
+        ) : !fees ? (
+          <p className="text-light/50 text-sm mt-4">
+            Awaiting the organiser. There is nothing to pay for this booking; it shows as confirmed once the organiser approves it.
+          </p>
+        ) : phase === "breakdown" ? (
+          <>
+            {error && <div className="reg-error" style={{ marginTop: 12 }}>{error}</div>}
+            {quote && (
+              <div className="reg-error" style={priceNotice}>
+                The price changed to ₹{(quote.amount / 100).toFixed(2)}. Please review.
               </div>
-              <button onClick={handlePay} className="reg-submit">Pay ₹{fees.total.toFixed(2)} & Book →</button>
-            </>
-          );
-        })()}
-
-        {(phase === "paying" || phase === "verifying") && (
+            )}
+            <p className="text-light/40 text-sm mb-4">{ev.name}</p>
+            <div className="fee-breakdown">
+              <div className="fee-breakdown__row">
+                <span>
+                  {quote
+                    ? `${count} participant${count !== 1 ? "s" : ""}`
+                    : ev.isCompetition && count > 1
+                    ? `₹${price} + ${count - 1} × ₹${extraPrice} (group entry)`
+                    : ev.isCompetition
+                    ? `₹${price} (individual entry)`
+                    : `₹${price} × ${count} person${count !== 1 ? "s" : ""}`}
+                </span>
+                <span>₹{bd.base.toFixed(2)}</span>
+              </div>
+              {bd.gst > 0 && <div className="fee-breakdown__row"><span>GST (18%)</span><span>₹{bd.gst.toFixed(2)}</span></div>}
+              {bd.platformFee > 0 && <div className="fee-breakdown__row"><span>Platform fee (2%)</span><span>₹{bd.platformFee.toFixed(2)}</span></div>}
+              <div className="fee-breakdown__divider" />
+              <div className="fee-breakdown__total"><span>Total</span><span>₹{bd.total.toFixed(2)}</span></div>
+            </div>
+            <button onClick={handlePay} className="reg-submit">Pay ₹{bd.total.toFixed(2)} & Book →</button>
+          </>
+        ) : (
           <div style={{ textAlign: "center", padding: "32px 0" }}>
             <div className="spinner" style={{ margin: "0 auto" }} />
-            <p className="text-light/40 text-sm mt-4">{phase === "verifying" ? "Confirming payment…" : "Opening payment gateway…"}</p>
+            <p className="text-light/40 text-sm mt-4">{verifying ? "Confirming payment…" : "Opening payment gateway…"}</p>
           </div>
         )}
       </div>
@@ -365,6 +389,12 @@ export default function AccountPage() {
   const [ticketsLoading, setTicketsLoading] = useState(true);
   const [ticketsError, setTicketsError] = useState(null);
   const [repayTarget, setRepayTarget] = useState(null);
+  // A repayment Razorpay took whose confirmation failed, kept here so that
+  // closing the panel does not lose the Payment ID:
+  // { ticketCode, slug, vBody, paymentId, message, retrying? }
+  const [payIssue, setPayIssue] = useState(null);
+  // The ticket email after a repayment: null | { state: "sending" | "sent" | "failed" | "skipped", email?, error? }
+  const [repayMail, setRepayMail] = useState(null);
   const [polling, setPolling] = useState(false);
 
   const userRef = useRef(null);
@@ -514,6 +544,34 @@ export default function AccountPage() {
 
   const set = (field) => (e) => setForm((f) => ({ ...f, [field]: e.target.value }));
 
+  // A repayment is confirmed: the card turns paid at once, the bookings reload
+  // behind it, and the ticket is emailed, with the outcome shown above them.
+  const handleRepaid = (ticketCode, ticketData) => {
+    // Only this ticket's failed confirmation is settled; another ticket's
+    // stays on screen with its Payment ID.
+    setPayIssue((issue) => (issue?.ticketCode === ticketCode ? null : issue));
+    setRepayTarget(null);
+    addTicket({ ...ticketData, registeredAt: new Date().toISOString() });
+    setLiveTickets((tickets) => tickets.map((t) => (t.ticketCode === ticketCode ? { ...t, amountPaid: true } : t)));
+    loadTickets();
+    const email = userRef.current?.email;
+    if (!email) { setRepayMail({ state: "skipped" }); return; }
+    setRepayMail({ state: "sending", email });
+    sendTicketEmail({ ticketCode, email }).then(({ ok, data }) =>
+      setRepayMail(ok ? { state: "sent", email } : { state: "failed", email, error: data?.error })
+    );
+  };
+
+  // Asks for the failed confirmation again; it is safe to repeat.
+  const retryPayIssue = async () => {
+    const issue = payIssue;
+    if (!issue || issue.retrying) return;
+    setPayIssue({ ...issue, retrying: true });
+    const result = await verifyWithRetry(() => verifyPayment(issue.slug, issue.vBody));
+    if (result.ok) { handleRepaid(issue.ticketCode, result.data.data); return; }
+    setPayIssue({ ...issue, retrying: false, message: verifyFailureMessage(result) });
+  };
+
   const storedCount = (user.tickets || []).length;
 
   return (
@@ -522,7 +580,10 @@ export default function AccountPage() {
         <RepayPanel
           ticket={repayTarget}
           user={user}
-          onSuccess={() => { setRepayTarget(null); loadTickets(); }}
+          issue={payIssue?.ticketCode === repayTarget.ticketCode ? payIssue : null}
+          onPaid={handleRepaid}
+          onFailed={setPayIssue}
+          onRetryIssue={retryPayIssue}
           onClose={() => setRepayTarget(null)}
         />
       )}
@@ -578,6 +639,32 @@ export default function AccountPage() {
               </button>
             )}
           </div>
+
+          {/* A failed confirmation stays here after its panel is closed. */}
+          {payIssue && !repayTarget && (
+            <div className="reg-form" style={{ marginBottom: "1.5rem" }}>
+              <VerifyFailed
+                message={payIssue.message}
+                paymentId={payIssue.paymentId}
+                onRetry={retryPayIssue}
+                retrying={!!payIssue.retrying}
+                accountLink={false}
+              />
+            </div>
+          )}
+
+          {repayMail && (
+            <p className="text-xs mb-4" role="status" style={{ color: repayMail.state === "failed" ? "#fca5a5" : "rgba(255,255,255,0.5)" }}>
+              Payment confirmed.{" "}
+              {repayMail.state === "sending"
+                ? "Emailing your ticket…"
+                : repayMail.state === "sent"
+                ? `Ticket emailed to ${repayMail.email}.`
+                : repayMail.state === "failed"
+                ? `${repayMail.error || "We couldn't email your ticket."} Use Email Ticket on the booking to try again.`
+                : "Add an email to your profile to have tickets mailed to you."}
+            </p>
+          )}
 
           {ticketsLoading && <div className="spinner" style={{ margin: "32px auto" }} />}
 

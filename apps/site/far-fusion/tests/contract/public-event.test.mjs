@@ -1,12 +1,14 @@
 // The event fields the site reads, against the fields the admin panel sends.
 //
 // The admin panel builds both public event payloads from allow-lists (the list
-// select and toPublicEvent), copied into public-event.json. A field the site
-// reads that is not on its list arrives undefined, and that fails quietly: no
-// endTime and an ended event still shows Book, no isFull or bookingOpen and a
-// full or closed event looks bookable, no registeredCount and the detail page
-// shows "NaN spots". So when this fails, add the field to the admin panel and
-// to public-event.json in the same change, or stop reading it here.
+// select and toPublicEvent), copied into public-event.json, and My Bookings
+// gets a third, the event each booking carries. A field the site reads that is
+// not on its list arrives undefined, and that fails quietly: no endTime and an
+// ended event still shows Book, no isFull or bookingOpen and a full or closed
+// event looks bookable, no registeredCount and the detail page shows "NaN
+// spots", no gstEnabled and Complete Payment shows a total without the GST the
+// server charges. So when this fails, add the field to the admin panel and to
+// public-event.json in the same change, or stop reading it here.
 import test from "node:test";
 import assert from "node:assert/strict";
 import fs from "node:fs";
@@ -18,7 +20,8 @@ const CONTRACT = JSON.parse(fs.readFileSync(new URL("./public-event.json", impor
 
 // Where each payload is read, and the names it goes by there. "posters[]"
 // stands for posters[i]. Only a bare name counts, so ticket.event (the event a
-// booking carries, from a different endpoint) is not matched.
+// booking carries, from a different endpoint) is not matched where it is used
+// in passing; RepayPanel, which prices from it, names it ev.
 const CONSUMERS = {
   list: {
     "src/components/EventsList.jsx": ["ev"],
@@ -30,9 +33,17 @@ const CONSUMERS = {
   detail: {
     "src/components/EventDetail.jsx": ["event"],
     "src/components/RegistrationForm.jsx": ["event"],
-    // RepayPanel's event, fetched with getEvent.
-    "src/components/AccountPage.jsx": ["event"],
   },
+  tickets: {
+    // RepayPanel's ev: the ticket's own event, from participants/my-tickets.
+    "src/components/AccountPage.jsx": ["ev"],
+  },
+};
+
+const ENDPOINTS = {
+  list: "GET /api/public/events",
+  detail: "GET /api/public/events/[slug]",
+  tickets: "POST /api/public/participants/my-tickets",
 };
 
 // Helpers handed a whole event. What they read counts for every consumer that
@@ -40,6 +51,7 @@ const CONSUMERS = {
 const HELPERS = {
   "src/lib/event-time.js": ["event"],
   "src/lib/event-status.js": ["event"],
+  "src/lib/fees.js": ["event"],
 };
 
 const read = (rel) => fs.readFileSync(appPath(rel), "utf8");
@@ -117,12 +129,14 @@ function sourceFiles(dir = appPath("src"), found = []) {
 }
 
 test("the contract file is well formed", () => {
-  for (const key of ["list", "detail", "forbidden"]) {
+  for (const key of [...Object.keys(CONSUMERS), "forbidden"]) {
     assert.ok(Array.isArray(CONTRACT[key]) && CONTRACT[key].length, `${key} is missing`);
     assert.equal(new Set(CONTRACT[key]).size, CONTRACT[key].length, `${key} lists a field twice`);
   }
   for (const field of CONTRACT.forbidden) {
-    assert.ok(!CONTRACT.list.includes(field) && !CONTRACT.detail.includes(field), `${field} is both allowed and forbidden`);
+    for (const payload of Object.keys(CONSUMERS)) {
+      assert.ok(!CONTRACT[payload].includes(field), `${field} is both allowed (${payload}) and forbidden`);
+    }
   }
 });
 
@@ -148,13 +162,20 @@ test("the scanner finds reads, and only reads off the event itself", () => {
   for (const field of ["registeredCount", "capacity", "galleryImageUrls", "competitionInstructions"]) {
     assert.ok(detail.has(field), `the scan missed ${field} in the detail consumers`);
   }
-  for (const [file, names] of Object.entries({ ...CONSUMERS.list, ...CONSUMERS.detail })) {
+  // The prices, read through fees.js, count for both screens that charge.
+  const tickets = fieldsReadFor("tickets");
+  for (const field of ["gstEnabled", "platformFeeEnabled", "effectiveAmount", "groupExtraAmount"]) {
+    assert.ok(detail.has(field), `the scan missed ${field} in the detail consumers`);
+    assert.ok(tickets.has(field), `the scan missed ${field} in the my-tickets consumers`);
+  }
+  const consumers = Object.values(CONSUMERS).reduce((all, files) => ({ ...all, ...files }), {});
+  for (const [file, names] of Object.entries(consumers)) {
     assert.ok(readsOf(read(file), names).length, `${file} reads nothing off ${names.join(" or ")}; has it changed?`);
   }
 });
 
 test("every component that fetches an event, or is handed one, is in the scan", () => {
-  const covered = new Set([...Object.keys(CONSUMERS.list), ...Object.keys(CONSUMERS.detail)]);
+  const covered = new Set(Object.values(CONSUMERS).flatMap((files) => Object.keys(files)));
   const missing = [];
   for (const file of sourceFiles()) {
     const code = stripComments(fs.readFileSync(file, "utf8"));
@@ -171,8 +192,7 @@ test("every component that fetches an event, or is handed one, is in the scan", 
   assert.deepEqual(missing, [], "add these to CONSUMERS");
 });
 
-for (const payload of ["list", "detail"]) {
-  const endpoint = payload === "list" ? "GET /api/public/events" : "GET /api/public/events/[slug]";
+for (const [payload, endpoint] of Object.entries(ENDPOINTS)) {
   test(`every field the site reads from ${endpoint} is one the admin panel sends`, () => {
     const allowed = new Set(CONTRACT[payload]);
     const unsent = [...fieldsReadFor(payload)]

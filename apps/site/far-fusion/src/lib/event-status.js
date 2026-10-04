@@ -2,11 +2,12 @@ import { hasEventEnded } from "./event-time.js";
 
 // Mirrors src/lib/event-status.ts in the admin panel. The API already sends
 // `bookingOpen` / `bookingClosedReason`, but the clock keeps running on a page
-// left open, so the end time is re-checked here too.
+// left open, so the end time is re-checked here too. A cancelled event stays
+// cancelled once its date has passed, as it does there.
 export function getBookingClosedReason(event) {
   if (!event) return "CLOSED";
-  if (hasEventEnded(event)) return "ENDED";
   if (event.status === "CANCELLED") return "CANCELLED";
+  if (hasEventEnded(event)) return "ENDED";
   if (event.status === "ANNOUNCED") return "NOT_PUBLISHED";
   if (event.status === "BOOKING_CLOSED") return "CLOSED";
   if (event.isFull) return "FULL";

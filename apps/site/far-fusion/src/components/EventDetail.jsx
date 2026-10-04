@@ -206,8 +206,19 @@ export default function EventDetail() {
     </div>
   );
 
+  // The booking form calls this when the server turned a booking down because
+  // the event changed (closed, filled up, repriced). The fresh copy re-renders
+  // the page and the form to match; a failed read keeps what is shown.
+  const refreshEvent = () => {
+    getEvent(event.slug, { fresh: true }).then(({ ok, data }) => {
+      if (ok && data?.data?.event) setEvent(data.data.event);
+    });
+  };
+
   const date = formatDateFull(event.date);
   const isPast = hasEventEnded(event);
+  // Cancelled events stay reachable by their link, with no way to book.
+  const isCancelled = event.status === "CANCELLED";
   // Seats left only mean something while booking is open; once it has closed
   // (full, closed, cancelled, not yet published or over) the form below says
   // so instead. Never below zero, even when an event is oversold.
@@ -245,7 +256,7 @@ export default function EventDetail() {
               : event.venue}
             </p>
             {isCompetition && <p>🏆 {participationLabel} — chest number issued on registration</p>}
-            {!isPast && (
+            {!isPast && !isCancelled && (
               event.isFree ? (
                 <p>🎟 Free Entry</p>
               ) : isCompetition ? (
@@ -280,7 +291,14 @@ export default function EventDetail() {
             </div>
           )}
 
-          <RegistrationForm event={event} />
+          {isCancelled ? (
+            <div className="reg-closed" role="status">
+              <p className="font-serif text-2xl text-accent">Event Cancelled</p>
+              <p className="text-light/50 mt-2 text-sm">This event has been cancelled.</p>
+            </div>
+          ) : (
+            <RegistrationForm event={event} onEventStale={refreshEvent} />
+          )}
         </div>
 
       </div>

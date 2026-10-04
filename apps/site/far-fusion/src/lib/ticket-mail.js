@@ -1,13 +1,13 @@
-import { createRequire } from "module";
+// A static import, so the deployment's file tracing packs qrcode into the
+// function. Loaded through createRequire it was left out, and every request to
+// /api/send-ticket failed with "Cannot find module 'qrcode'".
+import QRCode from "qrcode";
 import { escapeHtml, renderDetailRows, renderEmailShell, SITE_URL } from "./mailer.js";
 
 // The ticket email. Two routes send it: /api/send-ticket when a visitor asks,
 // and /api/internal/ticket-mail when the admin panel completes a booking with
 // no browser present. Both build it here, from the booking as the admin panel
 // holds it (participants/check), so a ticket reads the same either way.
-
-const _require = createRequire(import.meta.url);
-const QRCode = _require("qrcode");
 
 export const TICKET_CODE_RE = /^[A-Z0-9][A-Z0-9-]{3,39}$/;
 const PAYMENT_ID_RE = /^[A-Za-z0-9_]{1,40}$/;

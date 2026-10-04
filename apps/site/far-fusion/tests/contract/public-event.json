@@ -1,5 +1,5 @@
 {
-  "_source": "Copied from the admin panel at d3f60bd. list: PUBLIC_EVENT_LIST_SELECT in src/repositories/event.repository.ts, less capacity and archivedParticipantCount, plus the booking state getPublishedEvents in src/services/event.service.ts adds. detail: toPublicEvent in src/services/event.service.ts. Update this file in the same change as either.",
+  "_source": "Copied from the admin panel at d3f60bd. list: PUBLIC_EVENT_LIST_SELECT in src/repositories/event.repository.ts, less capacity and archivedParticipantCount, plus the booking state getPublishedEvents in src/services/event.service.ts adds. detail: toPublicEvent in src/services/event.service.ts. tickets: the event each booking carries in POST /api/public/participants/my-tickets (src/app/api/public/participants/my-tickets/route.ts), which Complete Payment prices from. Update this file in the same change as any of them.",
   "list": [
     "id",
     "name",
@@ -54,6 +54,29 @@
     "bookingOpen",
     "bookingClosedReason",
     "bookingClosedMessage"
+  ],
+  "tickets": [
+    "id",
+    "name",
+    "slug",
+    "date",
+    "startTime",
+    "endTime",
+    "status",
+    "venue",
+    "bannerImageUrl",
+    "isFree",
+    "amount",
+    "earlyBirdAmount",
+    "isEarlyBird",
+    "effectiveAmount",
+    "groupExtraAmount",
+    "gstEnabled",
+    "platformFeeEnabled",
+    "isCompetition",
+    "participationType",
+    "competitionInstructions",
+    "competitionNotes"
   ],
   "forbidden": [
     "couponCodes",
