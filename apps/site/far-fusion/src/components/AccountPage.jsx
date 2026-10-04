@@ -7,6 +7,7 @@ import { downloadParticipationCardPdf, warmParticipationCardPdf } from "../lib/p
 import { optimizeCloudinary } from "../lib/image.js";
 import { hasEventEnded } from "../lib/event-time.js";
 import { formatDateShort, formatDateMedium } from "../lib/format-date.js";
+import { SUPPORT_EMAIL } from "../lib/contact.js";
 
 function loadRazorpay() {
   return new Promise((resolve) => {
@@ -120,7 +121,7 @@ function RepayPanel({ ticket, user, onSuccess, onClose }) {
         setPhase("verifying");
         const result = await verifyPayment(ticket.event.slug, { ...response, ...body });
         if (!result.ok) {
-          setError(`Payment received but confirmation failed. Save your Payment ID: ${response.razorpay_payment_id} and contact support@ulsaham.com.`);
+          setError(`Payment received but confirmation failed. Save your Payment ID: ${response.razorpay_payment_id} and contact ${SUPPORT_EMAIL}.`);
           setPhase("breakdown");
           return;
         }
@@ -128,11 +129,7 @@ function RepayPanel({ ticket, user, onSuccess, onClose }) {
         // Settling a booking later deserves the same ticket email as booking it
         // outright. The card's own Email Ticket button covers a failure here.
         if (user.email) {
-          sendTicketEmail({
-            ticketCode: ticket.ticketCode,
-            email: user.email,
-            paymentId: response.razorpay_payment_id,
-          }).catch(() => {});
+          sendTicketEmail({ ticketCode: ticket.ticketCode, email: user.email }).catch(() => {});
         }
         onSuccess();
       },

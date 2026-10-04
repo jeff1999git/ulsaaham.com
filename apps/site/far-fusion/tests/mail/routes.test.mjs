@@ -159,14 +159,15 @@ test("a malformed request is refused before the backend is asked", async () => {
 
 test("the ticket mail is built from the booking the backend holds", async () => {
   const { POST } = await loadTicketRoute();
-  backendReply = TICKET();
+  backendReply = TICKET({ amountPaid: true, paymentId: "pay_ABC123" });
   const marker = smtp.mark();
   const before = backendCalls.length;
 
   const result = await readJson(
     await POST(
       makeContext({
-        body: { ticketCode: "ue-dance-abc123", email: "guest@example.test", paymentId: "pay_ABC123" },
+        // A Payment ID in the request is ignored; only the booking's own is printed.
+        body: { ticketCode: "ue-dance-abc123", email: "guest@example.test", paymentId: "pay_FORGED99" },
         ip: "203.0.113.5",
       })
     )
@@ -205,6 +206,10 @@ test("the ticket mail is built from the booking the backend holds", async () => 
   assert.ok(mail.html.includes("&lt;b&gt;2026&lt;/b&gt;"), "event markup was not escaped");
   assert.ok(mail.html.includes("Kochi &amp; Co"), "an ampersand was not escaped");
   assert.ok(mail.html.includes("pay_ABC123"), "the payment id row is missing");
+  assert.ok(mail.text.includes("Payment ID: pay_ABC123"), "the plain text part has no payment id");
+  for (const text of parseMail(sent[0].raw).searchable()) {
+    assert.ok(!text.includes("pay_FORGED99"), "a Payment ID from the request reached the mail");
+  }
 
   // Stored as UTC midnight; a mail rendered in the server zone would say the
   // day before.
@@ -262,6 +267,51 @@ test("a ticket the backend does not know is never mailed", async () => {
     assert.equal(smtp.since(marker).messages.length, 0, "mail was sent without a confirmed booking");
     assertNoSecrets(result, marker);
   }
+});
+
+test("a booking awaiting payment is not mailed as a ticket", async () => {
+  const { POST } = await loadTicketRoute();
+  const send = () =>
+    POST(makeContext({ body: { ticketCode: "UE-DANCE-UNPAID", email: "wait@example.test" }, ip: "198.51.100.90" }));
+
+  backendReply = TICKET({ ticketCode: "UE-DANCE-UNPAID", amountPaid: false, paymentId: null });
+  const marker = smtp.mark();
+  const before = backendCalls.length;
+  const refused = await readJson(await send());
+
+  assert.equal(refused.status, 409);
+  assert.match(refused.body.error, /awaiting payment/i);
+  assert.equal(backendCalls.length - before, 1, "the refusal was not based on the backend's booking");
+  assert.equal(smtp.since(marker).messages.length, 0, "an unpaid booking was mailed as a ticket");
+  assertNoSecrets(refused, marker);
+
+  // Once paid, the same address gets it straight away: the refusal held no
+  // slot and set no duplicate guard.
+  backendReply = TICKET({ ticketCode: "UE-DANCE-UNPAID", amountPaid: true, paymentId: "pay_PAIDLATER1" });
+  const paid = await readJson(await send());
+  assert.equal(paid.status, 200);
+  assert.ok(parseMail(smtp.since(marker).messages[0].raw).html.includes("pay_PAIDLATER1"));
+});
+
+test("an admin panel that does not report payment still gets its tickets mailed", async () => {
+  // Older admin deployments leave amountPaid and paymentId out of the lookup.
+  const { POST } = await loadTicketRoute();
+  backendReply = TICKET({ ticketCode: "UE-DANCE-OLDAPI" });
+  const marker = smtp.mark();
+
+  const result = await readJson(
+    await POST(
+      makeContext({
+        body: { ticketCode: "UE-DANCE-OLDAPI", email: "old@example.test", paymentId: "pay_FROMBODY1" },
+        ip: "198.51.100.91",
+      })
+    )
+  );
+
+  assert.equal(result.status, 200);
+  const mail = parseMail(smtp.since(marker).messages[0].raw);
+  assert.ok(!mail.html.includes("Payment ID"), "a Payment ID row appeared with none on the booking");
+  assert.ok(!mail.text.includes("pay_FROMBODY1"), "the request's Payment ID was printed");
 });
 
 test("a competition entry is sent as a participation card", async () => {

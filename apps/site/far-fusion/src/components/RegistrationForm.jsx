@@ -7,6 +7,7 @@ import { getBookingClosedReason, getBookingClosedDetail } from "../lib/event-sta
 import { generateTicketCanvas, downloadCanvasAsPng } from "../lib/generate-ticket.js";
 import { downloadParticipationCardPdf, warmParticipationCardPdf } from "../lib/participation-card-pdf.js";
 import { formatDateShort, formatDateFull } from "../lib/format-date.js";
+import { SUPPORT_EMAIL } from "../lib/contact.js";
 
 const GST_RATE = 0.18;
 const PLATFORM_FEE_RATE = 0.02;
@@ -288,8 +289,9 @@ export default function RegistrationForm({ event }) {
   // Sends the ticket email without holding up the success screen, and records
   // how it went so the visitor can retry a failed send instead of never
   // learning it failed. Defined above the early returns so the success screen
-  // can call it again.
-  const deliverTicketEmail = (ticketData, paymentId = null) => {
+  // can call it again. The Payment ID in the mail comes from the booking the
+  // server holds, so none is sent from here.
+  const deliverTicketEmail = (ticketData) => {
     const to = form.email.trim();
     if (!ticketData?.ticketCode) {
       setEmailStatus(null);
@@ -302,11 +304,7 @@ export default function RegistrationForm({ event }) {
       return;
     }
     setEmailStatus({ state: "sending", email: to });
-    sendTicketEmail({
-      ticketCode: ticketData.ticketCode,
-      email: to,
-      paymentId: paymentId ?? ticketData.paymentId ?? null,
-    })
+    sendTicketEmail({ ticketCode: ticketData.ticketCode, email: to })
       .then(({ ok, data }) =>
         setEmailStatus({ state: ok ? "sent" : "failed", email: to, error: ok ? null : data?.error })
       )
@@ -545,14 +543,14 @@ export default function RegistrationForm({ event }) {
         if (!result.ok) {
           const pid = response.razorpay_payment_id;
           setGlobalError(
-            `Payment was received but we couldn't confirm your registration. Please save your Payment ID: ${pid} and contact support@ulsaham.com.`
+            `Payment was received but we couldn't confirm your registration. Please save your Payment ID: ${pid} and contact ${SUPPORT_EMAIL}.`
           );
           setPhase("form");
           return;
         }
         const ticketData = result.data.data;
         addTicket({ ...ticketData, registeredAt: new Date().toISOString() });
-        deliverTicketEmail(ticketData, response.razorpay_payment_id);
+        deliverTicketEmail(ticketData);
         setTicket(ticketData);
         setPhase("success");
       },

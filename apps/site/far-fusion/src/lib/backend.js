@@ -1,6 +1,9 @@
+import { createHmac, timingSafeEqual } from "node:crypto";
+
 // The admin panel API. Both the /api/public proxy and the ticket mailer reach
 // the backend through here so the host and the proxy handshake live in one
-// place.
+// place. Requests the admin panel signs for this site (/api/internal/*) are
+// checked here too, against the same shared secret.
 
 // Read by name, never through a computed lookup on import.meta.env — that
 // would inline the whole build-time environment into the bundle.
@@ -38,11 +41,50 @@ export const BACKEND_URL = resolveBackendUrl(BACKEND_ORIGIN);
  */
 export function applyProxyHeaders(headers, clientIp) {
   const proxyKey = PROXY_SHARED_SECRET;
+  if (!proxyKey) warnMissingSecret();
   if (clientIp && proxyKey) {
     headers.set("x-client-ip", clientIp);
     headers.set("x-proxy-key", proxyKey);
   }
   return headers;
+}
+
+let warnedMissingSecret = false;
+
+// Once per instance, and only in production: a local build runs without the
+// secret on purpose. Bookings keep working without it, so nothing a visitor
+// sees would point at it.
+function warnMissingSecret() {
+  if (warnedMissingSecret || !import.meta.env.PROD) return;
+  warnedMissingSecret = true;
+  console.warn(
+    "[backend] PROXY_SHARED_SECRET is not set: the admin panel rate-limits every visitor together as this " +
+      "server's address, and /api/internal/ticket-mail refuses every request. Set it to the admin panel's value."
+  );
+}
+
+export const hasProxySecret = () => Boolean(PROXY_SHARED_SECRET);
+
+// How far the admin panel's timestamp may be from this server's clock, either
+// way. A captured request stops working once it is this old.
+export const SIGNATURE_WINDOW_MS = 5 * 60 * 1000;
+
+/**
+ * Why a request the admin panel signed should be refused, or null when it is
+ * genuine. x-ulsaham-signature is the lowercase hex HMAC-SHA256 of
+ * `${timestamp}.${body}` keyed with PROXY_SHARED_SECRET, where the timestamp is
+ * x-ulsaham-timestamp (Unix epoch milliseconds) and body the exact bytes sent.
+ */
+export function adminSignatureProblem({ timestamp, signature, body, now = Date.now() }) {
+  if (!PROXY_SHARED_SECRET) return "no secret";
+  if (!timestamp || !signature) return "unsigned";
+  if (!/^\d{1,16}$/.test(timestamp)) return "bad timestamp";
+  if (Math.abs(now - Number(timestamp)) > SIGNATURE_WINDOW_MS) return "stale";
+
+  const expected = createHmac("sha256", PROXY_SHARED_SECRET).update(`${timestamp}.`).update(body).digest("hex");
+  const a = Buffer.from(String(signature));
+  const b = Buffer.from(expected);
+  return a.length === b.length && timingSafeEqual(a, b) ? null : "bad signature";
 }
 
 /**
