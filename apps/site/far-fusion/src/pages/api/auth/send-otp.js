@@ -1,5 +1,5 @@
 import { jsonErr, jsonOk } from "../../../lib/http.js";
-import { escapeHtml, isMailConfigured, renderEmailShell, sendMail } from "../../../lib/mailer.js";
+import { escapeHtml, isMailConfigured, renderEmailShell, sendMail, EMAIL_RE } from "../../../lib/mailer.js";
 import { getClientIp, rateLimit, releaseLimit, HOUR_MS } from "../../../lib/rate-limit.js";
 import {
   signCookie, verifyCookie, generateOtp, hashOtp,
@@ -7,8 +7,6 @@ import {
   COOKIE_NAME, OTP_TTL_MS, RESEND_COOLDOWN_MS,
   MAX_SENDS_PER_HOUR, SEND_WINDOW_MS, COOKIE_OPTS,
 } from "../../../lib/otp.js";
-
-const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
 // The cookie counters below travel with the client and reset if it drops the
 // cookie, so the real ceiling is enforced here, in the server's own memory.
@@ -91,6 +89,9 @@ export async function POST(context) {
     });
   }
 
+  // The session holds the address and the code, nothing else. A code proves
+  // only the address, so no other field the client posts is carried through
+  // to come back looking verified.
   const otp = generateOtp();
   const next = {
     email: normalEmail,
@@ -101,17 +102,6 @@ export async function POST(context) {
     firstSentAt: sendWindow.firstSentAt,
     sendCount: sendWindow.sendCount + 1,
   };
-
-  // Signup fields ride along so verify-otp can hand them back once the address
-  // is proven. A resend keeps whatever the first send captured.
-  const profile = resend ? session : body;
-  if (profile?.name) next.name = String(profile.name).trim();
-  if (profile?.phone) next.phone = profile.phone;
-  if (profile?.age !== undefined) {
-    const age = Number(profile.age);
-    if (!Number.isNaN(age)) next.age = age;
-  }
-  if (profile?.passwordHash) next.passwordHash = profile.passwordHash;
 
   // Mail first: a failed send must not burn the cooldown or leave a cookie
   // holding a code that never arrived.

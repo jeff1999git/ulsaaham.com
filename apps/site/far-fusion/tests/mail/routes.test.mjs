@@ -389,7 +389,7 @@ test("a sign-in code is mailed from the OTP sender and kept out of the subject",
   assert.equal(written.options.httpOnly, true);
   assert.equal(written.options.sameSite, "lax");
   assert.equal(written.options.maxAge, 600);
-  assert.equal(written.options.path, "/");
+  assert.equal(written.options.path, "/api/auth", "the session is sent with requests that never read it");
 
   const session = OTP_HELPER.verifyCookie(written.value);
   assert.equal(session.email, "user@example.test");
@@ -587,8 +587,147 @@ test("a code is checked without trusting the shape of the request", async () => 
     await POST(makeContext({ body: { email: session.email, otp: code }, cookies: jar() }))
   );
   assert.equal(right.status, 200, "a code with a leading zero was rejected");
-  assert.equal(right.body.data.name, "Ravi");
-  assert.equal(right.body.data.email, session.email);
+  // A code proves the address and nothing else, so a name sitting in the
+  // session (as an older send-otp put there) does not come back as verified.
+  assert.deepEqual(right.body.data, { email: session.email, tickets: [] });
+});
+
+test("a profile posted with the address is not carried through the session", async () => {
+  const send = await loadOtpRoute();
+  const jar = makeCookieJar();
+  const marker = smtp.mark();
+
+  const result = await readJson(
+    await send.POST(
+      makeContext({
+        body: { email: "rider@example.test", name: "Mallory", phone: "9999999999", age: 30, passwordHash: "x" },
+        cookies: jar,
+        ip: "203.0.113.60",
+      })
+    )
+  );
+  assert.equal(result.status, 200);
+
+  const session = OTP_HELPER.verifyCookie(jar.last("otp_session").value);
+  for (const field of ["name", "phone", "age", "passwordHash"]) {
+    assert.ok(!(field in session), `${field} rode along in the session`);
+  }
+
+  const code = (parseMail(smtp.since(marker).messages[0].raw).text.match(/code is: (\d{6})/) || [])[1];
+  const verify = await loadVerifyRoute();
+  const verified = await readJson(
+    await verify.POST(makeContext({ body: { email: "rider@example.test", otp: code }, cookies: jar, ip: "203.0.113.60" }))
+  );
+  assert.equal(verified.status, 200);
+  assert.deepEqual(verified.body.data, { email: "rider@example.test", tickets: [] });
+  assert.ok(
+    jar.deletes.some((entry) => entry.name === "otp_session" && entry.options?.path === "/api/auth"),
+    "the session was not cleared on the path it was set on"
+  );
+});
+
+test("guessing is capped per address even when the first cookie is replayed", async () => {
+  const { POST } = await loadVerifyRoute();
+  const session = {
+    email: "replay@example.test",
+    hashedOtp: OTP_HELPER.hashOtp("123456"),
+    expiresAt: Date.now() + 60000,
+    attempts: 0,
+  };
+  // The cookie from send-otp says 0 attempts every time it is sent again.
+  const replayed = () => makeCookieJar({ otp_session: OTP_HELPER.signCookie(session) });
+
+  for (let i = 0; i < 10; i += 1) {
+    const wrong = await readJson(
+      await POST(makeContext({ body: { email: session.email, otp: "000000" }, cookies: replayed(), ip: "198.51.100." + (40 + i) }))
+    );
+    assert.equal(wrong.status, 400, `guess ${i + 1} was refused early`);
+  }
+
+  // Ten wrong guesses from ten addresses: the right code is now refused too,
+  // so a replayed cookie gives a guesser ten tries, not a million.
+  const capped = await readJson(
+    await POST(makeContext({ body: { email: session.email, otp: "123456" }, cookies: replayed(), ip: "198.51.100.60" }))
+  );
+  assert.equal(capped.status, 429, "the per-address ceiling never applied");
+  assert.ok(Number(capped.headers.get("retry-after")) > 0, "no Retry-After was sent");
+});
+
+test("guessing is capped per device, and right codes do not count", async () => {
+  const { POST } = await loadVerifyRoute();
+  const ip = "198.51.100.77";
+  const sessionFor = (email) =>
+    makeCookieJar({
+      otp_session: OTP_HELPER.signCookie({
+        email,
+        hashedOtp: OTP_HELPER.hashOtp("123456"),
+        expiresAt: Date.now() + 60000,
+        attempts: 0,
+      }),
+    });
+
+  // Sign-ins that succeed, as from one shared venue connection, use none of it.
+  for (let i = 0; i < 40; i += 1) {
+    const ok = await POST(makeContext({ body: { email: `ok${i}@example.test`, otp: "123456" }, cookies: sessionFor(`ok${i}@example.test`), ip }));
+    assert.equal(ok.status, 200, `sign-in ${i + 1} from a shared connection was refused`);
+  }
+
+  for (let i = 0; i < 30; i += 1) {
+    const email = `guess${i}@example.test`;
+    const wrong = await POST(makeContext({ body: { email, otp: "000000" }, cookies: sessionFor(email), ip }));
+    assert.equal(wrong.status, 400, `guess ${i + 1} was refused early`);
+  }
+
+  const blocked = await readJson(
+    await POST(makeContext({ body: { email: "late@example.test", otp: "123456" }, cookies: sessionFor("late@example.test"), ip }))
+  );
+  assert.equal(blocked.status, 429, "the per-device ceiling never applied");
+  assert.match(blocked.body.error, /device/i);
+
+  // Another device is unaffected.
+  const elsewhere = await POST(
+    makeContext({ body: { email: "late@example.test", otp: "123456" }, cookies: sessionFor("late@example.test"), ip: "198.51.100.78" })
+  );
+  assert.equal(elsewhere.status, 200);
+});
+
+test("addresses an address parser would read as structure are refused", async () => {
+  const otp = await loadOtpRoute();
+  const ticket = await loadTicketRoute();
+  backendReply = TICKET();
+  const hostile = [
+    "a(comment)@example.test",
+    "user@example.test(evil.example)",
+    "<user@example.test>",
+    "a,b@example.test",
+    "a;b@example.test",
+    "a:b@example.test",
+    '"a"@example.test',
+    "user@[127.0.0.1]",
+    "a\\b@example.test",
+  ];
+
+  const before = backendCalls.length;
+  for (const email of hostile) {
+    const marker = smtp.mark();
+    const sent = await readJson(
+      await otp.POST(makeContext({ body: { email }, cookies: makeCookieJar(), ip: "203.0.113.70" }))
+    );
+    assert.equal(sent.status, 400, `send-otp accepted ${email}`);
+
+    const mailed = await readJson(
+      await ticket.POST(makeContext({ body: { ticketCode: "UE-DANCE-ABC123", email }, ip: "203.0.113.71" }))
+    );
+    assert.equal(mailed.status, 400, `send-ticket accepted ${email}`);
+    assert.equal(smtp.since(marker).messages.length, 0, `mail went out for ${email}`);
+  }
+  assert.equal(backendCalls.length, before, "a refused address still reached the backend");
+
+  // Ordinary addresses, apostrophes and plus tags included, still pass.
+  for (const [email, ip] of [["o'brien@example.test", "203.0.113.72"], ["first.last+tag@sub.example.test", "203.0.113.73"]]) {
+    const ok = await readJson(await otp.POST(makeContext({ body: { email }, cookies: makeCookieJar(), ip })));
+    assert.equal(ok.status, 200, `send-otp refused ${email}`);
+  }
 });
 
 test("a spent or expired session is cleared", async () => {
@@ -607,6 +746,10 @@ test("a spent or expired session is cleared", async () => {
   );
   assert.equal(exhausted.status, 429);
   assert.ok(burned.deletes.some((entry) => entry.name === "otp_session"), "the spent session was kept");
+  assert.ok(
+    burned.deletes.every((entry) => entry.options?.path === "/api/auth"),
+    "the session was cleared on a different path from the one it was set on"
+  );
 
   const stale = makeCookieJar({ otp_session: OTP_HELPER.signCookie({ ...base, expiresAt: Date.now() - 1000 }) });
   const expired = await readJson(await POST(makeContext({ body: { email: base.email, otp: code }, cookies: stale })));

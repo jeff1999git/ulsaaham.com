@@ -7,6 +7,7 @@
     "build": "astro build",
     "preview": "astro preview",
     "test": "node --test tests/",
+    "lint": "eslint .",
     "astro": "astro"
   },
   "dependencies": {
@@ -16,7 +17,7 @@
     "@vercel/speed-insights": "^2.0.0",
     "astro": "^5.18.2",
     "jspdf": "^4.2.1",
-    "nodemailer": "^6.9.16",
+    "nodemailer": "^10.0.13",
     "qrcode": "^1.5.4",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
@@ -24,7 +25,6 @@
   },
   "devDependencies": {
     "@eslint/js": "^9.39.4",
-    "@types/nodemailer": "^6.4.17",
     "@typescript-eslint/parser": "^8.70.1",
     "autoprefixer": "^10.4.20",
     "eslint": "^9.39.4",

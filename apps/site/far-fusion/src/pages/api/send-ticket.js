@@ -1,13 +1,14 @@
 import { createRequire } from "module";
 import { jsonErr, jsonOk, isSameOrigin } from "../../lib/http.js";
-import { escapeHtml, isMailConfigured, renderDetailRows, renderEmailShell, sendMail, SITE_URL } from "../../lib/mailer.js";
+import {
+  escapeHtml, isMailConfigured, renderDetailRows, renderEmailShell, sendMail, EMAIL_RE, SITE_URL,
+} from "../../lib/mailer.js";
 import { fetchTicketByCode } from "../../lib/backend.js";
 import { getClientIp, rateLimit, releaseLimit, HOUR_MS } from "../../lib/rate-limit.js";
 
 const _require = createRequire(import.meta.url);
 const QRCode = _require("qrcode");
 
-const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 const TICKET_CODE_RE = /^[A-Z0-9][A-Z0-9-]{3,39}$/;
 const PAYMENT_ID_RE = /^[A-Za-z0-9_]{1,40}$/;
 

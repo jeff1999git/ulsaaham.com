@@ -1,23 +1,8 @@
 ---
-export const prerender = false;
+// Static: the Google result arrives in a cookie that script can read, so this
+// page needs no function. The script below does the work in the browser.
+export const prerender = true;
 import BaseLayout from "../../layouts/BaseLayout.astro";
-import { safeNextPath } from "../../lib/next-path.js";
-
-// Both values below are written into an inline script by define:vars, which
-// escapes only a lowercase "</script>". next is reduced to a same-site path
-// (percent-encoded, so it holds no "<"), and userJson has every "<" escaped;
-// JSON.parse turns < back into "<".
-const cookieValue = Astro.cookies.get("google_auth_result")?.value;
-const next = safeNextPath(Astro.url.searchParams.get("next"));
-
-let userJson = null;
-if (cookieValue) {
-  try {
-    const parsed = JSON.parse(decodeURIComponent(cookieValue));
-    userJson = JSON.stringify(parsed).replace(/</g, "\\u003c");
-    Astro.cookies.delete("google_auth_result", { path: "/" });
-  } catch {}
-}
 ---
 
 <BaseLayout title="Signing in… — Ulsaham Entertainments" noindex>
@@ -28,35 +13,12 @@ if (cookieValue) {
     </div>
   </div>
 
-  <script is:inline define:vars={{ userJson, next }}>
-    if (!userJson) {
-      window.location.replace("/login?error=no_auth_result");
-    } else {
-      try {
-        var googleUser = JSON.parse(userJson);
-        var KEY = "ulsaham_user";
-        var ACCOUNTS_KEY = "ulsaham_accounts";
-        var existing = JSON.parse(localStorage.getItem(KEY) || "null");
-        var merged = (existing && existing.email === googleUser.email)
-          ? Object.assign({}, existing, googleUser)
-          : Object.assign({ tickets: [] }, googleUser);
-        localStorage.setItem(KEY, JSON.stringify(merged));
-        // Update known accounts so re-login after logout routes correctly
-        try {
-          var accts = JSON.parse(localStorage.getItem(ACCOUNTS_KEY) || "{}");
-          accts[merged.email.toLowerCase()] = {
-            name: merged.name,
-            phone: merged.phone,
-            hasGoogle: true,
-            googleId: merged.googleId,
-          };
-          localStorage.setItem(ACCOUNTS_KEY, JSON.stringify(accts));
-        } catch(e2) {}
-        window.location.replace(next);
-      } catch (e) {
-        window.location.replace("/login?error=auth_failed");
-      }
-    }
+  <script>
+    // Reads and clears the result cookie, saves the user and leaves for a path
+    // on this site (or /login with an error code). See lib/google-complete.js.
+    import { completeGoogleSignIn } from "../../lib/google-complete.js";
+
+    window.location.replace(completeGoogleSignIn(document, window.location));
   </script>
 </BaseLayout>
 

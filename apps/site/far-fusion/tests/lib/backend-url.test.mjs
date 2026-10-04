@@ -20,16 +20,18 @@ async function backendUrlWith(env) {
   return BACKEND_URL;
 }
 
+// setTestEnv() points BACKEND_URL at a dead local port by default; these two
+// unset it to see the fallbacks. Nothing here sends a request.
 test("a production build with no BACKEND_URL uses the live admin panel", async () => {
   assert.equal(
-    await backendUrlWith({ NODE_ENV: "production" }),
+    await backendUrlWith({ BACKEND_URL: undefined, NODE_ENV: "production" }),
     "https://ulsaham-admin-panel.vercel.app/api/public"
   );
 });
 
 test("anything else with no BACKEND_URL uses a local admin panel, and says so", async () => {
   const before = warnings.length;
-  assert.equal(await backendUrlWith({}), "http://localhost:3000/api/public");
+  assert.equal(await backendUrlWith({ BACKEND_URL: undefined }), "http://localhost:3000/api/public");
   assert.ok(warnings.slice(before).some((line) => line.includes("BACKEND_URL")), "no warning was printed");
 });
 
